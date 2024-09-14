@@ -4,11 +4,9 @@ import {
     initiateRegister, 
     verifyOtp, 
     login, 
-    getRefreshToken,
-    updateAvatar, 
-    addDoctorToUser, 
-    removeDoctorFromUser 
-} from '../controllers/user.controller.js';
+    getRefreshToken, 
+    updateAvatar 
+} from '../controllers/doctor.controller.js';
 import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
@@ -18,14 +16,10 @@ router.post('/register', initiateRegister);
 router.post('/verifyOtp', verifyOtp);
 router.post('/login', login);
 
-// Route to refresh token
+// Route to refresh tokens
 router.get('/refresh-token', getRefreshToken);
 
-// Route to update user avatar
+// Route to update doctor avatar
 router.post('/avatar', verifyJwt, upload.single('avatar'), updateAvatar);
-
-// Routes to manage doctor associations
-router.post('/add-doctor', verifyJwt, addDoctorToUser);
-router.post('/remove-doctor', verifyJwt, removeDoctorFromUser);
 
 export default router;

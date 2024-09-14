@@ -1,14 +1,13 @@
 import nodemailer from "nodemailer";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { User } from "../models/user.model.js";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { Doctor } from "../models/doctor.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadToCloudinary, deleteFromCloudinary, publicId } from '../utils/cloudinary.js';
 
-const tempUserStore = {};
+const tempDoctorStore = {};
 
 // Function to generate OTP
 function generateOTP(length) {
@@ -21,8 +20,6 @@ function generateOTP(length) {
 }
 
 // Nodemailer setup
-console.log(process.env.EMAIL);
-console.log(process.env.PASSWORD)
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -34,17 +31,19 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Initiate user register endpoint
+// Initiate doctor register endpoint
 const initiateRegister = asyncHandler(async (req, res) => {
-    console.log(req.body)
-    const { mobileNo, email, name, age, password } = req.body;
-    if (!mobileNo || !email || !name || !age || !password) {
+    const { name, speciality, gender, email, password, virtualFee, onsiteFee } = req.body;
+
+    console.log({ name, speciality, gender, email, password, virtualFee, onsiteFee } )
+    if (!name || !speciality || !gender || !email || !password || !virtualFee || !onsiteFee) {
         throw new ApiError(400, "All fields are required");
     }
 
     const otp = generateOTP(4);
-    tempUserStore[email] = { mobileNo, email, name, age, password, otp };
+    tempDoctorStore[email] = { name, speciality, gender, email, password, virtualFee, onsiteFee, otp };
 
+    
     const mailOptions = {
         from: process.env.EMAIL,
         to: email,
@@ -64,37 +63,33 @@ const initiateRegister = asyncHandler(async (req, res) => {
 const verifyOtp = asyncHandler(async (req, res) => {
     const { email, otp } = req.body;
 
+    console.log({email  , otp})
 
     if (!email || !otp) {
         throw new ApiError(400, "All fields are required");
     }
 
-    const tempUser = tempUserStore[email];
+    const tempDoctor = tempDoctorStore[email];
 
-    if (!tempUser || tempUser.otp !== otp) {
+    if (!tempDoctor || tempDoctor.otp !== otp) {
+        console.log(tempDoctor)
+        console.log(tempDoctor.otp)
+        console.log(otp)
         throw new ApiError(400, "Invalid OTP");
     }
 
-    const { mobileNo, name, age, address, password } = tempUser;
-
-    const user = await User.create({
-        mobileNo,
-        email,
-        name,
-        age,
-        address,
-        password
-    });
+    const { name, speciality, gender, password, virtualFee, onsiteFee } = tempDoctor;
+    const doctor = await Doctor.create({ name, speciality, gender, email, password, virtualFee, onsiteFee });
 
     // Generate tokens
-    const accessToken = user.generateAccessToken();
-    const refreshToken = user.generateRefreshToken();
+    const accessToken = doctor.generateAccessToken();
+    const refreshToken = doctor.generateRefreshToken();
 
-    // Save refreshToken to user document
-    user.refreshToken = refreshToken;
-    await user.save();
+    // Save refreshToken to doctor document
+    doctor.refreshToken = refreshToken;
+    await doctor.save();
 
-    delete tempUserStore[email];
+    delete tempDoctorStore[email];
 
     res.cookie('accessToken', accessToken, {
         httpOnly: true,
@@ -103,37 +98,36 @@ const verifyOtp = asyncHandler(async (req, res) => {
         domain: 'http://localhost:5173',
     });
 
-    res.status(200).json(new ApiResponse(200, { user, accessToken }, "User registered successfully"));
+    res.status(200).json(new ApiResponse(200, { doctor, accessToken }, "Doctor registered successfully"));
 });
 
-// User login endpoint
+// Doctor login endpoint
 const login = asyncHandler(async (req, res) => {
-    console.log("reacged")
     const { email, password } = req.body;
 
     if (!email || !password) {
         throw new ApiError(400, "All fields are required");
     }
 
-    const user = await User.findOne({ email });
+    const doctor = await Doctor.findOne({ email });
 
-    if (!user) {
-        throw new ApiError(400, "User doesn't exist");
+    if (!doctor) {
+        throw new ApiError(400, "Doctor doesn't exist");
     }
 
-    const isPasswordMatch = await user.isPasswordCorrect(password);
+    const isPasswordMatch = await doctor.isPasswordCorrect(password);
 
     if (!isPasswordMatch) {
         throw new ApiError(400, "Wrong password");
     }
 
     // Generate tokens
-    const accessToken = user.generateAccessToken();
-    const refreshToken = user.generateRefreshToken();
+    const accessToken = doctor.generateAccessToken();
+    const refreshToken = doctor.generateRefreshToken();
 
-    // Save refreshToken to user document
-    user.refreshToken = refreshToken;
-    await user.save();
+    // Save refreshToken to doctor document
+    doctor.refreshToken = refreshToken;
+    await doctor.save();
 
     res.cookie('accessToken', accessToken, {
         httpOnly: true,
@@ -146,7 +140,7 @@ const login = asyncHandler(async (req, res) => {
         maxAge: 1000 * 60 * 60 // 1 hour in milliseconds
     });
 
-    res.status(200).json(new ApiResponse(200, { user, accessToken, refreshToken }, "User logged in successfully"));
+    res.status(200).json(new ApiResponse(200, { doctor, accessToken, refreshToken }, "Doctor logged in successfully"));
 });
 
 // Controller to refresh tokens
@@ -159,19 +153,19 @@ const getRefreshToken = asyncHandler(async (req, res) => {
 
     try {
         const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-        const user = await User.findById(decoded._id);
+        const doctor = await Doctor.findById(decoded._id);
 
-        if (!user) {
-            throw new ApiError(404, "User not found");
+        if (!doctor) {
+            throw new ApiError(404, "Doctor not found");
         }
 
         // Generate new tokens
-        const newAccessToken = user.generateAccessToken();
-        const newRefreshToken = user.generateRefreshToken();
+        const newAccessToken = doctor.generateAccessToken();
+        const newRefreshToken = doctor.generateRefreshToken();
 
-        // Save new refresh token to user document
-        user.refreshToken = newRefreshToken;
-        await user.save();
+        // Save new refresh token to doctor document
+        doctor.refreshToken = newRefreshToken;
+        await doctor.save();
 
         // Set cookies with new tokens
         res.cookie('accessToken', newAccessToken, {
@@ -193,21 +187,21 @@ const getRefreshToken = asyncHandler(async (req, res) => {
 
 // Controller to update avatar
 const updateAvatar = asyncHandler(async (req, res) => {
-    const userId = req.user._id;
+    const doctorId = req.user._id;
     const file = req.file;
 
     if (!file) {
         throw new ApiError(400, 'No file uploaded');
     }
 
-    const user = await User.findById(userId);
+    const doctor = await Doctor.findById(doctorId);
 
-    if (!user) {
-        throw new ApiError(404, 'User not found');
+    if (!doctor) {
+        throw new ApiError(404, 'Doctor not found');
     }
 
-    if (user.avatar) {
-        const existingPublicId = await publicId(user.avatar);
+    if (doctor.avatar) {
+        const existingPublicId = await publicId(doctor.avatar);
         await deleteFromCloudinary(existingPublicId);
     }
 
@@ -216,47 +210,10 @@ const updateAvatar = asyncHandler(async (req, res) => {
         throw new ApiError(500, 'Failed to upload image');
     }
 
-    user.avatar = uploadResponse.secure_url;
-    await user.save();
+    doctor.avatar = uploadResponse.secure_url;
+    await doctor.save();
 
-    res.status(200).json(new ApiResponse(200, user, 'Avatar updated successfully'));
-});
-
-// Associate a doctor with a user
-const addDoctorToUser = asyncHandler(async (req, res) => {
-    const { userId, doctorId } = req.body;
-
-    const user = await User.findById(userId);
-    if (!user) {
-        throw new ApiError(404, "User not found");
-    }
-
-    const doctor = await Doctor.findById(doctorId);
-    if (!doctor) {
-        throw new ApiError(404, "Doctor not found");
-    }
-
-    if (!user.doctors.includes(doctorId)) {
-        user.doctors.push(doctorId);
-        await user.save();
-    }
-
-    res.status(200).json(new ApiResponse(200, user, "Doctor added to user successfully"));
-});
-
-// Remove a doctor from a user
-const removeDoctorFromUser = asyncHandler(async (req, res) => {
-    const { userId, doctorId } = req.body;
-
-    const user = await User.findById(userId);
-    if (!user) {
-        throw new ApiError(404, "User not found");
-    }
-
-    user.doctors = user.doctors.filter((docId) => docId.toString() !== doctorId);
-    await user.save();
-
-    res.status(200).json(new ApiResponse(200, user, "Doctor removed from user successfully"));
+    res.status(200).json(new ApiResponse(200, doctor, 'Avatar updated successfully'));
 });
 
 export {
@@ -265,6 +222,4 @@ export {
     login,
     getRefreshToken,
     updateAvatar,
-    addDoctorToUser,
-    removeDoctorFromUser
 };
