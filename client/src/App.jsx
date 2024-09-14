@@ -13,6 +13,8 @@ import SignUp from './Pages/Auth/SignUp/SignUp'
 import Login from './Pages/Auth/Login/Login'
 import 'react-toastify/dist/ReactToastify.css';
 import ClinicProfileView from './Pages/Clinic/ClinicProfileView'
+import Dashboard from './Pages/Admin/Dashboard';
+import AdminPanel from './Pages/Admin/AdminPanel';
 
 function App() {
 
@@ -27,6 +29,11 @@ function App() {
         <Route path="/login" element={<div><Login /></div>} />
         <Route path="/signup" element={<div><SignUp /></div>} />
         <Route path="/clinic/profile/:clinicId" element={<div><ClinicProfileView /></div>} />
+
+        {/* Admin */}
+        <Route path="/clinic/dashboard" element={<AdminPanel>< Dashboard/></AdminPanel>} />
+
+
 
 
 
