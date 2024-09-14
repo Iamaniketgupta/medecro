@@ -16,8 +16,10 @@ app.use(cookieParser());
 
 import userRouter from "./routes/user.routes.js"
 import doctorRouter from "./routes/doctor.routes.js"
+import clinicRouter from "./routes/clinic.routes.js"
 
 app.use("/users" , userRouter);
 app.use("/doctor" , doctorRouter);
+app.use("/clinic" , clinicRouter);
 
 export {app} 

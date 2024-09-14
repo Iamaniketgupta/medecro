@@ -8,7 +8,6 @@ const clinicSchema = new Schema(
       street: { type: String, required: true },
       city: { type: String, required: true },
       state: { type: String, required: true },
-      zip: { type: String, required: true },
       country: { type: String, required: true },
     },
     coordinates: {
@@ -17,9 +16,9 @@ const clinicSchema = new Schema(
     },
     schedules: [
       {
-        day: { type: String, required: true }, // e.g., "Monday"
-        openTime: { type: String, required: true }, // e.g., "09:00 AM"
-        closeTime: { type: String, required: true }, // e.g., "05:00 PM"
+        type:Schema.Types.ObjectId,
+        ref:'Schedule',
+        default:[]
       },
     ],
     licenseNumber: { type: String, required: true, unique: true },
@@ -35,8 +34,12 @@ const clinicSchema = new Schema(
         rating: { type: Number, min: 1, max: 5 }, // Rating between 1 and 5
         comment: { type: String },
         date: { type: Date, default: Date.now },
+        default:[]
       },
     ],
+    images:[
+        {type:String}
+    ]
   },
   {
     timestamps: true,
