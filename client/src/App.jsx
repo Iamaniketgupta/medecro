@@ -4,14 +4,12 @@ import { Route, Routes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import Home from './Pages/Home/Home'
 
-import Login from './components/auth/Login'
-import SignUp from './components/auth/Signup'
+
 import DocLogin from "./components/DoctorAuth/DocLogin";
 import DocSignup from "./components/DoctorAuth/DocSignup";
 
 import 'react-toastify/dist/ReactToastify.css';
-
-import SignUp from './Pages/Auth/SignUp'
+import SignUp from './Pages/Auth/SignUp/SignUp'
 import Login from './Pages/Auth/Login/Login'
 import 'react-toastify/dist/ReactToastify.css';
 import ClinicProfileView from './Pages/Clinic/ClinicProfileView'
