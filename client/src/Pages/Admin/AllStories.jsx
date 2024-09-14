@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from '../components/Navbar';
+
 import { useRecoilState } from 'recoil';
 import axiosInstance from '../axiosConfig/axiosConfig';
 import { allStoriesState } from '../atom/states';

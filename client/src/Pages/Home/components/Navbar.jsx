@@ -69,7 +69,7 @@ const Navbar = () => {
               ))}
             </ul>
             <div className="flex space-x-6">
-              {currentUser ? (
+              {/* {currentUser ? (
                 <button
                   onClick={handleLogout}
                   className="py-2 px-3 border rounded-md"
@@ -80,7 +80,13 @@ const Navbar = () => {
                 <Link to="/login" className="py-2 px-3 border rounded-md">
                   Log In
                 </Link>
-              )}
+              )} */}
+              <button
+                  onClick={handleLogout}
+                  className="py-2 px-3 border rounded-md"
+                >
+                  Log Out
+                </button>
               <Link
                 to="/signup"
                 className="py-2 px-3 rounded-md bg-gradient-to-r from-orange-500 to-orange-800"

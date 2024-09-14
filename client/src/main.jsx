@@ -4,11 +4,14 @@ import App from './App.jsx'
 import './index.css'
 import { RecoilRoot } from 'recoil'
 import { BrowserRouter } from 'react-router-dom'
-
+import { Provider } from 'react-redux'
+import {store} from "./store/store.js"
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
-      <RecoilRoot>
+  
+  <Provider store={store}> 
+  
     <App />
-    </RecoilRoot>
+    </Provider>
     </BrowserRouter>
 )
