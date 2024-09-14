@@ -6,6 +6,7 @@ import Home from './Pages/Home/Home'
 import SignUp from './Pages/Auth/SignUp'
 import Login from './Pages/Auth/Login/Login'
 import 'react-toastify/dist/ReactToastify.css';
+import ClinicProfileView from './Pages/Clinic/ClinicProfileView'
 function App() {
 
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<div><Home /></div>} />
         <Route path="/login" element={<div><Login /></div>} />
         <Route path="/signup" element={<div><SignUp /></div>} />
+        <Route path="/clinic/profile/:clinicId" element={<div><ClinicProfileView /></div>} />
 
 
       </Routes>
