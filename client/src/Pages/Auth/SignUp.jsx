@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaEye, FaRegEyeSlash } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
-import Navbar from "../../Pages/Home/components/Navbar"
+import Navbar from '../../Pages/Home/Home';
 import axiosInstance from '../../axiosConfig/axiosConfig';
 import Otp from './VerifyOtp';
 
@@ -12,8 +12,7 @@ const SignUp = () => {
         email: '',
         password: '',
         mobileNo: '',
-        age: '',
-        role: ''
+        age: ''
     });
     const [otpsent, setOtpSent] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -31,8 +30,8 @@ const SignUp = () => {
         e.preventDefault();
 
         // Client-side validation
-        const { fullName, email, password, mobileNo, age, role } = formData;
-        if (!fullName || !email || !password || !mobileNo || !age || !role) {
+        const { fullName, email, password, mobileNo, age } = formData;
+        if (!fullName || !email || !password || !mobileNo || !age) {
             toast.error("All fields are required");
             return;
         }
@@ -58,7 +57,7 @@ const SignUp = () => {
 
     return (
         <div className='overflow-hidden relative'>
-            <Navbar/>
+            <Navbar />
             <div className='grid lg:grid-cols-2 overflow-clip'>
                 {/* IMG */}
                 <div className='min-h-full w-full overflow-hidden'>
@@ -88,23 +87,6 @@ const SignUp = () => {
                                         value={formData.fullName}
                                         onChange={handleChange}
                                     />
-                                </div>
-
-                                <div className='space-y-2'>
-                                    <label htmlFor="role" className='block text-sm px-2 font-medium text-gray-700'>
-                                        Role <span className='text-red-500'>*</span>
-                                    </label>
-                                    <select
-                                        name="role"
-                                        required
-                                        value={formData.role}
-                                        onChange={handleChange}
-                                        className='bg-gray-100 rounded-md px-4 py-2 text-gray-900 w-full'
-                                    >
-                                        <option value="">Select Role</option>
-                                        <option value="author">Author</option>
-                                        <option value="reader">Reader</option>
-                                    </select>
                                 </div>
 
                                 <div className='space-y-2'>
