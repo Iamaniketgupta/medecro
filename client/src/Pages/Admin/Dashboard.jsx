@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import { FaChartSimple, FaRankingStar, FaUserDoctor } from 'react-icons/fa6';
 import { FaPenSquare } from 'react-icons/fa';
 import LiveAppointments from './components/Dashboard/LiveAppointments';
 import OneonOne from './components/Dashboard/OneonOne';
+import AddClinic from './components/Dashboard/AddClinic';
 // import { useRecoilState } from 'recoil';
 // import { userData } from '../atom/states';
 
@@ -60,6 +61,8 @@ const Dashboard = () => {
 
     ]
 
+    const [open,setopen]= useState(false);
+
 
     return (
         <div className='relative pb-10'>
@@ -85,8 +88,7 @@ const Dashboard = () => {
                 <div className='flex gap-1 items-center'>
                     <h2 className='px-5 my-4 text-2xl font-semibold text-gray-600'>My Clinics</h2>
                     <p>2/2</p>
-
-                    <button className='bg-blue-500 opacity-35 px-4 py-1 rounded-md text-white font-semibold cursor-not-allowed mx-4'>Add Clinic</button>
+                    <button onClick={() => setopen(true)} className='bg-blue-500 opacity-35 px-4 py-1 rounded-md text-white font-semibold cursor-not-allowed mx-4'>Add Clinic</button>
                 </div>
                 <div className='flex flex-wrap gap-4 p-3'>
                     {
@@ -110,6 +112,8 @@ const Dashboard = () => {
                 <LiveAppointments />
                 <OneonOne />
             </div>
+
+            <AddClinic open={open} onClose={() => setopen(false)} />
 
         </div >
     );
