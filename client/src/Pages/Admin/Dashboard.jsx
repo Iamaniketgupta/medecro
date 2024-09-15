@@ -3,8 +3,8 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import { FaChartSimple, FaRankingStar, FaUserDoctor } from 'react-icons/fa6';
 import { FaPenSquare } from 'react-icons/fa';
-import LiveAppointments from './components/LiveAppointments';
-import OneonOne from './components/OneonOne';
+import LiveAppointments from './components/Dashboard/LiveAppointments';
+import OneonOne from './components/Dashboard/OneonOne';
 // import { useRecoilState } from 'recoil';
 // import { userData } from '../atom/states';
 
@@ -88,11 +88,11 @@ const Dashboard = () => {
 
                     <button className='bg-blue-500 opacity-35 px-4 py-1 rounded-md text-white font-semibold cursor-not-allowed mx-4'>Add Clinic</button>
                 </div>
-                <div className='flex  flex-wrap gap-4 p-3'>
+                <div className='flex flex-wrap gap-4 p-3'>
                     {
                         clinics.map((i) =>
-                            <div key={i.id} className='bg-white hover:bg-gray-50 cursor-pointer flex-1 max-w-[500px] rounded-lg shadow-lg flex min-w-46  p-4 md:w-[260px] w-[180px] py-5 justify-between gap-5  items-center'>
-                                <img src={i.img} className=' rounded-md w-40 h-32 object-cover' />
+                            <div key={i.id} className='bg-white min-w-fit hover:bg-gray-50 cursor-pointer flex-1 max-w-[500px] rounded-lg shadow-lg flex min-w-46  p-4 md:w-[260px] w-[180px] py-5 justify-between gap-5  items-center'>
+                                <img src={i.img} className=' rounded-md w-20 md:w-40 h-32 object-cover' />
                                 <div className='flex-grow'>
                                     <h3 className='text-gray-800  font-semibold'>{i.Name}</h3>
                                     <p className='  text-gray-900'>{i.location}</p>
@@ -105,7 +105,7 @@ const Dashboard = () => {
             </>
 
 
-            <div className='grid grid-cols-2 gap-10 my-4 px-3'>
+            <div className='grid md:grid-cols-2 gap-10 my-4 px-3'>
                 {/* Live Appointments */}
                 <LiveAppointments />
                 <OneonOne />

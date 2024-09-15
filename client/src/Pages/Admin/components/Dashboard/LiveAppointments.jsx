@@ -1,10 +1,13 @@
 import React from 'react';
+import SearchInput from './SearchInput';
 
 const LiveAppointments = () => {
     return (
         <div className='shadow-lg bg-white py-5 rounded-xl'>
             <h2 className='px-5 my-4 text-xl rounded-lg font-semibold text-gray-600'>Appointments</h2>
+            <SearchInput/>
             <div className=''>
+
                 <h3 className='text-red-600 animate-pulse font-bold mx-4'>Live</h3>
                 <div className='flex items-center gap-5 px-4 w-full h-16 cursor-pointer hover:bg-gray-50'>
                     <img src="https://i.cbc.ca/1.5003340.1549069097!/fileImage/httpImage/image.jpg_gen/derivatives/16x9_780/melanie-fraser.jpg" alt=""
