@@ -29,6 +29,7 @@ import Reports from "./Pages/Patient/Reports";
 import ViewReport from "./Pages/Patient/ViewReport";
 import PChat from "./Pages/Patient/Chat";
 import AllClinics from "./Pages/Home/components/AllClinics";
+import ReportSum from "./Pages/Home/components/ReportSum";
 
 
 function App() {
@@ -63,7 +64,7 @@ function App() {
         <Route path="/patient/reports" element={<PAdminPanel>< Reports /></PAdminPanel>} />
         <Route path="/patient/chat" element={<PAdminPanel>< PChat /></PAdminPanel>} />
         <Route path="/patient/report/:reportId" element={<PAdminPanel><ViewReport /></PAdminPanel>} />
-
+        <Route path="/patient/summarise" element={<ReportSum/>}/>
 
                                                  
       </Routes>

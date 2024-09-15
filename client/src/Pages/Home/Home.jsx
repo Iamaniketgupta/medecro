@@ -7,6 +7,7 @@ import Testimonials from "./components/Testimonials";
 import CTAs from "./components/CTAs";
 import Pricing from "./components/Pricing";
 import Team from "./components/Team";
+import Chatbot from "./components/ChatBot";
 
 ;
 
@@ -21,6 +22,7 @@ const Home = () => {
         <Workflow />
         <Pricing />
         <Testimonials />
+        <Chatbot/>
         <Team/>
         <Footer />
       </div>
