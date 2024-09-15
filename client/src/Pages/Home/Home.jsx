@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import Testimonials from "./components/Testimonials";
 import CTAs from "./components/CTAs";
 import Pricing from "./components/Pricing";
+import Team from "./components/Team";
 
 ;
 
@@ -20,6 +21,7 @@ const Home = () => {
         <Workflow />
         <Pricing />
         <Testimonials />
+        <Team/>
         <Footer />
       </div>
     </>
