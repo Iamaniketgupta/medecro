@@ -123,7 +123,7 @@ export const checklistItems = [
 export const pricingOptions = [
   {
     title: "Free",
-    price: "$0",
+    price: "Rs 0",
     features: [
       "Basic record management",
       "Appointment scheduling",
@@ -132,7 +132,7 @@ export const pricingOptions = [
   },
   {
     title: "Pro",
-    price: "$10",
+    price: "Rs 3000",
     features: [
       "Advanced record management",
       "Priority support",
@@ -142,7 +142,7 @@ export const pricingOptions = [
   },
   {
     title: "Enterprise",
-    price: "$200",
+    price: "Rs 20000",
     features: [
       "Full record management suite",
       "Dedicated support",

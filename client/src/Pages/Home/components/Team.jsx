@@ -25,7 +25,7 @@ const Team = () => {
   return (
     <div className="bg-gradient-to-r from-blue-50 to-purple-50 py-16">
       <div className="container mx-auto text-center mb-12">
-        <p className="text-gray-500 text-lg font-normal mb-2">BUILDING TEAM</p>
+        <p className="text-gray-500 text-lg font-bold mb-2">One Punch Coders</p>
         <h1 className="text-4xl font-extrabold text-gray-800">
           The Talented People Behind the Scenes of the OnePunch Coders
         </h1>
