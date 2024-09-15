@@ -21,6 +21,7 @@ import PatientsRecords from "./Pages/Admin/PatientsRecords";
 import Chat from "./Pages/Admin/Chat";
 import AssignPrescription from "./Pages/Admin/AssignPrescription";
 import ViewPatientRecordInfo from "./Pages/Admin/components/PatientRecords/Pages/ViewPatientRecordInfo";
+import PDashboard from "./Pages/Patient/PDashboard";
 
 function App() {
   return (
@@ -37,14 +38,20 @@ function App() {
         />
         <Route path="/clinic/register" element={<ClinicRegistration />} />
 
-               {/* Admin */}
-               <Route path="/clinic/dashboard" element={<AdminPanel>< Dashboard/></AdminPanel>} />
-        <Route path="/clinic/records" element={<AdminPanel>< PatientsRecords/></AdminPanel>} />
-        <Route path="/clinic/records/patient/:patientId" element={<AdminPanel><ViewPatientRecordInfo/></AdminPanel>} />
+        {/* Admin */}
+       <Route path="/clinic/dashboard" element={<AdminPanel>< Dashboard /></AdminPanel>} />
+        <Route path="/clinic/records" element={<AdminPanel>< PatientsRecords /></AdminPanel>} />
+        <Route path="/clinic/records/patient/:patientId" element={<AdminPanel><ViewPatientRecordInfo /></AdminPanel>} />
 
-        <Route path="/clinic/chat" element={<AdminPanel>< Chat/></AdminPanel>} />
-        <Route path="/clinic/prescription" element={<AdminPanel>< AssignPrescription/></AdminPanel>} />
-        <Route path="/clinic/profile" element={<AdminPanel>< Profile/></AdminPanel>} />
+        <Route path="/clinic/chat" element={<AdminPanel>< Chat /></AdminPanel>} />
+        <Route path="/clinic/prescription" element={<AdminPanel>< AssignPrescription /></AdminPanel>} />
+        <Route path="/clinic/profile" element={<AdminPanel>< Profile /></AdminPanel>} />
+
+        {/* Patient Routes */}
+
+        <Route path="/patient/dashboard" element={<AdminPanel>< PDashboard /></AdminPanel>} />
+        {/* <Route path="/patient/reports" element={<AdminPanel>< PatientsReports /></AdminPanel>} /> */}
+        <Route path="/clinic/records/patient/:patientId" element={<AdminPanel><ViewPatientRecordInfo /></AdminPanel>} />
 
       </Routes>
       <ToastContainer />
