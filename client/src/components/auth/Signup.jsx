@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { FaEye, FaRegEyeSlash } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import Navbar from "../../Pages/Home/components/Navbar"
 import axiosInstance from '../../axiosConfig/axiosConfig';
 import Otp from './VerifyOtp';
-import { Link } from 'react-router-dom';
 
 const SignUp = () => {
     const [formData, setFormData] = useState({
-        name: '',
+        fullName: '',
         email: '',
         password: '',
         mobileNo: '',
         age: '',
+        role: ''
     });
     const [otpsent, setOtpSent] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -29,8 +31,8 @@ const SignUp = () => {
         e.preventDefault();
 
         // Client-side validation
-        const { name, email, password, mobileNo, age } = formData;
-        if (!name || !email || !password || !mobileNo || !age) {
+        const { fullName, email, password, mobileNo, age, role } = formData;
+        if (!fullName || !email || !password || !mobileNo || !age || !role) {
             toast.error("All fields are required");
             return;
         }
@@ -55,28 +57,54 @@ const SignUp = () => {
     };
 
     return (
-        <div className='overflow-hidden'>
-            <div className='p-2 my-5'>
-                <div className='text-gray-800 max-w-xl mx-auto p-5 shadow-lg rounded-lg'>
-                    {!otpsent ? (
-                        <>
-                            <h1 className='text-center text-2xl md:text-3xl mb-8 font-semibold text-gray-800'>Join Our Community</h1>
-                            <form className='space-y-4' onSubmit={handleSubmit}>
+        <div className='overflow-hidden relative'>
+            <Navbar/>
+            <div className='grid lg:grid-cols-2 overflow-clip'>
+                {/* IMG */}
+                <div className='min-h-full w-full overflow-hidden'>
+                    <img
+                        src="https://static.vecteezy.com/system/resources/previews/001/991/652/non_2x/sign-in-page-flat-design-concept-illustration-icon-account-login-user-login-abstract-metaphor-can-use-for-landing-page-mobile-app-ui-posters-banners-free-vector.jpg"
+                        alt="" className='object-cover h-full w-full' />
+                </div>
+
+                {/* FORM */}
+                <div className='p-2 my-5'>
+                    <h1 className='text-center text-2xl md:text-3xl mb-8 font-semibold text-gray-800'>Easy Sign Up</h1>
+                    <div className='text-gray-800 max-w-md mx-auto shadow-lg p-5 rounded-lg'>
+                        {!otpsent ? (
+                            <form className='flex flex-col gap-3' onSubmit={handleSubmit}>
                                 <div className='space-y-2'>
-                                    <label htmlFor="name" className='block text-sm px-2 font-medium text-gray-700'>
+                                    <label htmlFor="fullName" className='block text-sm px-2 font-medium text-gray-700'>
                                         Full Name <span className='text-red-500'>*</span>
                                     </label>
                                     <input
                                         type="text"
                                         autoComplete="off"
-                                        className='outline-none border-b px-4 py-2 text-gray-900 w-full'
-                                        name="name"
-                                        id="name"
+                                        className='bg-gray-100 rounded-md px-4 py-2 text-gray-900 w-full'
+                                        name="fullName"
+                                        id="fullName"
                                         required
                                         placeholder='Full Name'
-                                        value={formData.name}
+                                        value={formData.fullName}
                                         onChange={handleChange}
                                     />
+                                </div>
+
+                                <div className='space-y-2'>
+                                    <label htmlFor="role" className='block text-sm px-2 font-medium text-gray-700'>
+                                        Role <span className='text-red-500'>*</span>
+                                    </label>
+                                    <select
+                                        name="role"
+                                        required
+                                        value={formData.role}
+                                        onChange={handleChange}
+                                        className='bg-gray-100 rounded-md px-4 py-2 text-gray-900 w-full'
+                                    >
+                                        <option value="">Select Role</option>
+                                        <option value="author">Author</option>
+                                        <option value="reader">Reader</option>
+                                    </select>
                                 </div>
 
                                 <div className='space-y-2'>
@@ -86,7 +114,7 @@ const SignUp = () => {
                                     <input
                                         type="email"
                                         autoComplete="off"
-                                        className='outline-none border-b px-4 py-2 text-gray-900 w-full'
+                                        className='bg-gray-100 rounded-md px-4 py-2 text-gray-900 w-full'
                                         name="email"
                                         id="email"
                                         required
@@ -104,7 +132,7 @@ const SignUp = () => {
                                         <input
                                             type="text"
                                             autoComplete="off"
-                                            className='outline-none border-b px-4 py-2 text-gray-900 w-full'
+                                            className='bg-gray-100 rounded-md px-4 py-2 text-gray-900 w-full'
                                             name="mobileNo"
                                             id="mobileNo"
                                             required
@@ -120,7 +148,7 @@ const SignUp = () => {
                                         <input
                                             type="number"
                                             autoComplete="off"
-                                            className='outline-none border-b px-4 py-2 text-gray-900 w-full'
+                                            className='bg-gray-100 rounded-md px-4 py-2 text-gray-900 w-full'
                                             name="age"
                                             id="age"
                                             required
@@ -138,7 +166,7 @@ const SignUp = () => {
                                     <input
                                         type={showPassword ? 'text' : 'password'}
                                         autoComplete="off"
-                                        className='outline-none border-b px-4 py-2 text-gray-900 w-full'
+                                        className='bg-gray-100 rounded-md px-4 py-2 text-gray-900 w-full'
                                         name="password"
                                         id="password"
                                         required
@@ -176,20 +204,21 @@ const SignUp = () => {
                                 <div className='text-center mt-4'>
                                     Already have an account?{' '}
                                     <Link to="/login" className='text-blue-500'>
-                                        login{' '}
+                                        Login{' '}
                                     </Link>
                                 </div>
 
                                 <div className='text-center mt-4'>
-                                    <Link to="/doc/Singup" className='text-blue-500'>
-                                        Join as a Doctor?{' '}
+                                    Are you a RagPicker?{' '}
+                                    <Link to="/ragpickerregister" className='text-blue-500'>
+                                        Register here{' '}
                                     </Link>
                                 </div>
                             </form>
-                        </>
-                    ) : (
-                        <Otp formData={formData} />
-                    )}
+                        ) : (
+                            <Otp formData={formData} />
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
