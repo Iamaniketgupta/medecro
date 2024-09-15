@@ -6,6 +6,7 @@ import { FaClock, FaPhone } from "react-icons/fa";
 import { Clock, LucideStethoscope } from "lucide-react";
 import ReviewSection from "./components/ReviewSection";
 import { FaUserDoctor } from "react-icons/fa6";
+import LiveMap from "../../Map/LiveMap";
 
 const ClinicProfileView = () => {
     return (
@@ -35,9 +36,9 @@ const ClinicProfileView = () => {
                             </div>
                         </div>
                         {/* Clinic Location Map */}
-                        <div className='h-42 bg-black flex-1 rounded overflow-clip'>
-                            <img src="https://media.wired.com/photos/5a6a61938c669c70314b300d/master/pass/Google-Map-US_10.jpg"
-                                className=' h-38 w-full object-cover rounded-lg shadow-md' alt="" />
+                        <div className='w-[500px] h-[400px] mb-6'>
+
+                                <LiveMap />
                             {/* Map Component */}
                         </div>
 

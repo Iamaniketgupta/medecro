@@ -28,6 +28,7 @@ import PAdminPanel from "./Pages/Patient/PAdminPanel";
 import Reports from "./Pages/Patient/Reports";
 import ViewReport from "./Pages/Patient/ViewReport";
 import PChat from "./Pages/Patient/Chat";
+import AllClinics from "./Pages/Home/components/AllClinics";
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
     <div>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/all/clinics" element={<AllClinics />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/doc/login" element={<DocLogin />} />
