@@ -20,9 +20,14 @@ import Profile from "./Pages/Admin/Profile";
 import PatientsRecords from "./Pages/Admin/PatientsRecords";
 import Chat from "./Pages/Admin/Chat";
 import AssignPrescription from "./Pages/Admin/AssignPrescription";
-import ViewPatientRecordInfo from './Pages/Admin/components/PatientRecords/Pages/ViewPatientRecordInfo';
+import ViewPatientRecordInfo from "./Pages/Admin/components/PatientRecords/Pages/ViewPatientRecordInfo";
+import PDashboard from "./Pages/Patient/PDashboard";
 import ChatInbox from "./Pages/Admin/components/Chat/ChatInbox";
 import ChatPage from "./Pages/Admin/components/Chat/ChatPage";
+import PAdminPanel from "./Pages/Patient/PAdminPanel";
+import Reports from "./Pages/Patient/Reports";
+import ViewReport from "./Pages/Patient/ViewReport";
+import PChat from "./Pages/Patient/Chat";
 
 
 function App() {
@@ -40,17 +45,22 @@ function App() {
         />
         <Route path="/clinic/register" element={<ClinicRegistration />} />
 
-
-        
         {/* Admin */}
-        <Route path="/clinic/dashboard" element={<AdminPanel>< Dashboard/></AdminPanel>} />
-        <Route path="/clinic/records" element={<AdminPanel>< PatientsRecords/></AdminPanel>} />
-        <Route path="/clinic/records/patient/:patientId" element={<AdminPanel><ViewPatientRecordInfo/></AdminPanel>} />
+       <Route path="/clinic/dashboard" element={<AdminPanel>< Dashboard /></AdminPanel>} />
+        <Route path="/clinic/records" element={<AdminPanel>< PatientsRecords /></AdminPanel>} />
+        <Route path="/clinic/records/patient/:patientId" element={<AdminPanel><ViewPatientRecordInfo /></AdminPanel>} />
 
+        <Route path="/clinic/chat" element={<AdminPanel>< Chat /></AdminPanel>} />
+        <Route path="/clinic/prescription" element={<AdminPanel>< AssignPrescription /></AdminPanel>} />
+        <Route path="/clinic/profile" element={<AdminPanel>< Profile /></AdminPanel>} />
         <Route path="/clinic/chat" element={<AdminPanel>< Chat/></AdminPanel>} />
         <Route path="/clinic/chat/:id" element={<AdminPanel>< ChatPage/></AdminPanel>} />
-        <Route path="/clinic/prescription" element={<AdminPanel>< AssignPrescription/></AdminPanel>} />
-        <Route path="/clinic/profile" element={<AdminPanel>< Profile/></AdminPanel>} />
+        {/* Patient Routes */}
+
+        <Route path="/patient/dashboard" element={<PAdminPanel>< PDashboard /></PAdminPanel>} />
+        <Route path="/patient/reports" element={<PAdminPanel>< Reports /></PAdminPanel>} />
+        <Route path="/patient/chat" element={<PAdminPanel>< PChat /></PAdminPanel>} />
+        <Route path="/patient/report/:reportId" element={<PAdminPanel><ViewReport /></PAdminPanel>} />
 
 
                                                  
