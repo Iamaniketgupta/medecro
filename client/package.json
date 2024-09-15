@@ -26,6 +26,8 @@
     "react-router-dom": "^6.26.2",
     "react-toastify": "^10.0.5",
     "recoil": "^0.7.7",
+    "simple-peer": "^9.11.1",
+    "socket.io-client": "^4.7.5",
     "universal-cookie": "^7.2.0"
   },
   "devDependencies": {
