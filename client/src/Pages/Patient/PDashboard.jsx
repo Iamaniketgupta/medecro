@@ -1,99 +1,240 @@
-import React from 'react';
-import { FaCalendarCheck, FaFileMedical, FaHospitalUser } from 'react-icons/fa6';
-import { FaUserNurse } from 'react-icons/fa';
+import React, { useEffect, useState } from 'react';
+import { FaPhone, FaPlusSquare } from 'react-icons/fa';
+import { FaFileCirclePlus, FaUserDoctor } from 'react-icons/fa6';
+import { MdPayment } from 'react-icons/md';
+import { TbCalendarRepeat } from 'react-icons/tb';
+import { Link } from 'react-router-dom';
+import LiveMap from '../../Map/LiveMap';
 
 const PDashboard = () => {
+    // Statistics cards
     const statsTabs = [
         {
             id: 1,
             title: "Upcoming Appointments",
             value: "3",
-            icon: <FaCalendarCheck className='' />
+            icon: <TbCalendarRepeat className='' />
         },
         {
             id: 2,
             title: "Total Consultations",
             value: "15",
-            icon: <FaFileMedical />
+            icon: <FaPlusSquare />
+
         },
         {
             id: 3,
             title: "Preferred Doctors",
             value: "5",
-            icon: <FaUserNurse />
+            icon: <FaUserDoctor />
+
         },
         {
             id: 4,
-            title: "Total Clinics",
-            value: "2",
-            icon: <FaHospitalUser />
+            title: "Pending Payments",
+            value: "₹9,500",
+            icon: <MdPayment />
         },
     ];
 
-    const doctors = [
+    // Appointments data
+    const appointments = [
         {
             id: 1,
-            img: 'https://plus.unsplash.com/premium_photo-1682145291930-43b73e27446e?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZG9jdG9yfGVufDB8fDB8fHww',
-            name: "Dr. Suresh Patel",
-            specialization: "Cardiologist",
-            phone: `+91 9876543210`,
+            doctor: "Dr. Suresh Patel",
+            date: "15th Sept 2024",
+            time: "10:30 AM",
+            mode: 'online',
+            status: "Confirmed",
+        },
+
+    ];
+    const appointments2 = [
+        {
+            id: 1,
+            clinic: 'Sabarmati Clinic',
+            address: 'Dharmatala, Sabarmati, Nagpur, Maharashtra 440022',
+            doctor: "Dr. Anita Sharma",
+            date: "20th Sept 2024",
+            time: "02:00 PM",
+            mode: 'on site',
+            status: "Pending Payment",
+        },
+
+    ];
+
+    // Reports data
+    const reports = [
+        {
+            id: 1,
+            title: "Blood Test Report",
+            date: "10th Sept 2024",
+            doctor: "Dr. Suresh Patel",
+            link: "#",
         },
         {
             id: 2,
-            img: 'https://plus.unsplash.com/premium_photo-1673547484865-199b16c93a5e?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            name: "Dr. Anita Sharma",
-            specialization: "Pediatrician",
-            phone: `+91 9876543211`,
+            title: "X-Ray Report",
+            date: "12th Sept 2024",
+            doctor: "Dr. Anita Sharma",
+            link: "#",
         },
     ];
+    const [timers, setTimers] = useState({});
 
+    // Initialize countdown timers for each appointment
+    useEffect(() => {
+        const initTimers = appointments.reduce((acc, appointment) => {
+            acc[appointment.id] = 60; // Set each timer to 60 seconds
+            return acc;
+        }, {});
+        setTimers(initTimers);
+    }, [appointments]);
+
+    // Countdown logic
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setTimers((prevTimers) => {
+                const newTimers = { ...prevTimers };
+                Object.keys(newTimers).forEach((id) => {
+                    if (newTimers[id] > 0) {
+                        newTimers[id] -= 1;
+                    }
+                });
+                return newTimers;
+            });
+        }, 1000);
+
+        return () => clearInterval(intervalId);
+    }, []);
     return (
         <div className='relative pb-10'>
-            <h1 className="md:text-2xl text-lg max-sm:px-3 font-semibold mb-5  opacity-70">Patient Dashboard</h1>
+            <h1 className="md:text-2xl text-lg max-sm:px-3 font-semibold mb-5 opacity-70">Patient Dashboard</h1>
 
             {/* Stats Section */}
             <div className='flex justify-around flex-wrap gap-4 p-3'>
-                {
-                    statsTabs.map((i) =>
-                        <div key={i.id} className='bg-white flex-1 rounded-lg shadow-lg flex min-w-46 p-4 md:w-[260px] w-[180px] py-5 justify-between gap-5 items-center'>
-                            <div className='flex-grow'>
-                                <h3 className='text-gray-600 font-semibold'>{i.title}</h3>
-                                <p className='md:text-3xl text-xl font-bold text-gray-900'>{i.value}</p>
-                            </div>
-                            <div className='bg-gradient-to-r p-1 text-white text-5xl rounded-md from-blue-500 to-blue-800'>
-                                {i.icon}
-                            </div>
+                {statsTabs.map((i) => (
+                    <div key={i.id} className='bg-white flex-1 rounded-lg shadow-lg flex min-w-46 p-4 md:w-[260px] w-[180px] py-5 justify-between gap-5 items-center'>
+                        <div className='flex-grow'>
+                            <h3 className='text-gray-600 font-semibold'>{i.title}</h3>
+                            <p className='md:text-3xl text-xl font-bold text-gray-900'>{i.value}</p>
                         </div>
-                    )}
+                        <div className='bg-gradient-to-r p-1 text-white text-5xl rounded-md from-blue-500 to-blue-800'>
+                            {i.icon}
+                        </div>
+                    </div>
+                ))}
             </div>
 
-            {/* My Doctors Section */}
-            {/* <div className='flex gap-1 items-center'>
-                <h2 className='px-5 my-4 text-2xl font-semibold text-gray-600'>My Doctors</h2>
-                <p>{doctors.length}/5</p>
-                <button className='bg-blue-500 opacity-35 px-4 py-1 rounded-md text-white font-semibold cursor-not-allowed mx-4'>Add Doctor</button>
-            </div> */}
+            <br />
+            <hr />
+            {/* Appointments Section */}
+            <div className='my-6'>
+      <h2 className='px-5 text-xl font-semibold text-gray-600 flex items-center gap-4'>
+        1:1 Upcoming Appointments <div className='bg-red-500 animate-ping w-2 h-2 rounded-full'></div>
+      </h2>
+      <div className='flex-wrap gap-4 p-3 grid grid-cols-3'>
+        {appointments.map((appointment) => (
+          <div key={appointment.id} className='bg-white flex-1 rounded-lg shadow-lg p-4'>
+            <h3 className='text-gray-800'>{appointment.doctor}</h3>
+            <h3 className='text-gray-800'>{appointment.mode}</h3>
+            <p className='text-gray-600'>
+              {appointment.date} at {appointment.time}
+            </p>
+            <p className={`text-sm ${appointment.status === 'Pending Payment' ? 'text-red-500' : 'text-green-500'}`}>
+              {appointment.status}
+            </p>
+<div className='flex items-center justify-between '>
 
-            {/* <div className='flex flex-wrap gap-4 p-3'>
-                {
-                    doctors.map((i) =>
-                        <div key={i.id} className='bg-white hover:bg-gray-50 cursor-pointer flex-1 max-w-[500px] rounded-lg shadow-lg flex min-w-46 p-4 md:w-[260px] w-[180px] py-5 justify-between gap-5 items-center'>
-                            <img src={i.img} className='rounded-md w-20 md:w-40 h-32 object-cover' alt="doctor profile" />
-                            <div className='flex-grow'>
-                                <h3 className='text-gray-800 font-semibold'>{i.name}</h3>
-                                <p className='text-gray-900'>{i.specialization}</p>
-                                <p className='text-gray-900'>{i.phone}</p>
+<button
+              className={`bg-indigo-300 text-white px-3 py-1 rounded-md my-1 flex items-center gap-3 ${timers[appointment.id] > 0 ? 'opacity-50 cursor-not-allowed' : 'opacity-100'}`}
+              disabled={timers[appointment.id] > 0} // Disable button based on timer
+            //   onClick={() => console.log('Meeting started!')}
+            >
+              Meet <FaPhone />
+            </button>
+
+            <>
+            {timers[appointment.id] > 0 ? (
+              <p className='text-gray-500 text-sm'>Meeting starts in {timers[appointment.id]}s</p>
+            ) : (
+              <p className='text-gray-500 text-sm'>Ready to meet</p>
+            )}
+
+            </>
+</div>
+            {/* Display Countdown Timer */}
+
+           
+          </div>
+        ))}
+      </div>
+    </div>
+
+            {/* Appointments Section */}
+            <div className='my-6'>
+                <h2 className='px-5 text-xl font-semibold text-gray-600 flex items-center gap-3'>Onsite Appointments  <div className='bg-red-500 animate-ping w-2 h-2 rounded-full'></div></h2>
+                <div className=' flex-wrap gap-4 p-3 grid grid-cols-2'>
+                    {appointments2.map((appointment) => (
+                        <div key={appointment.id} className='bg-white flex-1 rounded-lg shadow-lg p-4 flex gap-3 justify-between'>
+                            <div>
+
+                                {appointment.clinic &&
+                                    <h3 className='text-gray-800 font-semibold'>{appointment.clinic}</h3>
+                                }
+                                {appointment.address &&
+                                    <h3 className='text-gray-800 '>{appointment.address}</h3>
+                                }
+                                <h3 className='text-gray-800 '>{appointment.doctor}</h3>
+                                <h3 className='text-gray-800 '>{appointment.mode}</h3>
+                                <p className='text-gray-600'>{appointment.date} at {appointment.time}</p>
+                                <p className={`text-sm ${appointment.status === 'Pending Payment' ? 'text-red-500' : 'text-green-500'}`}>{appointment.status}</p>
+                            </div>
+
+                            <div className='w-52 h-full '>
+                                <LiveMap />
                             </div>
                         </div>
-                    )}
-            </div> */}
 
-            {/* Other Sections: Future or Ongoing */}
-            <div className='grid md:grid-cols-2 gap-10 my-4 px-3'>
-                {/* Sections for appointments, reports, etc., can be added here */}
+                    ))}
+                </div>
+            </div>
+
+            <hr />
+            {/* Reports Section */}
+            <div className='my-6'>
+                <h2 className='px-5 text-xl font-semibold text-gray-600 flex gap-4 items-center'>My Reports <FaFileCirclePlus className='text-red-500' /></h2>
+                <div className='flex flex-wrap gap-4 p-3'>
+
+                    {reports.map((report) => (
+                        <div key={report.id} className='bg-white flex-1 rounded-lg shadow-lg p-4'>
+
+
+                            <h3 className='text-gray-800 font-semibold'>{report.title}</h3>
+                            <p className='text-gray-600'>Appointment : 9th Aug 2024</p>
+                            <p className='text-gray-600'>Type : Physical ( on Clinic )</p>
+                            <p className='text-gray-600'>Issued by {report.doctor} on {report.date}</p>
+                            <br />
+                            <a href={report.link} className='text-blue-500 hover:underline'>Download Report</a>
+                            <Link href={''} className='text-green-500 font-semibold hover:underline mx-4'>Prescription</Link>
+                            <button className=' hover:bg-indigo-700 bg-indigo-500 px-3 text-white rounded-full py-1 mx-5'>Ask Ai Summarizer</button>
+
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <hr />
+            {/* Pending Payments Section */}
+            <div className='my-6'>
+                <h2 className='px-5 text-2xl font-semibold text-gray-600'>Pending Payments</h2>
+                <div className='bg-white rounded-lg shadow-lg p-4'>
+                    <p className='text-gray-600'>You have pending payments totaling <span className='font-bold text-gray-900'>₹9,500</span>.</p>
+                    <button className='bg-blue-500 text-white px-4 py-2 rounded-md mt-3'>Pay Now</button>
+                </div>
             </div>
         </div>
     );
-}
+};
 
 export default PDashboard;

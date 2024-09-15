@@ -28,34 +28,28 @@ const SideBar = () => {
     const navlist = [
         {
             title: 'Dashboard',
-            link: `/clinic/dashboard`,
+            link: `/patient/dashboard`,
             icon: <MdDashboard className='text-xl max-sm:text-sm' />
         },
       
     
         {
             title: 'Patient Records',
-            link: `/clinic/records`,
+            link: `/patient/reports`,
             icon: <FaFolderOpen className='text-xl max-sm:text-sm' />
         },
         {
             title: 'Chat and Calls',
-            link: `/clinic/chat`,
+            link: `/patient/chat`,
             icon: <IoChatboxEllipses className='text-xl max-sm:text-sm' />
         },
-        {
-            title: 'Prescriptions',
-            link: `/clinic/prescription`,
-            icon: <FaPersonCirclePlus className='text-xl max-sm:text-sm' />
-        },
-      
-      
         // {
-        //     title: 'Settings',
-        //     link: `/pilot/settings/${currentUser?.fullName.toLowerCase().replace(" ","-")}`,
-        //     icon: <MdOutlineSettings className='text-xl max-sm:text-sm' />
+        //     title: 'Prescriptions',
+        //     link: `/patient/prescription`,
+        //     icon: <FaPersonCirclePlus className='text-xl max-sm:text-sm' />
         // },
-  
+      
+      
  
      
     ];
