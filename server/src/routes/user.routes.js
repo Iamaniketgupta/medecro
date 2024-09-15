@@ -7,7 +7,8 @@ import {
     getRefreshToken,
     updateAvatar, 
     addDoctorToUser, 
-    removeDoctorFromUser 
+    removeDoctorFromUser ,
+    getuserbyid
 } from '../controllers/user.controller.js';
 import { upload } from "../middlewares/multer.middleware.js";
 
@@ -17,6 +18,7 @@ const router = Router();
 router.post('/register', initiateRegister);
 router.post('/verifyOtp', verifyOtp);
 router.post('/login', login);
+router.get('/user/:id', getuserbyid);
 
 // Route to refresh token
 router.get('/refresh-token', getRefreshToken);

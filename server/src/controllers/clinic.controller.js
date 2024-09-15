@@ -30,8 +30,7 @@ const createClinic = asyncHandler(async (req, res) => {
         images = uploadResults.map(result => result.secure_url);
     }
 
-    console.log(images)
-
+    
     const clinic = new Clinic({
         name,
         address:address1,
@@ -162,6 +161,8 @@ const updateSchedule = asyncHandler(async (req, res) => {
 
     res.status(200).json(new ApiResponse(200, schedule, "Schedule updated successfully"));
 });
+
+
 
 export {
     createClinic,

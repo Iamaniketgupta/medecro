@@ -6,6 +6,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadToCloudinary, deleteFromCloudinary, publicId } from '../utils/cloudinary.js';
+import { User } from "../models/user.model.js";
 
 const tempDoctorStore = {};
 
@@ -216,10 +217,38 @@ const updateAvatar = asyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponse(200, doctor, 'Avatar updated successfully'));
 });
 
+const getPatients = asyncHandler(async (req, res) => {
+    const doctorId = req.user._id;
+
+    // Check if the doctor exists
+    const doctor = await Doctor.findById(doctorId);
+    if (!doctor) {
+        throw new ApiError(404, 'Doctor not found');
+    }
+
+    // Find patients where the doctor's ID is in the 'doctors' array
+    const patients = await User.find({ doctors: { $in: [doctor._id] } });
+
+    res.status(200).json(new ApiResponse(200, patients, 'Patients retrieved successfully'));
+});
+
+const getDoctorById = asyncHandler(async (req, res) => {
+    const {doctorId} = req.params;
+    const doctor = await Doctor.findById(doctorId); // Replace 'doctorId' with the actual ID of the doctor you want to retrieve     
+
+    if (!doctor) {
+        throw new ApiError(404, 'Doctor not found');
+    }
+
+    res.status(200).json(new ApiResponse(200, doctor, 'Doctor retrieved successfully'));
+});
+
 export {
     initiateRegister,
     verifyOtp,
     login,
     getRefreshToken,
     updateAvatar,
+    getPatients,
+    getDoctorById
 };
