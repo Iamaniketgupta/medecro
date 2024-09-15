@@ -1,6 +1,5 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-// import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
 
 import { navItems } from "../../../constants";
@@ -8,13 +7,11 @@ import { navItems } from "../../../constants";
 const Navbar = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
-
   const toggleNavbar = () => {
     setMobileDrawerOpen(!mobileDrawerOpen);
   };
 
   const handleLogout = () => {
-
     window.location.href = "/login";
   };
 
@@ -23,12 +20,12 @@ const Navbar = () => {
       <div className="container px-4 mx-auto relative lg:text-sm">
         <div className="flex justify-between items-center">
           <Link to={'/'} className="flex items-center flex-shrink-0">
-            {/* <img className="h-10 w-10 mr-2" src={logo} alt="Logo" /> */}
             <div
               className={`text-2xl text-blue-600 font-bold ${!open && "hidden"}`}
             >
-              🩺<span className='text-gray-700'>Clinic</span>  Net
-            </div>          </Link>
+              🩺<span className='text-gray-700'>Clinic</span> Net
+            </div>
+          </Link>
           <ul className="hidden lg:flex ml-14 space-x-12">
             {navItems.map((item, index) => (
               <li key={index}>
@@ -72,18 +69,6 @@ const Navbar = () => {
               ))}
             </ul>
             <div className="flex space-x-6">
-              {/* {currentUser ? (
-                <button
-                  onClick={handleLogout}
-                  className="py-2 px-3 border rounded-md"
-                >
-                  Log Out
-                </button>
-              ) : (
-                <Link to="/login" className="py-2 px-3 border rounded-md">
-                  Log In
-                </Link>
-              )} */}
               <button
                 onClick={handleLogout}
                 className="py-2 px-3 border rounded-md"

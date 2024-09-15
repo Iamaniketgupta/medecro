@@ -14,8 +14,7 @@ import { GlobeLock } from "lucide-react";
 
 export const navItems = [
   { label: "Features", href: "#" },
-  { label: "All Stories", href: "/stories" },
-  // { label: "Pricing", href: "#" },
+  { label: "Pricing", href: "#" },
   { label: "Testimonials", href: "#" },
 ];
 
@@ -30,7 +29,7 @@ export const testimonials = [
     user: "Jane Smith",
     company: "Blue Horizon Technologies",
     // image: user2,
-    text: "I couldn't be happier with the outcome of our project. The team's creativity and problem-solving skills were instrumental in bringing our vision to life",
+    text: "I couldn't be happier with the outcome of our project. The team's creativity and problem-solving skills were instrumental in bringing our vision to life.",
   },
   {
     user: "David Johnson",
@@ -61,62 +60,62 @@ export const testimonials = [
 export const features = [
   {
     icon: <BotMessageSquare />,
-    text: "User Friendly Smart Interface",
+    text: "Effortless Patient Management",
     description:
-      "Easily write and arrange your Stories and chapters ",
+      "Say goodbye to the hassle of clinic appointments and outdated offline ads. Manage patient records with ease.",
   },
   {
     icon: <Fingerprint />,
-    text: "Multi-Platform Compatibility",
+    text: "Streamlined Appointments",
     description:
-      "Run seamlessly across multiple platforms, including mobile, desktop",
+      "Schedule and manage appointments seamlessly with our cutting-edge digital platform.",
   },
   {
     icon: <ShieldHalf />,
-    text: "Built-in AI Assistant",
+    text: "Advanced Security",
     description:
-      "Don't worry about the Content writing you will be having AI partner.",
+      "Ensure the confidentiality of patient information with top-tier security features.",
   },
   {
     icon: <BatteryCharging />,
-    text: "Real-Time Collaboration",
+    text: "Real-Time Updates",
     description:
-      "Now Collaborate with the other authors in real-time on Story projects.",
+      "Keep track of patient interactions and appointment statuses with real-time updates.",
   },
   {
     icon: <PlugZap />,
-    text: "Auto Save & Share it live in seconds",
+    text: "Instant Data Access",
     description:
-      "Manage your stories and chapters using auto save feature and draft Management for the work.",
+      "Access and share patient data instantly, reducing wait times and improving service delivery.",
   },
   {
     icon: <GlobeLock />,
-    text: "Analytics Dashboard",
+    text: "Comprehensive Analytics",
     description:
-      "Gain valuable insights into user interactions and behavior within your analytics dashboard.",
+      "Gain valuable insights into patient care and clinic performance with our analytics dashboard.",
   },
 ];
 
 export const checklistItems = [
   {
-    title: "Collaborative Story writing",
+    title: "Efficient Patient Record Management",
     description:
-      "Track the performance of your collaborators on story and gain insights into user behavior.",
+      "Manage and access patient records digitally to streamline clinic operations.",
   },
   {
-    title: "Read Stories for free",
+    title: "Seamless Appointment Scheduling",
     description:
-      "Read, Like and comment on your favourite story.",
+      "Schedule, modify, and manage patient appointments with ease.",
   },
   {
-    title: "AI Assistance to reduce time to write chapters",
+    title: "Enhanced Security Features",
     description:
-      "Track the performance of your VR apps and gain insights into user behavior.",
+      "Protect sensitive patient data with advanced security protocols.",
   },
   {
-    title: "Share work in minutes",
+    title: "Instant Data Sharing",
     description:
-      "Track the performance of your VR apps and gain insights into user behavior.",
+      "Share patient information quickly to improve communication and care.",
   },
 ];
 
@@ -125,30 +124,29 @@ export const pricingOptions = [
     title: "Free",
     price: "$0",
     features: [
-      "Private board sharing",
-      "5 Gb Storage",
-      "Web Analytics",
-      "Private Mode",
+      "Basic record management",
+      "Appointment scheduling",
+      "Standard analytics",
     ],
   },
   {
     title: "Pro",
     price: "$10",
     features: [
-      "Private board sharing",
-      "10 Gb Storage",
-      "Web Analytics (Advance)",
-      "Private Mode",
+      "Advanced record management",
+      "Priority support",
+      "Enhanced analytics",
+      "Additional security features",
     ],
   },
   {
     title: "Enterprise",
     price: "$200",
     features: [
-      "Private board sharing",
-      "Unlimited Storage",
-      "High Performance Network",
-      "Private Mode",
+      "Full record management suite",
+      "Dedicated support",
+      "Custom analytics solutions",
+      "Advanced security and compliance",
     ],
   },
 ];
