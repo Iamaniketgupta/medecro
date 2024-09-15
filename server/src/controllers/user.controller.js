@@ -37,18 +37,18 @@ const transporter = nodemailer.createTransport({
 // Initiate user register endpoint
 const initiateRegister = asyncHandler(async (req, res) => {
     console.log(req.body)
-    const { mobileNo, email, name, age, password } = req.body;
-    if (!mobileNo || !email || !name || !age || !password) {
+    const { mobileNo, email, fullName, age, password } = req.body;
+    if (!mobileNo || !email || !fullName || !age || !password) {
         throw new ApiError(400, "All fields are required");
     }
 
     const otp = generateOTP(4);
-    tempUserStore[email] = { mobileNo, email, name, age, password, otp };
+    tempUserStore[email] = { mobileNo, email, fullName, age, password, otp };
 
     const mailOptions = {
         from: process.env.EMAIL,
         to: email,
-        subject: `Hello! ${name}, It's a verification mail`,
+        subject: `Hello! ${fullName}, It's a verification mail`,
         html: `<strong>Your OTP code is: ${otp}</strong>`,
     };
 
@@ -75,12 +75,12 @@ const verifyOtp = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid OTP");
     }
 
-    const { mobileNo, name, age, address, password } = tempUser;
+    const { mobileNo,fullName, age, address, password } = tempUser;
 
     const user = await User.create({
         mobileNo,
         email,
-        name,
+       fullName,
         age,
         address,
         password

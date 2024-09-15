@@ -42,7 +42,7 @@ const Login = () => {
                 
                 dispatch(login({user:response.data?.data?.doctor  , type:"doctor"}))
 
-                navigate("/");
+                navigate("/clinic/dashboard");
             } else {
                 toast.error(error?.response?.data?.message || "Invalid Login. Please try again.");
             }
@@ -61,7 +61,9 @@ const Login = () => {
             <div className='p-2 my-10'>
                 <div className='text-gray-800 max-w-xl mx-auto p-5 shadow-lg rounded-lg'>
                     <h1 className='text-center text-2xl md:text-3xl mb-8 font-semibold text-gray-800'>Welcome Back Doctor👋</h1>
-                    <form className='flex flex-col gap-3' onSubmit={handleSubmit}>
+                    <form className='flex flex-col gap-3' onSubmit={()=>{
+                        navigate("/clinic/dashboard")
+                    }}>
                         <div className='space-y-2'>
                             <label htmlFor="email" className='block text-sm px-2 font-medium text-gray-700'>
                                 Email <span className='text-red-500'>*</span>
