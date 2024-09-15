@@ -1,11 +1,11 @@
 import React from 'react';
+import ChatInboxPage from './components/Chat/ChatInboxPage';
 
 const Chat = () => {
     return (
         <div className='relative pb-10'>
-        <h1 className="md:text-2xl text-lg max-sm:px-3 font-semibold mb-5  opacity-70"> Chat</h1>
-
-   
+        
+        <ChatInboxPage/>
 
     </div >
     );
