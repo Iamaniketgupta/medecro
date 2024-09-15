@@ -13,7 +13,7 @@ import { IoIosArrowDroprightCircle } from "react-icons/io";
 
 
 import Cookies from 'universal-cookie';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { SidebarState, userData } from '../../../atom/states';
 import { IoChatboxEllipses } from 'react-icons/io5';
@@ -100,7 +100,10 @@ const SideBar = () => {
             } title='Sign out' className=' flex my-1 hover:bg-blue-500 hover:text-white inset-x-0 w-[80%] mx-auto rounded-md p-2 cursor-pointer  text-gray-800 items-center gap-x-4 
                           bottom-10 absolute'>
                 <FaSignOutAlt className={`text-xl ${!open && "mx-auto"}`}/>
-                <span className={`${!open && "hidden"} origin-left text-md duration-200`}>
+                <span onClick={()=>{
+                    localStorage.removeItem("accessToken")
+                    navigate("/login")
+                }} className={`${!open && "hidden"} origin-left text-md duration-200`}>
                     Sign Out
                 </span>
 
