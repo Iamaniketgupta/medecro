@@ -10,7 +10,9 @@ createRoot(document.getElementById('root')).render(
   <BrowserRouter>
   
   <Provider store={store}> 
+    <RecoilRoot>
     <App />
+    </RecoilRoot>
     </Provider>
     </BrowserRouter>
 )
