@@ -10,7 +10,7 @@ import DocSignup from "./components/DoctorAuth/DocSignup";
 import "react-toastify/dist/ReactToastify.css";
 
 import SignUp from "./components/auth/Signup";
-import Login from "./Pages/Auth/Login/Login";
+import Login from "./components/auth/Login";
 import ClinicProfileView from "./Pages/Clinic/ClinicProfileView";
 import ClinicRegistration from "./components/clinic/ClinicRegisteration";
 import ProtectedRoute from "./components/ProtectedRoute";

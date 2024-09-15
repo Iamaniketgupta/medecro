@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import { MdOutlineSettings } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { MdDashboard } from "react-icons/md";
-import { FaChartLine } from "react-icons/fa6";
+import { FaChartLine, FaMessage, FaPersonCirclePlus } from "react-icons/fa6";
 import { TbDrone } from "react-icons/tb";
-import { FaRegFolder, FaSignOutAlt } from "react-icons/fa";
+import { FaFile, FaFolder, FaFolderOpen, FaRegFolder, FaSignOutAlt } from "react-icons/fa";
 
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 
@@ -15,31 +15,43 @@ import { IoIosArrowDroprightCircle } from "react-icons/io";
 import Cookies from 'universal-cookie';
 import { Link, useLocation } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import { SidebarState, userData } from '../../atom/states';
+import { SidebarState, userData } from '../../../atom/states';
+import { IoChatboxEllipses } from 'react-icons/io5';
 const cookies = new Cookies(null, { path: '/' });
 
 const SideBar = () => {
     
     const {pathname}= useLocation();
     const [currentUser,setCurrentUser] =useRecoilState(userData)
-    console.log(currentUser)
+
     const [open,setOpen] =useRecoilState(SidebarState);
     const navlist = [
         {
             title: 'Dashboard',
-            link: `/author/dashboard`,
+            link: `/clinic/dashboard`,
             icon: <MdDashboard className='text-xl max-sm:text-sm' />
+        },
+      
+    
+        {
+            title: 'Patient Records',
+            link: `/clinic/records`,
+            icon: <FaFolderOpen className='text-xl max-sm:text-sm' />
+        },
+        {
+            title: 'Chat and Calls',
+            link: `/clinic/chat`,
+            icon: <IoChatboxEllipses className='text-xl max-sm:text-sm' />
+        },
+        {
+            title: 'Prescriptions',
+            link: `/clinic/prescription`,
+            icon: <FaPersonCirclePlus className='text-xl max-sm:text-sm' />
         },
         {
             title: 'Profile',
-            link: `/author/profile`,
+            link: `/clinic/profile`,
             icon: <CgProfile className='text-xl max-sm:text-sm' />
-        },
-    
-        {
-            title: 'Collabors',
-            link: `/author/collabors`,
-            icon: <FaChartLine className='text-xl max-sm:text-sm' />
         },
       
         // {
@@ -64,7 +76,7 @@ const SideBar = () => {
                 <h1
                     className={`text-2xl text-blue-600 font-bold ${!open && "hidden"}`}
                 >
-                    Fiction Mania
+                  🩺<span className='text-gray-700'>Clinic</span>  Net 
                 </h1>
                 
             </div>
