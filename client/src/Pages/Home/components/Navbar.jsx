@@ -13,6 +13,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     window.location.href = "/login";
+    
   };
 
   return (
@@ -39,7 +40,7 @@ const Navbar = () => {
                 onClick={handleLogout}
                 className="py-2 px-3 border rounded-md"
               >
-                Log Out
+                Log in
               </button>
             ) : (
               <Link to={'/login'} className="py-2 px-3 border rounded-md">
@@ -73,7 +74,7 @@ const Navbar = () => {
                 onClick={handleLogout}
                 className="py-2 px-3 border rounded-md"
               >
-                Log Out
+                Log in
               </button>
               <Link
                 to="/signup"

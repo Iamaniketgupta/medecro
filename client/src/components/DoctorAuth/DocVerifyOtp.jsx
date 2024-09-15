@@ -30,7 +30,8 @@ const Otp = ({ setOtpSent,  formData  , type}) => {
                 console.log("respinse.data :",response.data)
                 localStorage.setItem("accessToken" , response.data?.data?.accessToken);
                 dispatch(login({user:response.data?.data?.doctor  , type:"doctor"}))
-                navigate("/")
+                
+                navigate("/clinic/dashboard");
                 // if(type === "user"){
                 //     const obj = {
                 //         user : response?.data?.data?.user,

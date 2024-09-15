@@ -13,7 +13,6 @@ const SignUp = () => {
         password: '',
         mobileNo: '',
         age: '',
-        role: ''
     });
     const [otpsent, setOtpSent] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -32,7 +31,7 @@ const SignUp = () => {
 
         // Client-side validation
         const { fullName, email, password, mobileNo, age, role } = formData;
-        if (!fullName || !email || !password || !mobileNo || !age || !role) {
+        if (!fullName || !email || !password || !mobileNo || !age) {
             toast.error("All fields are required");
             return;
         }
@@ -90,22 +89,6 @@ const SignUp = () => {
                                     />
                                 </div>
 
-                                <div className='space-y-2'>
-                                    <label htmlFor="role" className='block text-sm px-2 font-medium text-gray-700'>
-                                        Role <span className='text-red-500'>*</span>
-                                    </label>
-                                    <select
-                                        name="role"
-                                        required
-                                        value={formData.role}
-                                        onChange={handleChange}
-                                        className='bg-gray-100 rounded-md px-4 py-2 text-gray-900 w-full'
-                                    >
-                                        <option value="">Select Role</option>
-                                        <option value="author">Author</option>
-                                        <option value="reader">Reader</option>
-                                    </select>
-                                </div>
 
                                 <div className='space-y-2'>
                                     <label htmlFor="email" className='block text-sm px-2 font-medium text-gray-700'>
@@ -208,12 +191,7 @@ const SignUp = () => {
                                     </Link>
                                 </div>
 
-                                <div className='text-center mt-4'>
-                                    Are you a RagPicker?{' '}
-                                    <Link to="/ragpickerregister" className='text-blue-500'>
-                                        Register here{' '}
-                                    </Link>
-                                </div>
+
                             </form>
                         ) : (
                             <Otp formData={formData} />
