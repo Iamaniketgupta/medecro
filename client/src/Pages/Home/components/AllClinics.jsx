@@ -113,6 +113,8 @@ const AllClinics = () => {
             <h1 className="text-3xl text-gray-600 font-semibold mb-6 text-center">All Clinics</h1>
 
             {/* Search Input */}
+            <div className='flex items-center my-4 justify-between'>
+
             <input
                 type="text"
                 placeholder="Search clinics by name..."
@@ -120,6 +122,15 @@ const AllClinics = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
             />
+
+
+
+            <select name="" className='w-[250px] p-2  bg-gray-50' id="">
+                <option value="">Sort By</option>
+                <option value="">Distance</option>
+                <option value="">Fee</option>
+            </select>
+            </div>
 
             {/* Clinic Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
