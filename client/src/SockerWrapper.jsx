@@ -12,7 +12,7 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     const socketInstance = io('http://localhost:3000'); // Replace with your socket server URL
     setSocket(socketInstance);
-    console.log(socketInstance)
+    
 
     if (user?._id) {
       socketInstance.emit('register', user?._id);

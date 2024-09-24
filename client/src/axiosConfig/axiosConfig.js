@@ -10,6 +10,7 @@ const axiosInstance = axios.create({
   baseURL: 'http://localhost:3000',
 });
 
+
 // Set the Authorization header for every request
 axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 

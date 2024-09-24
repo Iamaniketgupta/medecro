@@ -104,7 +104,7 @@ const ClinicForm = ({ clinic }) => {
 
         try {
             const response = await axiosInstance.post("/clinic/create", form);
-            console.log("response", response);
+            
             if (response.data) {
                 toast.success("Clinic created successfully");
             } else {

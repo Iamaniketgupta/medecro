@@ -13,7 +13,7 @@ import { IoIosArrowDroprightCircle } from "react-icons/io";
 
 
 import Cookies from 'universal-cookie';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { SidebarState, userData } from '../../../atom/states';
 import { IoChatboxEllipses } from 'react-icons/io5';
@@ -23,6 +23,7 @@ const SideBar = () => {
     
     const {pathname}= useLocation();
     const [currentUser,setCurrentUser] =useRecoilState(userData)
+    const navigate = useNavigate();
 
     const [open,setOpen] =useRecoilState(SidebarState);
     const navlist = [
@@ -62,7 +63,9 @@ const SideBar = () => {
                   rounded-full ${!open && "rotate-180"}`}
                 onClick={() => setOpen(!open)}
             />
-            <div className="flex gap-x-4 items-center">
+            <div className="flex gap-x-4 items-center" onClick={()=>{
+                navigate("/")
+            }} >
                 <h1
                     className={`text-2xl text-blue-600 font-bold ${!open && "hidden"}`}
                 >

@@ -25,6 +25,7 @@ const SideBar = () => {
     const [currentUser,setCurrentUser] =useRecoilState(userData)
 
     const [open,setOpen] =useRecoilState(SidebarState);
+    const navigate = useNavigate()
     const navlist = [
         {
             title: 'Dashboard',
@@ -72,11 +73,14 @@ const SideBar = () => {
                   rounded-full ${!open && "rotate-180"}`}
                 onClick={() => setOpen(!open)}
             />
-            <div className="flex gap-x-4 items-center">
+            <div className="flex gap-x-4 items-center"  >
                 <h1
                     className={`text-2xl text-blue-600 font-bold ${!open && "hidden"}`}
+                    onClick={()=>{
+                        navigate('/')
+                    }}
                 >
-                  🩺<span className='text-gray-700'>Clinic</span>  Net 
+                  🩺<span className='text-gray-700' >Clinic</span>  Net 
                 </h1>
                 
             </div>

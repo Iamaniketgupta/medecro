@@ -88,7 +88,7 @@ const PDashboard = () => {
             acc[appointment.id] = 60; // Set each timer to 60 seconds
             return acc;
         }, {});
-        setTimers(initTimers);
+        // setTimers(initTimers);
     }, [appointments]);
 
     // Countdown logic

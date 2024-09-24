@@ -30,9 +30,13 @@ import ViewReport from "./Pages/Patient/ViewReport";
 import PChat from "./Pages/Patient/Chat";
 import AllClinics from "./Pages/Home/components/AllClinics";
 import ReportSum from "./Pages/Home/components/ReportSum";
+import { useSelector } from "react-redux";
+import BookAppointment from "./Pages/Patient/AppointmentBooking";
 
 
 function App() {
+  const user = useSelector(state=>state.auth.user);
+  
   return (
     <div>
       <Routes>
@@ -46,6 +50,8 @@ function App() {
           path="/clinic/profile/:clinicId"
           element={<ClinicProfileView />}
         />
+        <Route path="/clinic/profile/:clinicId/:SlotId" element={<BookAppointment/>} />
+        
         <Route path="/clinic/register" element={<ClinicRegistration />} />
 
         {/* Admin */}

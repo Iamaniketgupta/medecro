@@ -35,9 +35,11 @@ const Login = () => {
             const response = await axiosInstance.post(`/doctor/login`, formData);
             if (response.status === 200) {
                 // Assuming response.data contains user data and accessToken
-                const { user, accessToken } = response.data?.data;
+                const { doctor, accessToken } = response.data?.data;
+                
                 localStorage.setItem("accessToken", accessToken);
-                localStorage.setItem("user", JSON.stringify(user));
+                localStorage.setItem("user", JSON.stringify(doctor));
+                
                 toast.success("🎉 Login Successful!");
                 
                 dispatch(login({user:response.data?.data?.doctor  , type:"doctor"}))
@@ -61,9 +63,7 @@ const Login = () => {
             <div className='p-2 my-10'>
                 <div className='text-gray-800 max-w-xl mx-auto p-5 shadow-lg rounded-lg'>
                     <h1 className='text-center text-2xl md:text-3xl mb-8 font-semibold text-gray-800'>Welcome Back Doctor👋</h1>
-                    <form className='flex flex-col gap-3' onSubmit={()=>{
-                        navigate("/clinic/dashboard")
-                    }}>
+                    <form className='flex flex-col gap-3' onSubmit={handleSubmit}>
                         <div className='space-y-2'>
                             <label htmlFor="email" className='block text-sm px-2 font-medium text-gray-700'>
                                 Email <span className='text-red-500'>*</span>

@@ -12,7 +12,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-const LiveMap = () => {
+const LiveMap = ({markerPositio1}) => {
   const markerPosition = [20.5937, 78.9629]; // Center of India
 
   return (

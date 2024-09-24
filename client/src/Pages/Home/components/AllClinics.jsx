@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState  , useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from './Navbar';
+import axiosInstance from '../../../axiosConfig/axiosConfig';
 
 // Demo clinic data with random images
 const demoClinics = [
@@ -98,10 +99,27 @@ const demoClinics = [
 
 const AllClinics = () => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [clinics, setclinics] = useState([]);
+    const fetchClinics = async()=>{
+        try {
+            const res = await axiosInstance('/clinic/getAllClinics');
+            if(res.data){
+                console.log(res.data)
+                setclinics(res.data.data);
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        fetchClinics();
+    }, [])
+
 
     // Filter clinics based on search term
-    const filteredClinics = demoClinics.filter(clinic =>
-        clinic.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredClinics = clinics.filter(clinic =>
+        clinic.clinicName.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
@@ -135,12 +153,12 @@ const AllClinics = () => {
             {/* Clinic Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 {filteredClinics.map((clinic, index) => (
-                    <Link to={"/clinic/profile/211314378y17"} key={index} className="bg-white hover:bg-gray-50 shadow-lg rounded-lg overflow-hidden">
-                        <img src={clinic.image} alt={clinic.name} className="w-full h-48 object-cover" />
+                    <Link to={`/clinic/profile/${clinic._id}`} key={index} className="bg-white hover:bg-gray-50 shadow-lg rounded-lg overflow-hidden">
+                        <img src={clinic?.clinicImages[0]} alt={clinic?.clinicName} className="w-full h-48 object-cover" />
                         <div className="p-6">
-                            <h2 className="text-xl font-semibold mb-2">{clinic.name}</h2>
-                            <p className="text-gray-700">{clinic.address}, {clinic.city}, {clinic.state} - {clinic.zip}</p>
-                            <p className="text-gray-600 mt-2">Phone: {clinic.phone}</p>
+                            <h2 className="text-xl font-semibold mb-2">{clinic.clinicName}</h2>
+                            <p className="text-gray-700">{clinic.address}, {clinic.city}, {clinic.state} - {clinic.zipCode}</p>
+                            <p className="text-gray-600 mt-2">Phone: {clinic.phoneNumber}</p>
                         </div>
                     </Link>
                 ))}
