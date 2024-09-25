@@ -5,7 +5,8 @@ import { MdPayment } from 'react-icons/md';
 import { TbCalendarRepeat } from 'react-icons/tb';
 import { Link } from 'react-router-dom';
 import LiveMap from '../../Map/LiveMap';
-
+import axios from 'axios';
+import {toast} from 'react-toastify';
 const PDashboard = () => {
     // Statistics cards
     const statsTabs = [
@@ -89,7 +90,7 @@ const PDashboard = () => {
             return acc;
         }, {});
         setTimers(initTimers);
-    }, [appointments]);
+    }, []);
 
     // Countdown logic
     useEffect(() => {
@@ -107,6 +108,52 @@ const PDashboard = () => {
 
         return () => clearInterval(intervalId);
     }, []);
+
+
+
+    const checkoutHandler = async () => {
+        const instance = async () => {
+            try {
+                const response = await axios.post(`http://localhost:3000/create_order`, {
+                    username :'Aniket Gupta',
+                    amt : 9500
+                });
+                return response.data.message;
+            } catch (error) {
+                console.log("error : ", error);
+            }
+        };
+        const order = await instance();
+        const key = 'rzp_test_mrBW5J4OwVHwDY';
+        const options = {
+            key,
+            amount: 9500,
+            currency: "INR",
+            name: 'Aniket Gupta',
+            description: "RazorPay",
+            // image: ragpicker.pfp,
+            order_id: order.id,
+            callback_url: `http://localhost:3000/payment/verify_order`,
+            notes: {
+                "address": "Razorpay Corporate Office"
+            },
+            theme: {
+                "color": "#121212"
+            }
+        };
+        const razor = new window.Razorpay(options);
+        razor.open();
+    };
+    const makePaymet =async()=>{
+        try {
+            console.log('fjkandaj')
+          const r=  axios.post('http://localhost:3000/create_order',{username:'Aniket Gupta',amt:9500})
+          console.log(r)
+        } catch (error) {
+            console.log(error)
+            toast.error('Something went wrong')
+        }
+    }
     return (
         <div className='relative pb-10'>
             <h1 className="md:text-2xl text-lg max-sm:px-3 font-semibold mb-5 opacity-70">Patient Dashboard</h1>
@@ -217,7 +264,7 @@ const PDashboard = () => {
                             <br />
                             <a href={report.link} className='text-blue-500 hover:underline'>Download Report</a>
                             <Link href={''} className='text-green-500 font-semibold hover:underline mx-4'>Prescription</Link>
-                            <button className=' hover:bg-indigo-700 bg-indigo-500 px-3 text-white rounded-full py-1 mx-5'>Ask Ai Summarizer</button>
+                            <Link to={"/patient/summarise"} className=' hover:bg-indigo-700 bg-indigo-500 px-3 text-white rounded-full py-1 mx-5'>Ask Ai Summarizer</Link>
 
                         </div>
                     ))}
@@ -230,7 +277,7 @@ const PDashboard = () => {
                 <h2 className='px-5 text-2xl font-semibold text-gray-600'>Pending Payments</h2>
                 <div className='bg-white rounded-lg shadow-lg p-4'>
                     <p className='text-gray-600'>You have pending payments totaling <span className='font-bold text-gray-900'>₹9,500</span>.</p>
-                    <button className='bg-blue-500 text-white px-4 py-2 rounded-md mt-3'>Pay Now</button>
+                    <button onClick={checkoutHandler} className='bg-blue-500 text-white px-4 py-2 rounded-md mt-3'>Pay Now</button>
                 </div>
             </div>
         </div>

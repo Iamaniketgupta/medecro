@@ -2,6 +2,7 @@ import React from 'react';
 import SideBar from './components/Sidebar';
 import Header from './components/Header';
 import Dashboard from './PDashboard';
+import Chatbot from './ChatBot';
 
 const PAdminPanel = ({children}) => {
 
@@ -22,7 +23,7 @@ const PAdminPanel = ({children}) => {
 
 
       </div>
-
+ <Chatbot/>
     </div>
     );
 }
