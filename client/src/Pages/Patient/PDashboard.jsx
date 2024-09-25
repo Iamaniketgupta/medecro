@@ -5,14 +5,31 @@ import { MdPayment } from 'react-icons/md';
 import { TbCalendarRepeat } from 'react-icons/tb';
 import { Link } from 'react-router-dom';
 import LiveMap from '../../Map/LiveMap';
+import {useSelector} from "react-redux";
+import axiosInstance from "../../axiosConfig/axiosConfig"
 
 const PDashboard = () => {
+
+    const user = useSelector((state) => state.auth.user);
+    const [pendingAppointments, setPendingAppointments] = useState([])
+
+    const fetchPendingAppointments = async()=>{
+        try {
+            const res = await axiosInstance.get(`/appointment/getUpcomingAppointments/${user._id}`);
+            if(res.data) {
+                console.log("Res.data : " , res.data);
+                setPendingAppointments(res.data);
+            }
+        } catch (error) {
+            console.log(error);            
+        }
+    }
     // Statistics cards
     const statsTabs = [
         {
             id: 1,
             title: "Upcoming Appointments",
-            value: "3",
+            value: pendingAppointments?.length,
             icon: <TbCalendarRepeat className='' />
         },
         {
@@ -107,6 +124,12 @@ const PDashboard = () => {
 
         return () => clearInterval(intervalId);
     }, []);
+
+
+    useEffect(() => {
+        fetchPendingAppointments();
+    }, [])
+    
     return (
         <div className='relative pb-10'>
             <h1 className="md:text-2xl text-lg max-sm:px-3 font-semibold mb-5 opacity-70">Patient Dashboard</h1>

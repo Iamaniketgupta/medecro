@@ -11,6 +11,8 @@ import { User } from "../models/user.model.js";
 const tempDoctorStore = {};
 
 // Function to generate OTP
+
+// Function to generate OTP
 function generateOTP(length) {
     const digits = '0123456789';
     let otp = '';
@@ -34,17 +36,16 @@ const transporter = nodemailer.createTransport({
 
 // Initiate doctor register endpoint
 const initiateRegister = asyncHandler(async (req, res) => {
-    const { name, speciality, gender, email, password, virtualFee, onsiteFee } = req.body;
+    const { name, speciality, gender, email, password, virtualFee, onsiteFee, experience, degrees } = req.body;
 
-    console.log({ name, speciality, gender, email, password, virtualFee, onsiteFee } )
-    if (!name || !speciality || !gender || !email || !password || !virtualFee || !onsiteFee) {
+
+    if (!name || !speciality || !gender || !email || !password || !virtualFee || !onsiteFee || experience === undefined || !degrees) {
         throw new ApiError(400, "All fields are required");
     }
 
     const otp = generateOTP(4);
-    tempDoctorStore[email] = { name, speciality, gender, email, password, virtualFee, onsiteFee, otp };
+    tempDoctorStore[email] = { name, speciality, gender, email, password, virtualFee, onsiteFee, experience, degrees, otp };
 
-    
     const mailOptions = {
         from: process.env.EMAIL,
         to: email,
@@ -64,8 +65,6 @@ const initiateRegister = asyncHandler(async (req, res) => {
 const verifyOtp = asyncHandler(async (req, res) => {
     const { email, otp } = req.body;
 
-    console.log({email  , otp})
-
     if (!email || !otp) {
         throw new ApiError(400, "All fields are required");
     }
@@ -73,14 +72,11 @@ const verifyOtp = asyncHandler(async (req, res) => {
     const tempDoctor = tempDoctorStore[email];
 
     if (!tempDoctor || tempDoctor.otp !== otp) {
-        console.log(tempDoctor)
-        console.log(tempDoctor.otp)
-        console.log(otp)
         throw new ApiError(400, "Invalid OTP");
     }
 
-    const { name, speciality, gender, password, virtualFee, onsiteFee } = tempDoctor;
-    const doctor = await Doctor.create({ name, speciality, gender, email, password, virtualFee, onsiteFee });
+    const { name, speciality, gender, password, virtualFee, onsiteFee, experience, degrees } = tempDoctor;
+    const doctor = await Doctor.create({ name, speciality, gender, email, password, virtualFee, onsiteFee, experience, degrees });
 
     // Generate tokens
     const accessToken = doctor.generateAccessToken();

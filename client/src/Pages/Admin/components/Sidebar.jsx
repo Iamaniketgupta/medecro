@@ -17,6 +17,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { SidebarState, userData } from '../../../atom/states';
 import { IoChatboxEllipses } from 'react-icons/io5';
+import { icon } from 'leaflet';
 const cookies = new Cookies(null, { path: '/' });
 
 const SideBar = () => {
@@ -32,7 +33,6 @@ const SideBar = () => {
             link: `/clinic/dashboard`,
             icon: <MdDashboard className='text-xl max-sm:text-sm' />
         },
-      
     
         {
             title: 'Patient Records',
@@ -54,6 +54,16 @@ const SideBar = () => {
             link: `/clinic/profile`,
             icon: <CgProfile className='text-xl max-sm:text-sm' />
         },
+        {
+            title:'Add Slot',
+            link: `/clinic/add-slot`,
+            icon: <TbDrone className='text-xl max-sm:text-sm' />
+        },
+        {
+            title:"Add Virtual Slot",
+            link:`/clinic/add-virtual-slot`,
+            icon:<TbDrone className='text-xl max-sm:text-sm' />
+        }
       
         // {
         //     title: 'Settings',
@@ -61,8 +71,6 @@ const SideBar = () => {
         //     icon: <MdOutlineSettings className='text-xl max-sm:text-sm' />
         // },
   
- 
-     
     ];
     
   

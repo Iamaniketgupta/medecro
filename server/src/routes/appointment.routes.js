@@ -7,6 +7,7 @@ import {
     getAppointmentById,
     updateAppointmentStatus,
     deleteAppointment,
+    getUpcomingAppointments
 } from '../controllers/appointment.controller.js';
 
 const router = express.Router();
@@ -31,5 +32,6 @@ router.put('/:appointmentId', updateAppointmentStatus);
 
 // Route to delete an appointment
 router.delete('/:appointmentId', deleteAppointment);
+router.get('/getUpcomingAppointments/:userId' , getUpcomingAppointments)
 
 export default router;

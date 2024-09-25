@@ -29,7 +29,7 @@ const AppointmentDetails = () => {
 
     const fetchSlot = async () => {
         try {
-            const res = await axiosInstance(`/slot/${SlotId}`);
+            const res = await axiosInstance(`/virtualSlot/slot/${SlotId}`);
             if (res.data) {
                 console.log(res.data);
                 setslot(res.data);
@@ -48,7 +48,7 @@ const AppointmentDetails = () => {
         try {
             setLoading(true)
             const userId = user._id;
-            const res = await axiosInstance.post(`/appointment`, { clinicId, slotId: SlotId, userId, doctorId: clinic.doctor._id, payment: clinic.doctor.onsiteFee });
+            const res = await axiosInstance.post(`/virtualAppointment`, {  slotId: SlotId, userId, doctorId: clinic.doctor._id, payment: clinic.doctor.onsiteFee });
 
             if (res.data) {
                 console.log(res.data);
@@ -87,7 +87,7 @@ const AppointmentDetails = () => {
                 
                 <div className="mb-4">
                     <p className="text-lg text-gray-700"><strong>Date:</strong> {slot?.date?.toString()?.slice(0, 10)}</p>
-                    <p className="text-lg text-gray-700"><strong>Time Slot:</strong> {slot.timeSlot}</p>
+                    <p className="text-lg text-gray-700"><strong>Time Slot:</strong> {slot?.timeSlot}</p>
                 </div>
 
                 <div className="flex items-center mb-4">

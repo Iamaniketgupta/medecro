@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import axiosInstance from "../../../../axiosConfig/axiosConfig";
 
-import { FaSpinner } from 'react-icons/fa'; 
+
+import { FaSpinner } from 'react-icons/fa';
+import { FaLocationArrow } from 'react-icons/fa'; // Icon for the location button
+
 
 const AddClinic = ({ open, onClose }) => {
     const [formData, setFormData] = useState({
@@ -14,6 +17,7 @@ const AddClinic = ({ open, onClose }) => {
         emailAddress: '',
         coordinates: '',
     });
+    const [locationLoading, setLocationLoading] = useState(false)
 
     const [loading, setLoading] = useState(false); // Loader state
 
@@ -80,6 +84,33 @@ const AddClinic = ({ open, onClose }) => {
         }finally{
             setLoading(false);
         }
+    };
+
+
+    const handleLocationClick = () => {
+        if (!navigator.geolocation) {
+            alert('Geolocation is not supported by your browser');
+            return;
+        }
+
+        setLocationLoading(true); // Start loading when fetching location
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const lat = position.coords.latitude;
+                const long = position.coords.longitude;
+                setFormData({
+                    ...formData,
+                    coordinates: `${lat}, ${long}`, // Set the coordinates in the form
+                });
+                setLocationLoading(false); // Stop loading after success
+            },
+            (error) => {
+                console.error('Error getting location:', error);
+                alert('Failed to get location. Please try again.');
+                setLocationLoading(false); // Stop loading if there is an error
+            }
+        );
     };
 
     const resetForm = () => {
@@ -222,6 +253,7 @@ const AddClinic = ({ open, onClose }) => {
                             <label className="block text-sm font-medium text-gray-600 mb-1">
                                 Location Coordinates
                             </label>
+                            <div className='flex gap-3'>
                             <input
                                 type="text"
                                 name="coordinates"
@@ -230,6 +262,19 @@ const AddClinic = ({ open, onClose }) => {
                                 className="block w-full border-gray-300 p-3 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
                                 placeholder="Latitude, Longitude"
                             />
+                             <button
+                                    type="button"
+                                    onClick={handleLocationClick}
+                                    className="ml-2 px-3 py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-500"
+                                    disabled={locationLoading}
+                                >
+                                    {locationLoading ? (
+                                        <FaSpinner className="animate-spin" />
+                                    ) : (
+                                        <FaLocationArrow />
+                                    )}
+                                </button>
+                            </div>
                         </div>
                     </div>
 

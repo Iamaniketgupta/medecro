@@ -13,97 +13,149 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const ClinicProfileView = () => {
-    const { clinicId } = useParams();
-    const [clinic, setClinic] = useState(null);
-    const [slots, setSlots] = useState([]);
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [timeSlots, setTimeSlots] = useState([]);
-    const [selectedSlot, setselectedSlot] = useState(null);
-    const[selectedTimeSlot , setSelectedTimeSlot]=useState(null)
-    const navigate = useNavigate()
-    const getFormattedDate = (dateString) => {
-      const date = new Date(dateString);
-      const day = date.getDate();
-      const monthNames = [
-        "Jan", "Feb", "Mar", "Apr", "May", "June", 
-        "July", "Aug", "Sept", "Oct", "Nov", "Dec"
-      ];
-      const month = monthNames[date.getMonth()];
+  const { clinicId } = useParams();
+  const [clinic, setClinic] = useState(null);
+  const [slots, setSlots] = useState([]); // In-person slots
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [timeSlots, setTimeSlots] = useState([]);
+  const [selectedSlot, setSelectedSlot] = useState(null);
   
-      const daySuffix = (day) => {
-        if (day > 3 && day < 21) return "th";
-        switch (day % 10) {
-          case 1: return "st";
-          case 2: return "nd";
-          case 3: return "rd";
-          default: return "th";
-        }
-      };
+  const [virtualSlots, setVirtualSlots] = useState([]); // Virtual slots
+  const [selectedVirtualDate, setSelectedVirtualDate] = useState(null);
+  const [virtualTimeSlots, setVirtualTimeSlots] = useState([]);
+  const [selectedVirtualSlot, setSelectedVirtualSlot] = useState(null);
   
-      return `${day}${daySuffix(day)} ${month}`;
-    };
+  const navigate = useNavigate();
   
-    // Handle date selection
-    const handleDateClick = (date) => {
-      setSelectedDate(date);
-      const availableSlots = slots
-        .filter((app) => app.date === date)
-        .map((app) => app.timeSlot);
-      setTimeSlots(availableSlots);
-    };
-
-    
-    
-    const handleSlotSelection = (time) => {
-        console.log(selectedDate , time)
-        const slot = slots.find(slot => slot.date == selectedDate && slot.timeSlot == time);
-        setselectedSlot(slot);
-    };
+  // Helper function to format date
+  const getFormattedDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const monthNames = [
+      "Jan", "Feb", "Mar", "Apr", "May", "June", 
+      "July", "Aug", "Sept", "Oct", "Nov", "Dec"
+    ];
+    const month = monthNames[date.getMonth()];
   
-    // Fetch clinic details
-    const fetchClinicDetails = async () => {
-      try {
-        const res = await axiosInstance(`/clinic/getClinicById/${clinicId}`);
-        if (res.data) {
-          setClinic(res.data.data);
-        }
-      } catch (error) {
-        console.error(error);
+    const daySuffix = (day) => {
+      if (day > 3 && day < 21) return "th";
+      switch (day % 10) {
+        case 1: return "st";
+        case 2: return "nd";
+        case 3: return "rd";
+        default: return "th";
       }
     };
   
-    // Fetch available slots
-    const fetchSlots = async () => {
-      try {
-        const res = await axiosInstance(`/slot/clinic/${clinicId}`);
-        if (res.data) {
-          const formattedSlots = res.data.map(slot => ({
-            ...slot,
-            date: getFormattedDate(slot.date),
-          }));
+    return `${day}${daySuffix(day)} ${month}`;
+  };
   
-          setSlots(formattedSlots);
-          setSelectedDate(formattedSlots[0].date);
-          setTimeSlots(formattedSlots
-            .filter(app => app.date === formattedSlots[0].date)
-            .map(app => app.timeSlot)
-          );
-        }
-      } catch (error) {
-        console.error(error);
+  // Handle date selection for in-person slots
+  const handleDateClick = (date) => {
+    setSelectedDate(date);
+    const availableSlots = slots
+      .filter((app) => app.date === date)
+      .map((app) => app.timeSlot);
+    setTimeSlots(availableSlots);
+  };
+  
+  // Handle in-person slot selection
+  const handleSlotSelection = (time) => {
+    const slot = slots.find(slot => slot.date === selectedDate && slot.timeSlot === time);
+    setSelectedSlot(slot);
+  };
+  
+  // Handle date selection for virtual slots
+  const handleVirtualDateClick = (date) => {
+    setSelectedVirtualDate(date);
+    const availableVirtualSlots = virtualSlots
+      .filter((app) => app.date === date)
+      .map((app) => app.timeSlot);
+    setVirtualTimeSlots(availableVirtualSlots);
+  };
+  
+  // Handle virtual slot selection
+  const handleVirtualSlotSelection = (time) => {
+    const slot = virtualSlots.find(slot => slot.date === selectedVirtualDate && slot.timeSlot === time);
+    setSelectedVirtualSlot(slot);
+  };
+  
+  // Fetch clinic details
+  const fetchClinicDetails = async () => {
+    try {
+      const res = await axiosInstance(`/clinic/getClinicById/${clinicId}`);
+      if (res.data) {
+        setClinic(res.data.data);
       }
-    };
-  
-    useEffect(() => {
-      fetchClinicDetails();
-      fetchSlots();
-    }, []);
-  
-    if (!clinic || !slots.length) {
-      return <>Loading...</>;
+    } catch (error) {
+      console.error(error);
     }
+  };
   
-    const uniqueDates = [...new Set(slots.map(app => app.date))];
+  // Fetch available in-person slots
+  const fetchSlots = async () => {
+    try {
+      const res = await axiosInstance(`/slot/clinic/${clinicId}`);
+      if (res.data) {
+        const formattedSlots = res.data.map(slot => ({
+          ...slot,
+          date: getFormattedDate(slot.date),
+        }));
+        setSlots(formattedSlots);
+        setSelectedDate(formattedSlots[0].date);
+        setTimeSlots(formattedSlots
+          .filter(app => app.date === formattedSlots[0].date)
+          .map(app => app.timeSlot)
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  // Fetch available virtual slots
+  const fetchVirtualSlots = async () => {
+    try {
+      const res = await axiosInstance(`/virtualSlot/getVirtualSlotsByDoctorId/${clinic?.doctor?._id}`);
+      if (res.data) {
+        const formattedVirtualSlots = res.data.map(slot => ({
+          ...slot,
+          date: getFormattedDate(slot.date),
+        }));
+
+        console.log({ redData: res})
+        setVirtualSlots(formattedVirtualSlots);
+        setSelectedVirtualDate(formattedVirtualSlots[0]?.date);
+        setVirtualTimeSlots(formattedVirtualSlots
+          .filter(app => app.date === formattedVirtualSlots[0]?.date)
+          .map(app => app.timeSlot)
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  // Effect to fetch clinic and slots
+  useEffect(() => {
+    fetchClinicDetails();
+    fetchSlots();
+  }, []);
+  
+  // Fetch virtual slots after clinic details are loaded
+  useEffect(() => {
+    if (clinic) {
+      fetchVirtualSlots();
+    }
+  }, [clinic]);
+  
+  if (!clinic || !slots.length ) {
+    return <>Loading...</>;
+  }
+  
+  // Get unique dates for both in-person and virtual slots
+  const uniqueDates = [...new Set(slots.map(app => app.date))];
+  const uniqueVirtualDates = [...new Set(virtualSlots.map(app => app.date))];
   
   return (
     <div>
@@ -276,39 +328,51 @@ const ClinicProfileView = () => {
             <h3 className="text mt-4 items-center gap-2 justify-center text-gray-900 font-semibold flex">
               Book 1:1 Online Consultation
             </h3>
+
+            <div className="flex items-center gap-4 mb-4 mt-2 px-5  " style={{overflowX:"scroll" , scrollbarWidth:"0"}}>
+            {uniqueVirtualDates.map((date) => (
+                <div
+                  key={date}
+                  className={`rounded-2xl font-bold bg-blue-50 p-3 cursor-pointer border-2 border-blue-700 ${
+                    selectedDate === date
+                      ? "bg-blue-700 text-white"
+                      : "hover:bg-blue-700 hover:text-white"
+                  } text-gray-900 shadow-md`}
+                  onClick={() => handleVirtualDateClick(date)}
+                >
+                  {date}
+                </div>
+              ))}
+            </div>
             {/* Timings  1:1 */}
             <div className=" items-center place-content-center gap-y-2 gap-4 my-5 px-5 grid grid-cols-2">
-              <div className="">
-                <div className="rounded-2xl mb-2 font-bold bg-green-50 px-2 py-1 text-sm cursor-pointer border-2 border-green-700 hover:bg-green-700 hover:text-white text-gray-900 shadow-md">
-                  10:00 AM
-                </div>
-                <div className="rounded-2xl font-bold bg-green-50 px-2 py-1 text-sm cursor-pointer border-2 border-green-700 hover:bg-green-700 hover:text-white text-gray-900 shadow-md">
-                  11:00 AM
-                </div>
-              </div>
+            <div className="flex items-center gap-4 my-5 px-5">
+              {virtualTimeSlots.map((slot, index) => (
+                <div
+                  key={index}
+                  className="rounded-2xl mb-2 font-bold bg-green-50 px-2 py-1 text-sm cursor-pointer border-2 border-green-700 hover:bg-green-700 hover:text-white text-gray-900 shadow-md"
+                  
+                >
+                    <div onClick={() => {
+                    handleVirtualSlotSelection(slot)}
+                  }>
 
-              <div>
-                <div className="rounded-2xl mb-2 font-bold bg-green-50 px-2 py-1 text-sm cursor-pointer border-2 border-green-700 hover:bg-green-700 hover:text-white text-gray-900 shadow-md">
-                  12:00 PM
+                        {slot}
+                    </div>
                 </div>
-                <div className="rounded-2xl font-bold bg-green-50 px-2 py-1 text-sm cursor-pointer border-2 border-green-700 hover:bg-green-700 hover:text-white text-gray-900 shadow-md">
-                  01:00 PM
-                </div>
-              </div>
-
-              <div>
-                <div className="rounded-2xl mb-2 font-bold bg-green-50 px-2 py-1 text-sm cursor-pointer border-2 border-green-700 hover:bg-green-700 hover:text-white text-gray-900 shadow-md">
-                  12:00 PM
-                </div>
-                <div className="rounded-2xl font-bold bg-green-50 px-2 py-1 text-sm cursor-pointer border-2 border-green-700 hover:bg-green-700 hover:text-white text-gray-900 shadow-md">
-                  01:00 PM
-                </div>
-              </div>
+              ))}
+            </div>
             </div>
 
             {/* Booking Button */}
             <div className="">
-              <button className="bg-blue-600 text-white font0bold py-2 px-4 mx-5 my-4 rounded-lg shadow-sm">
+              <button onClick={()=>{
+                if(!(selectedVirtualSlot && selectedVirtualDate)){
+                  toast.info("Please select slot and date");
+                  return;
+                }
+                navigate(`/clinic/profile/${clinicId}/virtual/${selectedVirtualSlot?._id}`)
+              }} className="bg-blue-600 text-white font0bold py-2 px-4 mx-5 my-4 rounded-lg shadow-sm">
                 Book 1:1 Online{" "}
               </button>
             </div>

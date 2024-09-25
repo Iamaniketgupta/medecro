@@ -1,11 +1,11 @@
 // models/Slot.js
 import mongoose from 'mongoose';
 
-const slotSchema = new mongoose.Schema({
-    clinicId: {
+const virtualSlotSchema = new mongoose.Schema({
+    doctor: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'Clinic' // Assuming you have a Clinic model
+        ref: 'Doctor' // Reference to the Doctor model
     },
     date: {
         type: Date,
@@ -14,11 +14,10 @@ const slotSchema = new mongoose.Schema({
     timeSlot: {
         type: String,
         required: true,
-        
     },
 }, {
     timestamps: true // Automatically adds createdAt and updatedAt fields
 });
 
-const Slot = mongoose.model('Slot', slotSchema);
-export default Slot;
+const VirtualSlot = mongoose.model('VirtualSlot', virtualSlotSchema);
+export default VirtualSlot;

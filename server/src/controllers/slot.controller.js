@@ -1,17 +1,30 @@
 // controllers/slotController.js
 import Slot from '../models/slot.model.js'; // Adjust the path as necessary
 
-// Add a new slot
+// Add a new slotimport Slot from '../models/Slot'; // Adjust the import path according to your project structure
+
 export const addSlot = async (req, res) => {
     try {
-        const { clinicId, date, timeSlot } = req.body;
-        const newSlot = new Slot({ clinicId, date, timeSlot });
-        await newSlot.save();
-        res.status(201).json({ message: 'Slot added successfully!', slot: newSlot });
+        const { clinicId, date, timeSlots } = req.body; // Assuming timeSlots is an array
+
+        // Ensure the timeSlots is an array and properly formatted
+        if (!Array.isArray(timeSlots) || timeSlots.length === 0) {
+            return res.status(400).json({ message: 'Time slots must be provided.' });
+        }
+
+        const slotsToSave = timeSlots.map(timeSlot => {
+            return { clinicId, date, timeSlot }; // Create an object for each time slot
+        });
+
+        // Save each slot to the database
+        const savedSlots = await Slot.insertMany(slotsToSave); // Use insertMany to save multiple documents
+
+        res.status(201).json({ message: 'Slots added successfully!', slots: savedSlots });
     } catch (error) {
-        res.status(500).json({ message: 'Failed to add slot', error: error.message });
+        res.status(500).json({ message: 'Failed to add slots', error: error.message });
     }
 };
+
 
 // Get all slots for a clinic
 export const getSlotsByClinicId = async (req, res) => {
