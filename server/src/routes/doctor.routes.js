@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { verifyJwt } from '../middlewares/auth.middleware.js';
+
 import { 
     initiateRegister, 
     verifyOtp, 
@@ -10,6 +10,7 @@ import {
     getDoctorById
 } from '../controllers/doctor.controller.js';
 import { upload } from "../middlewares/multer.middleware.js";
+import { verifyJwtForDoctor } from '../middlewares/doctor.auth.middleware.js';
 
 const router = Router();
 
@@ -23,7 +24,7 @@ router.get('/refresh-token', getRefreshToken);
 router.get("/getDoctorById/:id" , getDoctorById);
 
 // Route to update doctor avatar
-router.post('/avatar', verifyJwt, upload.single('avatar'), updateAvatar);
-router.get('/patients', getPatients);
+router.post('/avatar', verifyJwtForDoctor, upload.single('avatar'), updateAvatar);
+router.get('/patients',verifyJwtForDoctor, getPatients);
 
 export default router;

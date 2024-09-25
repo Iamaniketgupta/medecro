@@ -1,50 +1,59 @@
-import mongoose, { Schema } from 'mongoose';
 
-// Clinic Schema
-const clinicSchema = new Schema(
-  {
-    name: { type: String, required: true },
+import mongoose from "mongoose";
+const clinicSchema = new mongoose.Schema({
+    clinicName: {
+        type: String,
+        required: true,
+        trim: true,
+    },
     address: {
-      street: { type: String, required: true },
-      city: { type: String, required: true },
-      state: { type: String, required: true },
-      country: { type: String, required: true },
+        type: String,
+        required: true,
+        trim: true,
     },
-    coordinates: {
-      lat: { type: Number, required: true },
-      lng: { type: Number, required: true },
+    city: {
+        type: String,
+        required: true,
+        trim: true,
     },
-    schedules: [
-      {
-        type:Schema.Types.ObjectId,
-        ref:'Schedule',
-        default:[]
-      },
-    ],
-    licenseNumber: { type: String, required: true, unique: true },
-    mobileNo: { type: String, required: true },
+    state: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    zipCode: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    phoneNumber: {
+        type: String,
+        trim: true,
+    },
+    emailAddress: {
+        type: String,
+        trim: true,
+        match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email address'],
+    },
+    locationCoordinates: {
+        type: [Number], // Array of two numbers: [latitude, longitude]
+        validate: {
+            validator: function(arr) {
+                return arr.length === 2;
+            },
+            message: 'Location coordinates must contain both latitude and longitude',
+        },
+    },
+    clinicImages: {
+        type: [String], // Array of image URLs
+    },
     doctor: {
-      type: Schema.Types.ObjectId,
-      ref: 'Doctor',
-      required: true,
-    },
-    ratings: [
-      {
-        user: { type: Schema.Types.ObjectId, ref: 'User' },
-        rating: { type: Number, min: 1, max: 5 }, // Rating between 1 and 5
-        comment: { type: String },
-        date: { type: Date, default: Date.now },
-        default:[]
-      },
-    ],
-    images:[
-        {type:String}
-    ]
-  },
-  {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Doctor',
+    }
+}, {
     timestamps: true,
-  }
-);
+});
 
-// Exporting Clinic Model
 export const Clinic = mongoose.model('Clinic', clinicSchema);
+

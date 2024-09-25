@@ -17,6 +17,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { SidebarState, userData } from '../../../atom/states';
 import { IoChatboxEllipses } from 'react-icons/io5';
+import { icon } from 'leaflet';
 const cookies = new Cookies(null, { path: '/' });
 
 const SideBar = () => {
@@ -25,13 +26,13 @@ const SideBar = () => {
     const [currentUser,setCurrentUser] =useRecoilState(userData)
 
     const [open,setOpen] =useRecoilState(SidebarState);
+    const navigate = useNavigate()
     const navlist = [
         {
             title: 'Dashboard',
             link: `/clinic/dashboard`,
             icon: <MdDashboard className='text-xl max-sm:text-sm' />
         },
-      
     
         {
             title: 'Patient Records',
@@ -53,6 +54,16 @@ const SideBar = () => {
             link: `/clinic/profile`,
             icon: <CgProfile className='text-xl max-sm:text-sm' />
         },
+        {
+            title:'Add Slot',
+            link: `/clinic/add-slot`,
+            icon: <TbDrone className='text-xl max-sm:text-sm' />
+        },
+        {
+            title:"Add Virtual Slot",
+            link:`/clinic/add-virtual-slot`,
+            icon:<TbDrone className='text-xl max-sm:text-sm' />
+        }
       
         // {
         //     title: 'Settings',
@@ -60,8 +71,6 @@ const SideBar = () => {
         //     icon: <MdOutlineSettings className='text-xl max-sm:text-sm' />
         // },
   
- 
-     
     ];
     
   
@@ -72,11 +81,14 @@ const SideBar = () => {
                   rounded-full ${!open && "rotate-180"}`}
                 onClick={() => setOpen(!open)}
             />
-            <div className="flex gap-x-4 items-center">
+            <div className="flex gap-x-4 items-center"  >
                 <h1
                     className={`text-2xl text-blue-600 font-bold ${!open && "hidden"}`}
+                    onClick={()=>{
+                        navigate('/')
+                    }}
                 >
-                  🩺<span className='text-gray-700'>Clinic</span>  Net 
+                  🩺<span className='text-gray-700' >Clinic</span>  Net 
                 </h1>
                 
             </div>

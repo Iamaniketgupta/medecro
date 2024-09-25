@@ -30,9 +30,14 @@ import ViewReport from "./Pages/Patient/ViewReport";
 import PChat from "./Pages/Patient/Chat";
 import AllClinics from "./Pages/Home/components/AllClinics";
 import ReportSum from "./Pages/Home/components/ReportSum";
-
-
+import { useSelector } from "react-redux";
+import BookAppointment from "./Pages/Patient/AppointmentBooking";
+import BookVirtualAppointment from "./Pages/Patient/VirtualAppointmentBooking"
+import AddSlot from "./Pages/Admin/components/Add-Slot/AddSlot";
+import AddVirtualSlot from "./Pages/Admin/components/Add-Slot/AddVirtualSlot";
 function App() {
+  const user = useSelector(state=>state.auth.user);
+  
   return (
     <div>
       <Routes>
@@ -46,6 +51,10 @@ function App() {
           path="/clinic/profile/:clinicId"
           element={<ClinicProfileView />}
         />
+        <Route path="/clinic/profile/:clinicId/:SlotId" element={<BookAppointment/>} />
+        
+        <Route path="/clinic/profile/:clinicId/virtual/:SlotId" element={<BookVirtualAppointment/>} />
+        
         <Route path="/clinic/register" element={<ClinicRegistration />} />
 
         {/* Admin */}
@@ -58,6 +67,9 @@ function App() {
         <Route path="/clinic/profile" element={<AdminPanel>< Profile /></AdminPanel>} />
         <Route path="/clinic/chat" element={<AdminPanel>< Chat/></AdminPanel>} />
         <Route path="/clinic/chat/:id" element={<AdminPanel>< ChatPage/></AdminPanel>} />
+        <Route path="/clinic/add-slot" element={<AdminPanel>< AddSlot /></AdminPanel>} />
+        
+        <Route path="/clinic/add-virtual-slot" element={<AdminPanel>< AddVirtualSlot /></AdminPanel>} />
         {/* Patient Routes */}
 
         <Route path="/patient/dashboard" element={<PAdminPanel>< PDashboard /></PAdminPanel>} />

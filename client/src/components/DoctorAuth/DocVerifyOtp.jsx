@@ -13,8 +13,6 @@ const Otp = ({ setOtpSent,  formData  , type}) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     
-    
-    
 
     const verifyOTP = async (e) => {
         e.preventDefault();
@@ -27,35 +25,12 @@ const Otp = ({ setOtpSent,  formData  , type}) => {
             if (response.status === 200 || response.status === 201) {
                 
                 toast.success("🎉 OTP Verified Successfully!");
-                console.log("respinse.data :",response.data)
+                
                 localStorage.setItem("accessToken" , response.data?.data?.accessToken);
                 dispatch(login({user:response.data?.data?.doctor  , type:"doctor"}))
                 
                 navigate("/clinic/dashboard");
-                // if(type === "user"){
-                //     const obj = {
-                //         user : response?.data?.data?.user,
-                //         type :'user'
-                //     }
-
-                    console.log("obj : " ,obj)
-                    // dispatch(login(obj));
-            //     }else{
-                    
-            //         const obj = {
-            //             user : response?.data?.data.newRagPicker,
-            //             type:'ragpicker'
-            //         }
-
-            //         console.log("object : " , obj)
-            //         dispatch(login(obj));
-            //     }
-
-            //     navigate(`/${type}/dashboard`)
-
-            // } else {
-            //     toast.error("Failed to verify OTP. Please try again.");
-            // }
+                
         }
     } catch (error) {
             console.error('Error verifying OTP:', error);

@@ -13,6 +13,11 @@ const doctorSchema = new Schema(
     onsiteFee: { type: Number, required: true },
     avatar:{type:String},
     password: { type: String, required: true },
+    experience: { type: Number },
+    degree:{
+      type:[String]
+    }
+
   },
   {
     timestamps: true,

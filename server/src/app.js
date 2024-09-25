@@ -7,7 +7,11 @@ import payment from '../src/routes/payment.router.js';
 import userRouter from "./routes/user.routes.js"
 import doctorRouter from "./routes/doctor.routes.js"
 import clinicRouter from "./routes/clinic.routes.js"
-
+import reviewRouter from "./routes/review.routes.js"
+import slotRouter from "./routes/slot.routes.js"
+import appointmentRouter from "./routes/appointment.routes.js"
+import virtualSlot from "./routes/virtualSlot.routes.js"
+import virtualAppointmentRouter from "./routes/virtualAppointment.js"
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials:true
@@ -25,5 +29,10 @@ app.use(payment);
 app.use("/users" , userRouter);
 app.use("/doctor" , doctorRouter);
 app.use("/clinic" , clinicRouter);
+app.use("/review" , reviewRouter);
+app.use("/slot" , slotRouter);
+app.use("/appointment" , appointmentRouter);
+app.use("/virtualSlot" , virtualSlot);
+app.use('/virtualAppointment' , virtualAppointmentRouter)
 
 export {app} 

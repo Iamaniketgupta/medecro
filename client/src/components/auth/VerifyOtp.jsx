@@ -4,15 +4,15 @@ import { toast } from 'react-toastify';
 // import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axiosConfig/axiosConfig';
+import { useDispatch } from 'react-redux';
+import { login } from '../../store/authSlice';
 // import { login } from '../../../store/authSlice';
 
 const Otp = ({ setOtpSent,  formData  , type}) => {
     const [otpValue, setOtpValue] = useState('');
-
-    
     
     const navigate = useNavigate();
-    
+    const dispatch = useDispatch();
     
 
     const verifyOTP = async (e) => {
@@ -26,34 +26,14 @@ const Otp = ({ setOtpSent,  formData  , type}) => {
             if (response.status === 200 || response.status === 201) {
                 
                 toast.success("🎉 OTP Verified Successfully!");
-                console.log("respinse.data :",response.data)
+                
                 localStorage.setItem("accessToken" , response.data?.data?.accessToken);
+                dispatch(login({user:response.data?.data?.user  , type:"user"}));
+
+
 
                 navigate("/patient/dashboard");
-                // if(type === "user"){
-                //     const obj = {
-                //         user : response?.data?.data?.user,
-                //         type :'user'
-                //     }
-
                 
-                    // dispatch(login(obj));
-            //     }else{
-                    
-            //         const obj = {
-            //             user : response?.data?.data.newRagPicker,
-            //             type:'ragpicker'
-            //         }
-
-            //         console.log("object : " , obj)
-            //         dispatch(login(obj));
-            //     }
-
-            //     navigate(`/${type}/dashboard`)
-
-            // } else {
-            //     toast.error("Failed to verify OTP. Please try again.");
-            // }
         }
     } catch (error) {
             console.error('Error verifying OTP:', error);

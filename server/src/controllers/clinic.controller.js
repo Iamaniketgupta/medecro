@@ -1,88 +1,98 @@
-import { Clinic } from '../models/clinic.model.js';
+import  {Clinic}  from '../models/clinic.model.js';
+import { Doctor } from '../models/doctor.model.js';
 import { Schedule } from '../models/schedule.model.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { uploadToCloudinary, deleteFromCloudinary } from '../utils/cloudinary.js';
 
-// Create a new clinic
+
 const createClinic = asyncHandler(async (req, res) => {
-    const { name, address, coordinates, licenseNumber, mobileNo, doctor }
-     = req.body;
+    const { 
+        name, 
+        address, 
+        city, 
+        state, 
+        zipCode, 
+        phoneNumber, 
+        emailAddress, 
+        coordinates 
+    } = req.body;
 
-    const address1 = JSON.parse(address);
-    const coordinates1 = JSON.parse(coordinates);
-
-     console.log({ name, address1, coordinates1, licenseNumber, mobileNo, doctor })
-
-    if (!name || !address || !coordinates || !licenseNumber || !mobileNo || !doctor) {
-        throw new ApiError(400, "All fields are required");
+    const doctor = req.user;
+    if(!doctor){
+        throw new ApiError("Docotor not found", 401);
     }
 
-    let images = [];
-    console.log(req.files)
-    if (req.files) {
-        console.log("first")
-        // Upload images to Cloudinary
+    // Input validation
+    if (!name || !address || !city || !state || !zipCode || !coordinates) {
+        throw new ApiError(400, "All required fields must be provided");
+    }
+
+    // Parse coordinates from the string to an array
+    let parsedCoordinates;
+    try {
+        parsedCoordinates = coordinates.split(',').map(coord => parseFloat(coord.trim()));
+        if (parsedCoordinates.length !== 2 || parsedCoordinates.some(isNaN)) {
+            throw new Error('Invalid coordinates format. Please provide "latitude, longitude".');
+        }
+    } catch (error) {
+        throw new ApiError(400, error.message);
+    }
+
+    // Upload images to Cloudinary if available
+    let clinicImages = [];
+    if (req.files && req.files.length > 0) {
         const imageUploadPromises = req.files.map(file => uploadToCloudinary(file.path));
         const uploadResults = await Promise.all(imageUploadPromises);
-        console.log(uploadResults)
-        images = uploadResults.map(result => result.secure_url);
+        clinicImages = uploadResults.map(result => result.secure_url);
     }
 
-    
+    // Create new clinic
     const clinic = new Clinic({
-        name,
-        address:address1,
-        coordinates:coordinates1,
-        licenseNumber,
-        mobileNo,
-        doctor,
-        images
+        clinicName: name,
+        address,
+        city,
+        state,
+        zipCode,
+        phoneNumber,
+        emailAddress,
+        locationCoordinates: parsedCoordinates,
+        clinicImages,
+        doctor:doctor?._id
     });
 
+    // Save clinic to DB
     await clinic.save();
     res.status(201).json(new ApiResponse(201, clinic, "Clinic created successfully"));
 });
+
 
 // Update an existing clinic
 const updateClinic = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const updateData = req.body;
 
-    // Check if schedules need to be updated
-    if (updateData.scheduleIds) {
-        const schedules = await Schedule.find({ _id: { $in: updateData.scheduleIds } });
-        if (schedules.length !== updateData.scheduleIds.length) {
-            throw new ApiError(400, "Some schedules do not exist");
-        }
-        updateData.schedules = updateData.scheduleIds;
-        delete updateData.scheduleIds;
-    }
-
-    // Handle image updates
-    if (req.files && req.files.images) {
+    // Handle image updates if new images are uploaded
+    if (req.files && req.files.length > 0) {
         const clinic = await Clinic.findById(id);
-        if (!clinic) {
-            throw new ApiError(404, "Clinic not found");
-        }
+        if (!clinic) throw new ApiError(404, "Clinic not found");
 
         // Delete old images from Cloudinary
-        if (clinic.images.length > 0) {
-            const deletePromises = clinic.images.map(url => deleteFromCloudinary(url));
+        if (clinic.clinicImages.length > 0) {
+            const deletePromises = clinic.clinicImages.map(url => deleteFromCloudinary(url));
             await Promise.all(deletePromises);
         }
 
-        // Upload new images to Cloudinary
-        const imageUploadPromises = req.files.images.map(file => uploadToCloudinary(file.path));
+        // Upload new images
+        const imageUploadPromises = req.files.map(file => uploadToCloudinary(file.path));
         const uploadResults = await Promise.all(imageUploadPromises);
-        updateData.images = uploadResults.map(result => result.secure_url);
+        updateData.clinicImages = uploadResults.map(result => result.secure_url);
     }
 
+    // Update clinic in DB
     const clinic = await Clinic.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
-    if (!clinic) {
-        throw new ApiError(404, "Clinic not found");
-    }
+    if (!clinic) throw new ApiError(404, "Clinic not found");
 
     res.status(200).json(new ApiResponse(200, clinic, "Clinic updated successfully"));
 });
@@ -92,18 +102,16 @@ const deleteClinic = asyncHandler(async (req, res) => {
     const { id } = req.params;
 
     const clinic = await Clinic.findById(id);
-    if (!clinic) {
-        throw new ApiError(404, "Clinic not found");
-    }
+    if (!clinic) throw new ApiError(404, "Clinic not found");
 
-    // Delete images from Cloudinary
-    if (clinic.images.length > 0) {
-        const deletePromises = clinic.images.map(url => deleteFromCloudinary(url));
+    // Delete clinic images from Cloudinary
+    if (clinic.clinicImages.length > 0) {
+        const deletePromises = clinic.clinicImages.map(url => deleteFromCloudinary(url));
         await Promise.all(deletePromises);
     }
 
+    // Delete clinic from DB
     await Clinic.findByIdAndDelete(id);
-
     res.status(200).json(new ApiResponse(200, null, "Clinic deleted successfully"));
 });
 
@@ -115,14 +123,13 @@ const addSchedule = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Clinic ID and schedule data are required");
     }
 
+    // Create new schedule
     const schedule = new Schedule(scheduleData);
     await schedule.save();
 
     // Add the new schedule to the clinic
     const clinic = await Clinic.findById(clinicId);
-    if (!clinic) {
-        throw new ApiError(404, "Clinic not found");
-    }
+    if (!clinic) throw new ApiError(404, "Clinic not found");
 
     clinic.schedules.push(schedule._id);
     await clinic.save();
@@ -136,11 +143,9 @@ const deleteSchedule = asyncHandler(async (req, res) => {
 
     // Find and delete the schedule
     const schedule = await Schedule.findByIdAndDelete(id);
-    if (!schedule) {
-        throw new ApiError(404, "Schedule not found");
-    }
+    if (!schedule) throw new ApiError(404, "Schedule not found");
 
-    // Remove the schedule reference from all clinics
+    // Remove the schedule reference from clinics
     await Clinic.updateMany(
         { schedules: id },
         { $pull: { schedules: id } }
@@ -154,21 +159,52 @@ const updateSchedule = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const updateData = req.body;
 
+    // Update schedule in DB
     const schedule = await Schedule.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
-    if (!schedule) {
-        throw new ApiError(404, "Schedule not found");
-    }
+    if (!schedule) throw new ApiError(404, "Schedule not found");
 
     res.status(200).json(new ApiResponse(200, schedule, "Schedule updated successfully"));
 });
 
 
+const getClinicByDoctorId = asyncHandler(async (req, res) => {
+    const { doctorId } = req.params;
 
+    const doctor = await Doctor.findById(doctorId);
+    
+    if (!doctor) {
+        throw new ApiError(404, 'Doctor not found');
+    }
+
+    const clinics = await Clinic.find({ doctor: doctor._id });
+    if (!clinics) {
+        throw new ApiError(404, 'Clinics not found');
+    }
+
+    res.status(200).json(new ApiResponse(200, clinics, 'Clinics retrieved successfully'));
+    
+})
+
+const getAllClinics = asyncHandler(async (req, res) => {
+    const clinics = await Clinic.find();
+    res.status(200).json(new ApiResponse(200, clinics, 'All Clinics retrieved successfully'));
+})
+
+
+const getClinicById = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const clinic = await Clinic.findById(id).populate("doctor");
+    if (!clinic) throw new ApiError(404, "Clinic not found");
+    res.status(200).json(new ApiResponse(200, clinic, "Clinic retrieved successfully"));
+})
 export {
     createClinic,
     updateClinic,
     deleteClinic,
     addSchedule,
     deleteSchedule,
-    updateSchedule
+    updateSchedule,
+    getClinicByDoctorId,
+    getAllClinics,
+    getClinicById
 };

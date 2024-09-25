@@ -5,15 +5,31 @@ import { MdPayment } from 'react-icons/md';
 import { TbCalendarRepeat } from 'react-icons/tb';
 import { Link } from 'react-router-dom';
 import LiveMap from '../../Map/LiveMap';
-import axios from 'axios';
-import {toast} from 'react-toastify';
+import {useSelector} from "react-redux";
+import axiosInstance from "../../axiosConfig/axiosConfig"
+
 const PDashboard = () => {
+
+    const user = useSelector((state) => state.auth.user);
+    const [pendingAppointments, setPendingAppointments] = useState([])
+
+    const fetchPendingAppointments = async()=>{
+        try {
+            const res = await axiosInstance.get(`/appointment/getUpcomingAppointments/${user._id}`);
+            if(res.data) {
+                console.log("Res.data : " , res.data);
+                setPendingAppointments(res.data);
+            }
+        } catch (error) {
+            console.log(error);            
+        }
+    }
     // Statistics cards
     const statsTabs = [
         {
             id: 1,
             title: "Upcoming Appointments",
-            value: "3",
+            value: pendingAppointments?.length,
             icon: <TbCalendarRepeat className='' />
         },
         {
@@ -89,8 +105,8 @@ const PDashboard = () => {
             acc[appointment.id] = 60; // Set each timer to 60 seconds
             return acc;
         }, {});
-        setTimers(initTimers);
-    }, []);
+        // setTimers(initTimers);
+    }, [appointments]);
 
     // Countdown logic
     useEffect(() => {
@@ -110,50 +126,10 @@ const PDashboard = () => {
     }, []);
 
 
-
-    const checkoutHandler = async () => {
-        const instance = async () => {
-            try {
-                const response = await axios.post(`http://localhost:3000/create_order`, {
-                    username :'Aniket Gupta',
-                    amt : 9500
-                });
-                return response.data.message;
-            } catch (error) {
-                console.log("error : ", error);
-            }
-        };
-        const order = await instance();
-        const key = 'rzp_test_mrBW5J4OwVHwDY';
-        const options = {
-            key,
-            amount: 9500,
-            currency: "INR",
-            name: 'Aniket Gupta',
-            description: "RazorPay",
-            // image: ragpicker.pfp,
-            order_id: order.id,
-            callback_url: `http://localhost:3000/payment/verify_order`,
-            notes: {
-                "address": "Razorpay Corporate Office"
-            },
-            theme: {
-                "color": "#121212"
-            }
-        };
-        const razor = new window.Razorpay(options);
-        razor.open();
-    };
-    const makePaymet =async()=>{
-        try {
-            console.log('fjkandaj')
-          const r=  axios.post('http://localhost:3000/create_order',{username:'Aniket Gupta',amt:9500})
-          console.log(r)
-        } catch (error) {
-            console.log(error)
-            toast.error('Something went wrong')
-        }
-    }
+    useEffect(() => {
+        fetchPendingAppointments();
+    }, [])
+    
     return (
         <div className='relative pb-10'>
             <h1 className="md:text-2xl text-lg max-sm:px-3 font-semibold mb-5 opacity-70">Patient Dashboard</h1>
