@@ -241,7 +241,7 @@ const PDashboard = () => {
                             <br />
                             <a href={report.link} className='text-blue-500 hover:underline'>Download Report</a>
                             <Link href={''} className='text-green-500 font-semibold hover:underline mx-4'>Prescription</Link>
-                            <button className=' hover:bg-indigo-700 bg-indigo-500 px-3 text-white rounded-full py-1 mx-5'>Ask Ai Summarizer</button>
+                            <Link to={"/patient/summarise"} className=' hover:bg-indigo-700 bg-indigo-500 px-3 text-white rounded-full py-1 mx-5'>Ask Ai Summarizer</Link>
 
                         </div>
                     ))}
@@ -254,7 +254,7 @@ const PDashboard = () => {
                 <h2 className='px-5 text-2xl font-semibold text-gray-600'>Pending Payments</h2>
                 <div className='bg-white rounded-lg shadow-lg p-4'>
                     <p className='text-gray-600'>You have pending payments totaling <span className='font-bold text-gray-900'>₹9,500</span>.</p>
-                    <button className='bg-blue-500 text-white px-4 py-2 rounded-md mt-3'>Pay Now</button>
+                    <button onClick={checkoutHandler} className='bg-blue-500 text-white px-4 py-2 rounded-md mt-3'>Pay Now</button>
                 </div>
             </div>
         </div>
