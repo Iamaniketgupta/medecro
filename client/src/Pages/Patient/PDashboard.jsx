@@ -20,6 +20,7 @@ const PDashboard = () => {
                 console.log("Res.data : " , res.data);
                 setPendingAppointments(res.data);
             }
+            
         } catch (error) {
             console.log(error);            
         }
