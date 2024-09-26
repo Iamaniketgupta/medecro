@@ -42,7 +42,7 @@ const initiateRegister = asyncHandler(async (req, res) => {
     if (!name || !speciality || !gender || !email || !password || !virtualFee || !onsiteFee || experience === undefined || !degrees) {
         throw new ApiError(400, "All fields are required");
     }
-
+console.log(req.body)
     const otp = generateOTP(4);
     tempDoctorStore[email] = { name, speciality, gender, email, password, virtualFee, onsiteFee, experience, degrees, otp };
 
@@ -52,6 +52,8 @@ const initiateRegister = asyncHandler(async (req, res) => {
         subject: `Hello! ${name}, It's a verification mail`,
         html: `<strong>Your OTP code is: ${otp}</strong>`,
     };
+
+    console.log(mailOptions)
 
     try {
         await transporter.sendMail(mailOptions);

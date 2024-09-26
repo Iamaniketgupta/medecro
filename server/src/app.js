@@ -12,6 +12,7 @@ import slotRouter from "./routes/slot.routes.js"
 import appointmentRouter from "./routes/appointment.routes.js"
 import virtualSlot from "./routes/virtualSlot.routes.js"
 import virtualAppointmentRouter from "./routes/virtualAppointment.js"
+import prescriptionRouter from "./routes/prescription.routes.js"
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials:true
@@ -34,5 +35,6 @@ app.use("/slot" , slotRouter);
 app.use("/appointment" , appointmentRouter);
 app.use("/virtualSlot" , virtualSlot);
 app.use('/virtualAppointment' , virtualAppointmentRouter)
+app.use('/prescription' , prescriptionRouter)
 
 export {app} 

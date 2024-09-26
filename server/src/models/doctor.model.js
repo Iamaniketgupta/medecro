@@ -14,7 +14,7 @@ const doctorSchema = new Schema(
     avatar:{type:String},
     password: { type: String, required: true },
     experience: { type: Number },
-    degree:{
+    degrees:{
       type:[String]
     }
 

@@ -1,13 +1,8 @@
-import dotenv from "dotenv";
+import "dotenv/config" ;
 import { app } from "./src/app.js";
 import connectDB from "./src/db/index.js";
 import { createServer } from "http"; // Import to create an HTTP server
 import { Server } from "socket.io"; // Import Socket.IO
-
-dotenv.config({
-  path: "./env",
-});
-
 
 
 // Connect to MongoDB
