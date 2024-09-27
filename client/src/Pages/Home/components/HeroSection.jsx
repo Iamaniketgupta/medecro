@@ -22,7 +22,7 @@ const HeroSection = () => {
         </span>
       </h1>
       <p className="mt-10 text-lg text-center text-neutral-500 max-w-4xl">
-        Say goodbye to the hassle of clinic appointments and outdated offline ads!
+        Say goodbye to the hassle of clinic appointments!
         With our cutting-edge digital platform, you can effortlessly manage patient records, streamline appointments, and focus on what matters most—providing exceptional care. Let technology elevate your clinic to the next level!      </p>
       <div className="flex justify-center flex-wrap md:my-10 my-8">
         <a

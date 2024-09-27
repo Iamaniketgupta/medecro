@@ -21,42 +21,37 @@ export const navItems = [
 
 export const testimonials = [
   {
-    user: "John Doe",
-    company: "Stellar Solutions",
-    // image: user1,
-    text: "I am extremely satisfied with the services provided. The team was responsive, professional, and delivered results beyond my expectations.",
+    user: "Dr. Emily Ross",
+    company: "Sunrise Health Clinic",
+    text: "Switching to Clinic Net has been one of the best decisions for our clinic. The platform is user-friendly, and the efficiency it brings to our daily operations allows us to dedicate more time to patient care.",
   },
   {
-    user: "Jane Smith",
-    company: "Blue Horizon Technologies",
-    // image: user2,
-    text: "I couldn't be happier with the outcome of our project. The team's creativity and problem-solving skills were instrumental in bringing our vision to life.",
+    user: "Paul Roberts",
+    company: "HealthFirst Services",
+    text: "Clinic Net's digital innovation is truly remarkable. The automated appointment reminders have drastically reduced our missed appointments, making our scheduling process seamless. Our patients appreciate it, and so do we!",
   },
   {
-    user: "David Johnson",
-    company: "Quantum Innovations",
-    // image: user3,
-    text: "Working with this company was a pleasure. Their attention to detail and commitment to excellence are commendable. I would highly recommend them to anyone looking for top-notch service.",
+    user: "Nancy Patel",
+    company: "Community Care Center",
+    text: "The transition to Clinic Net was smooth and hassle-free. The training and support provided were excellent, and now our entire team is fully onboard and reaping the benefits of this incredible platform.",
   },
   {
-    user: "Ronee Brown",
-    company: "Fusion Dynamics",
-    // image: user4,
-    text: "Working with the team at XYZ Company was a game-changer for our project. Their attention to detail and innovative solutions helped us achieve our goals faster than we thought possible. We are grateful for their expertise and professionalism!",
+    user: "Dr. Liam Thompson",
+    company: "Precision Health Institute",
+    text: "With Clinic Net, we have seen a noticeable boost in patient satisfaction. The ability to track health records digitally allows us to provide personalized care that our patients love. It's truly revolutionizing our practice!",
   },
   {
-    user: "Michael Wilson",
-    company: "Visionary Creations",
-    // image: user5,
-    text: "I am amazed by the level of professionalism and dedication shown by the team. They were able to exceed our expectations and deliver outstanding results.",
+    user: "Sophia Williams",
+    company: "Family Wellness Clinic",
+    text: "The insights provided by Clinic Net have empowered us to make data-driven decisions in our practice. We've improved patient outcomes and streamlined our processes, all thanks to this fantastic platform!",
   },
   {
-    user: "Emily Davis",
-    company: "Synergy Systems",
-    // image: user6,
-    text: "The team went above and beyond to ensure our project was a success. Their expertise and dedication are unmatched. I look forward to working with them again in the future.",
+    user: "David Lee",
+    company: "Optimal Health Solutions",
+    text: "Clinic Net has enhanced our clinic's operational efficiency tremendously. From electronic patient records to easy appointment management, this platform has become an invaluable asset to our team.",
   },
 ];
+
 
 export const features = [
   {

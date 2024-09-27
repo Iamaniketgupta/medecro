@@ -125,9 +125,9 @@ const ReviewSection = ({clinicId}) => {
     <div className="p-6 bg-white">
       <h2 className="text-3xl font-bold mb-6">Customer Reviews</h2>
 
-      <div className="flex flex-col md:flex-row mb-8">
+      <div className="flex flex-col md:flex-row mb-8">  
         <div className="w-full md:w-1/3 mb-6 md:mb-0">
-          <div className="text-5xl font-bold text-center md:text-left">{overallRating.toFixed(1)}</div>
+          <div className="text-5xl font-bold text-center md:text-left">{!isNaN(overallRating.toFixed(1))?overallRating.toFixed(1):0}</div>
           <div className="flex justify-center md:justify-start mb-2">
             {renderStars(overallRating)}
           </div>

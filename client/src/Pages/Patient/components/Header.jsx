@@ -1,12 +1,15 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { userData } from '../../../atom/states';
 import { IoNotifications } from 'react-icons/io5';
 // import { useRecoilState } from 'recoil';
 
 const Header = () => {
-    const [currentUser,setCurrentUser] =useRecoilState(userData)
+    const [currentUser,setCurrentUser] =useRecoilState(userData);
+    useEffect(()=>{
+      console.log(currentUser?.user);
+    },[]);
     // const pathname  = usePathname()
 
     return (
@@ -17,7 +20,7 @@ const Header = () => {
             <IoNotifications className='text-2xl text-yellow-500'/>
             <div className='text-xs items-end flex flex-col'>
                
-               <p className='font-semibold'>{currentUser?.fullName || 'name'}</p> 
+               <p className='font-semibold'>{currentUser?.fullName || 'User'}</p> 
                <p>{currentUser?.email || ' Email'}</p> 
                </div>
                <div className='relative w-fit h-fit'>

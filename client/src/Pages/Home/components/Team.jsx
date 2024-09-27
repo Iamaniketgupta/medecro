@@ -5,19 +5,19 @@ const teamMembers = [
     name: 'Tirthesh Jain',
     role: 'Developer',
     description: 'Specializes in full-stack development with a passion for coding.',
-    image: 'https://media.licdn.com/dms/image/v2/D5603AQF-vRiz-MJBxA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1704281390843?e=1732147200&v=beta&t=c8WnMikVtFuU-L97BN9KZ2QfmdWgSlLk0Ndae4xEFV4',
+    image: 'tirthesh.jpeg',
   },
   {
     name: 'Aniket Gupta',
     role: 'Developer',
     description: 'Expert in UI/UX design with a keen eye for aesthetics and user experience.',
-    image: 'https://aniketgupta.vercel.app/assets/avatar-D7L7z8lA.jpg',
+    image: 'aniket.jpg',
   },
   {
     name: 'Suraj Gusain',
     role: 'Developer',
     description: 'Skilled in managing projects and ensuring timely delivery with high quality.',
-    image: 'https://media.licdn.com/dms/image/v2/D4D03AQHk1QNqMcH13Q/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1702309950529?e=1732147200&v=beta&t=N_LVkHD3pamZy_FdQsXfkjTR28UcAzaqwR4WKN_Vk68',
+    image: 'suraj.jpeg',
   },
 ];
 
