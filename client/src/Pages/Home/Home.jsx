@@ -8,10 +8,10 @@ import CTAs from "./components/CTAs";
 import Pricing from "./components/Pricing";
 import Team from "./components/Team";
 import Chatbot from "./components/ChatBot";
-
-;
+import { useEffect } from "react";
 
 const Home = () => {
+  
   return (
     <>
       <Navbar />

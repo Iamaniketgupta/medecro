@@ -189,4 +189,4 @@ const LiveMap = ({ markerPositio1 }) => {
   );
 };
 
-export default LiveMap;
+export default LiveMap; 
