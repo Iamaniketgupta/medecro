@@ -1,10 +1,10 @@
 // models/DoctorReview.js
 import mongoose from 'mongoose';
 
-const doctorReviewSchema = new mongoose.Schema({
-    doctorId: {
+const clinicReviewSchema = new mongoose.Schema({
+    clinicId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Doctor',
+        ref: 'Clinic',
         required: true,
     },
     userId: {
@@ -30,5 +30,5 @@ const doctorReviewSchema = new mongoose.Schema({
     },
 });
 
-const DoctorReview = mongoose.model('DoctorReview', doctorReviewSchema);
-export default DoctorReview;
+const ClinicReview = mongoose.model('ClinicReview', clinicReviewSchema);
+export default ClinicReview;

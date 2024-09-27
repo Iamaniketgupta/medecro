@@ -2,7 +2,7 @@ import React from "react";
 import SearchInput from "./SearchInput";
 import { useNavigate } from "react-router-dom";
 
-import { FaPhone, FaPlusSquare } from "react-icons/fa";
+import { FaPhone } from "react-icons/fa";
 const OneonOne = ({ upcomingAppointments = [], liveAppointments = [] }) => {
     console.log(typeof liveAppointments)
     const navigate = useNavigate();

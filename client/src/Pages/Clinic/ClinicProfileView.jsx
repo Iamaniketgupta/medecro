@@ -409,7 +409,7 @@ const ClinicProfileView = () => {
       </div>
       {/* Review Section */}
       <div className="p-4">
-        <ReviewSection />
+        <ReviewSection clinicId={clinicId}  />
       </div>
     </div>
   );

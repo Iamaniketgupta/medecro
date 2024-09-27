@@ -3,7 +3,7 @@ import { FaEye, FaRegEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import axiosInstance from "../../axiosConfig/axiosConfig";
 import Otp from "./DocVerifyOtp";
-import { Link } from "react-router-dom";
+
 import Select from "react-select"; // Import react-select
 
 const degreeOptions = [

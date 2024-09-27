@@ -59,7 +59,6 @@ const LiveAppointments = ({
           </div>
         )}
         
-
         {upcomingAppointments.map((appointment) => (
           <div
             key={appointment}
