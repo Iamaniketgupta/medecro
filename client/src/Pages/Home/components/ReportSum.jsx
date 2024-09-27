@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import Tesseract from 'tesseract.js';
 import pdfToText from 'react-pdftotext';
@@ -11,7 +11,8 @@ function ReportSum() {
   const [error, setError] = useState('');
   const [summary, setSummary] = useState('');
   const [loading, setLoading] = useState(false);
-  const [preview, setPreview] = useState(null); // New state for preview
+  const [preview, setPreview] = useState(null); // For preview of uploaded files
+  const [urlInput, setUrlInput] = useState(''); // URL input state
 
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -21,7 +22,7 @@ function ReportSum() {
     setText('');
     setSummary('');
     setLoading(true);
-    setPreview(null); // Reset preview on new upload
+    setPreview(null);
 
     if (fileType === 'application/pdf') {
       handlePdf(file);
@@ -49,7 +50,7 @@ function ReportSum() {
 
   const handleImage = async (file) => {
     try {
-      const { data: { text } } = await Tesseract.recognize(file, 'eng', { logger: (m) => console.log(m) });
+      const { data: { text } } = await Tesseract.recognize(file, 'eng');
       setText(text);
       await summarizeText(text);
     } catch (error) {
@@ -58,6 +59,7 @@ function ReportSum() {
       setLoading(false);
     }
   };
+
 
   const summarizeText = async (text) => {
     try {
@@ -76,6 +78,59 @@ function ReportSum() {
       setLoading(false);
     }
   };
+
+  const handleUrlSubmit = async (e) => {
+    e.preventDefault();
+  
+    setError('');
+    setText('');
+    setSummary('');
+    setLoading(true);
+    setPreview(null);
+  
+    if (!urlInput) {
+      setError('Please enter a valid URL.');
+      setLoading(false);
+      return;
+    }
+  
+    try {
+      const response = await axios.get(urlInput, { responseType: 'blob' });
+      const fileType = response.data.type;
+  
+      if (fileType === 'application/pdf') {
+        handlePdf(response.data);
+        setPreview(urlInput); // Show URL for PDFs
+      } else if (fileType.startsWith('image/')) {
+        handleImage(response.data);
+        setPreview(urlInput); // Show image URL as preview
+      } else {
+        setError('Unsupported file format from URL. Please provide a URL for a PDF or an image.');
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+  
+      // Handle network error
+      if (error.message === 'Network Error') {
+        setError('Network error: Unable to reach the server. Please check your connection or server status.');
+      } else if (error.response) {
+        // The request was made and the server responded with a status code
+        setError(`Error: ${error.response.status} - ${error.response.data}`);
+      } else {
+        // Something happened in setting up the request
+        setError('An unknown error occurred while fetching the URL.');
+      }
+  
+      setLoading(false);
+    }
+  };
+  
+  useEffect(()=>{
+  
+  document.title="Clinic New Report Summarizer";
+
+  },[]);
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
@@ -101,12 +156,26 @@ function ReportSum() {
         </div>
       </motion.div>
 
+      {/* URL input for file summarization */}
+      <div className="mt-4 w-full max-w-4xl">
+        <form onSubmit={handleUrlSubmit} className="flex items-center justify-center mt-4">
+          <input
+            type="url"
+            value={urlInput}
+            onChange={(e) => setUrlInput(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-lg"
+            placeholder="Enter the URL of a PDF or image"
+          />
+          <button type="submit" className="ml-4 p-2 bg-blue-500 text-white rounded-lg">Summarize </button>
+        </form>
+      </div>
+
       {/* Preview Section */}
       <div className="mt-4 w-full max-w-5xl">
         {preview && (
           <div className="mt-4">
             {preview.endsWith('.pdf') ? (
-              <p className="text-gray-700">Uploaded PDF: {preview}</p>
+              <p className="text-gray-700 p-2">Uploaded PDF: {preview}</p>
             ) : (
               <img src={preview} alt="Image Preview" className="max-h-48 object-contain" />
             )}
@@ -142,7 +211,7 @@ function ReportSum() {
             </svg>
             <span className="ml-4 text-gray-700">Summarizing...</span>
           </div>
-        )}
+        )}          
         {summary && (
           <motion.div
             className="mt-4 p-4 bg-white border border-gray-300 rounded-lg shadow-md"
