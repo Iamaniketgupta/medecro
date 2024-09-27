@@ -1,9 +1,8 @@
-import React from 'react';
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import React, { useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-// Default Leaflet marker icon fix for proper display
 delete L.Icon.Default.prototype._getIconUrl;
 
 L.Icon.Default.mergeOptions({
@@ -12,24 +11,42 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-const LiveMap = ({markerPositio1}) => {
-  const markerPosition = [20.5937, 78.9629]; // Center of India
+const FlyToHandler = ({ position }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (position) {
+      map.flyTo(position, map.getZoom(), {
+        animate: true,
+        duration: 1.5, 
+      });
+    }
+  }, [position, map]);
+
+  return null;
+};
+
+const LiveMap = ({ markerPositio1 }) => {
+  const defaultPosition = [20.5937, 78.9629]; 
 
   return (
     <div className="w-full h-full rounded-xl">
       <MapContainer
-        center={markerPosition} // Center the map at the marker's position
-        zoom={5} // Zoom level
+        center={markerPositio1 || defaultPosition}
+        zoom={10} 
         className="w-full h-full rounded-xl"
-        zoomControl={false} // Disable zoom controls (plus/minus buttons)
+        zoomControl={false} 
       >
         <TileLayer
           url="http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
           subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
         />
-
+        
         {/* Add Marker */}
-        <Marker position={markerPosition}></Marker>
+        <Marker position={markerPositio1 || defaultPosition} />
+
+        {/* FlyToHandler to enable flyTo on position change */}
+        <FlyToHandler position={markerPositio1 || defaultPosition} />
       </MapContainer>
     </div>
   );

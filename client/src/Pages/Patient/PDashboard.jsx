@@ -254,7 +254,7 @@ const PDashboard = () => {
                 <h2 className='px-5 text-2xl font-semibold text-gray-600'>Pending Payments</h2>
                 <div className='bg-white rounded-lg shadow-lg p-4'>
                     <p className='text-gray-600'>You have pending payments totaling <span className='font-bold text-gray-900'>₹9,500</span>.</p>
-                    <button onClick={checkoutHandler} className='bg-blue-500 text-white px-4 py-2 rounded-md mt-3'>Pay Now</button>
+                    <button  className='bg-blue-500 text-white px-4 py-2 rounded-md mt-3'>Pay Now</button>
                 </div>
             </div>
         </div>

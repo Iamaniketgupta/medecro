@@ -19,24 +19,24 @@ const ClinicProfileView = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [timeSlots, setTimeSlots] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  
+
   const [virtualSlots, setVirtualSlots] = useState([]); // Virtual slots
   const [selectedVirtualDate, setSelectedVirtualDate] = useState(null);
   const [virtualTimeSlots, setVirtualTimeSlots] = useState([]);
   const [selectedVirtualSlot, setSelectedVirtualSlot] = useState(null);
-  
+
   const navigate = useNavigate();
-  
+
   // Helper function to format date
   const getFormattedDate = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate();
     const monthNames = [
-      "Jan", "Feb", "Mar", "Apr", "May", "June", 
+      "Jan", "Feb", "Mar", "Apr", "May", "June",
       "July", "Aug", "Sept", "Oct", "Nov", "Dec"
     ];
     const month = monthNames[date.getMonth()];
-  
+
     const daySuffix = (day) => {
       if (day > 3 && day < 21) return "th";
       switch (day % 10) {
@@ -46,10 +46,10 @@ const ClinicProfileView = () => {
         default: return "th";
       }
     };
-  
+
     return `${day}${daySuffix(day)} ${month}`;
   };
-  
+
   // Handle date selection for in-person slots
   const handleDateClick = (date) => {
     setSelectedDate(date);
@@ -58,13 +58,13 @@ const ClinicProfileView = () => {
       .map((app) => app.timeSlot);
     setTimeSlots(availableSlots);
   };
-  
+
   // Handle in-person slot selection
   const handleSlotSelection = (time) => {
     const slot = slots?.find(slot => slot.date === selectedDate && slot.timeSlot === time);
     setSelectedSlot(slot);
   };
-  
+
   // Handle date selection for virtual slots
   const handleVirtualDateClick = (date) => {
     setSelectedVirtualDate(date);
@@ -73,30 +73,31 @@ const ClinicProfileView = () => {
       ?.map((app) => app.timeSlot);
     setVirtualTimeSlots(availableVirtualSlots);
   };
-  
+
   // Handle virtual slot selection
   const handleVirtualSlotSelection = (time) => {
     const slot = virtualSlots?.find(slot => slot.date === selectedVirtualDate && slot.timeSlot === time);
     setSelectedVirtualSlot(slot);
   };
-  
+
   // Fetch clinic details
   const fetchClinicDetails = async () => {
     try {
       const res = await axiosInstance(`/clinic/getClinicById/${clinicId}`);
-      console.log("Clinics:",res)
+      console.log("Clinics:", res)
       setClinic(res.data.data);
-   
+      if (clinic?.clinicImages.length > 0)
+        setSelectedImage(clinic?.clinicImages[0]);
     } catch (error) {
       console.error(error);
     }
   };
- 
+
   // Fetch available in-person slots
   const fetchSlots = async () => {
     try {
       const res = await axiosInstance(`/slot/clinic/${clinicId}`);
-      console.log("Slots:",res)
+      console.log("Slots:", res)
       if (res.data) {
         const formattedSlots = res.data.map(slot => ({
           ...slot,
@@ -114,7 +115,7 @@ const ClinicProfileView = () => {
       console.error(error);
     }
   };
-  
+
   // Fetch available virtual slots
   const fetchVirtualSlots = async () => {
     try {
@@ -125,7 +126,7 @@ const ClinicProfileView = () => {
           date: getFormattedDate(slot.date),
         }));
 
-        console.log({ redData: res})
+        console.log({ redData: res })
         setVirtualSlots(formattedVirtualSlots);
         setSelectedVirtualDate(formattedVirtualSlots[0]?.date);
         setVirtualTimeSlots(formattedVirtualSlots
@@ -137,26 +138,32 @@ const ClinicProfileView = () => {
       console.error(error);
     }
   };
-  
+
   // Effect to fetch clinic and slots
   useEffect(() => {
     fetchClinicDetails();
     fetchSlots();
   }, []);
-  
+
   // Fetch virtual slots after clinic details are loaded
   useEffect(() => {
     if (clinic) {
       fetchVirtualSlots();
     }
   }, [clinic]);
-  
- 
-  
+
+  console.log(clinic?.clinicImages[0])
+  const [selectedImage, setSelectedImage] = useState(clinic?.clinicImages[0]);
+
+  useEffect(() => {
+    if (clinic && clinic.clinicImages.length > 0) {
+      setSelectedImage(clinic.clinicImages[0]);
+    }
+  }, [clinic]);
   // Get unique dates for both in-person and virtual slots
   const uniqueDates = [...new Set(slots.map(app => app.date))];
   const uniqueVirtualDates = [...new Set(virtualSlots.map(app => app.date))];
-  
+
   return (
     <div>
       <Navbar />
@@ -165,36 +172,34 @@ const ClinicProfileView = () => {
         {/* Clinic */}
         <div className="p-4 col-span-3">
           {/* Clinic Details */}
-          <div className="flex flex-wrap gap-4 justify-around items-center">
+          <div className="flex flex-wrap  gap-4 justify-around">
             <div className="flex-1">
               {/* Clinic Image */}
               <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxe2RionRovJj8Q4yAe0wZUWxw56D-FcOVoA&s"
-                className=" h-42 w-full mb-5 object-cover rounded-lg shadow-md"
+                src={selectedImage}
+                className=" h-[400px] w-full mb-5 object-cover rounded-lg shadow-md"
                 alt=""
               />
 
               {/* Some More Images */}
-              <div className="flex items-center gap-3">
-                <img
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxe2RionRovJj8Q4yAe0wZUWxw56D-FcOVoA&s"
-                  alt=""
-                  className="w-20 h-20 rounded-lg shadow-md"
-                />
-                <img
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxe2RionRovJj8Q4yAe0wZUWxw56D-FcOVoA&s"
-                  alt=""
-                  className="w-20 h-20 rounded-lg shadow-md"
-                />
-                <img
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxe2RionRovJj8Q4yAe0wZUWxw56D-FcOVoA&s"
-                  alt=""
-                  className="w-20 h-20 rounded-lg shadow-md"
-                />
-              </div>
+              {clinic?.clinicImages.length > 0 &&
+                <div className="flex items-center gap-3">
+                  {clinic?.clinicImages.map((i) => (
+                    <img
+                      key={i}
+                      onClick={() => setSelectedImage(i)}
+                      src={i}
+                      className={`${selectedImage === i ? "border-2 border-blue-600" : ""} cursor-pointer w-20 h-20 rounded-lg shadow-md`}
+                      alt=""
+                    />
+                  ))}
+
+
+                </div>}
+
             </div>
             {/* Clinic Location Map */}
-            <div className="w-[500px] h-[400px] mb-6">
+            <div className="w-[500px] h-[400px]  mb-6">
               <LiveMap markerPositio1={clinic?.locationCoordinates} />
               {/* Map Component */}
             </div>
@@ -245,16 +250,15 @@ const ClinicProfileView = () => {
             {/* Dates */}
             <div
               className="flex items-center gap-4 mb-4 mt-2 px-5 "
-              style={{ overflowX: "scroll" }}
+              style={{ overflowX: "scroll" , scrollbarWidth:'none' }}
             >
               {uniqueDates.map((date) => (
                 <div
                   key={date}
-                  className={`rounded-2xl font-bold bg-blue-50 p-3 cursor-pointer border-2 border-blue-700 ${
-                    selectedDate === date
-                      ? "bg-blue-700 text-white"
-                      : "hover:bg-blue-700 hover:text-white"
-                  } text-gray-900 shadow-md`}
+                  className={`rounded-2xl min-w-fit font-bold bg-blue-50 p-3 cursor-pointer border-2 border-blue-700 ${selectedDate === date
+                    ? "bg-blue-700 text-white"
+                    : "hover:bg-blue-700 hover:text-white"
+                    } text-gray-900 shadow-md`}
                   onClick={() => handleDateClick(date)}
                 >
                   {date}
@@ -268,25 +272,26 @@ const ClinicProfileView = () => {
                 <div
                   key={index}
                   className="rounded-2xl font-bold bg-green-50 px-2 py-1 text-sm cursor-pointer border-2 border-green-700 hover:bg-green-700 hover:text-white text-gray-900 shadow-md"
-                  
+
                 >
-                    <div onClick={() => {
-                    handleSlotSelection(slot)}
+                  <div onClick={() => {
+                    handleSlotSelection(slot)
+                  }
                   }>
 
-                        {slot}
-                    </div>
+                    {slot}
+                  </div>
                 </div>
               ))}
             </div>
 
-            <button onClick={()=>{
-                if(selectedSlot && selectedDate){
-                    navigate(`/clinic/profile/${clinicId}/${selectedSlot?._id}`)
-                    
-                }else{
-                    toast.info("Please select slot and date")
-                }
+            <button onClick={() => {
+              if (selectedSlot && selectedDate) {
+                navigate(`/clinic/profile/${clinicId}/${selectedSlot?._id}`)
+
+              } else {
+                toast.info("Please select slot and date")
+              }
             }} className="bg-blue-800 text-white font-bold py-2 px-4 mx-5 my-4 rounded shadow-sm">
               Book Appointment
             </button>
@@ -297,7 +302,7 @@ const ClinicProfileView = () => {
         <div className=" gap-4 shadow-lg  min-h-screen   rounded-l-2xl">
           {/* Doctor Image */}
           <img
-            src={clinic?.doctor?.avatar}
+            src={clinic?.doctor?.avatar || "https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3408.jpg"}
             alt="DoctorName"
             className="w-36 h-36 ring ring-blue-700 rounded-full object-cover mx-auto my-10 shadow-md"
           />
@@ -306,7 +311,7 @@ const ClinicProfileView = () => {
           <div className="text-center">
             {/* Name,Exp,Speaciality, */}
             <h1 className="text-xl items-center gap-2 justify-center text-gray-800 font-semibold flex">
-              Dr. {clinic?.doctor.name}{" "}
+              Dr. {clinic?.doctor?.name}{" "}
               <RiVerifiedBadgeFill className="text-sm text-blue-700" />
             </h1>
 
@@ -315,10 +320,11 @@ const ClinicProfileView = () => {
                 {" "}
                 <LucideStethoscope className="  text-gray-700" /> {clinic?.doctor.speciality}
               </p>
-              <p className="flex my-1 items-center justify-center  gap-2 font-bold text-md">
-                {" "}
-                <FaUserDoctor className=" text-gray-700" /> MBBS, M.D
+              <p className="flex my-1 items-center justify-center gap-2 font-bold text-md">
+                <FaUserDoctor className="text-gray-700" />
+                {clinic?.doctor.degrees.join(", ")}
               </p>
+
               <p className="flex my-1 items-center justify-center  gap-2 font-bold text-md">
                 {" "}
                 <FaClock className=" text-gray-700" /> 7+ Years Experience
@@ -329,15 +335,14 @@ const ClinicProfileView = () => {
               Book 1:1 Online Consultation
             </h3>
 
-            <div className="flex items-center gap-4 mb-4 mt-2 px-5  " style={{overflowX:"scroll" , scrollbarWidth:"0"}}>
-            {uniqueVirtualDates.map((date) => (
+            <div className="flex items-center gap-4 mb-4 mt-2 px-5" style={{ overflowX: "scroll", scrollbarWidth: "none" }}>
+              {uniqueVirtualDates.map((date) => (
                 <div
                   key={date}
-                  className={`rounded-2xl font-bold bg-blue-50 p-3 cursor-pointer border-2 border-blue-700 ${
-                    selectedDate === date
-                      ? "bg-blue-700 text-white"
-                      : "hover:bg-blue-700 hover:text-white"
-                  } text-gray-900 shadow-md`}
+                  className={`rounded-2xl text-xs font-bold bg-blue-50 p-3 cursor-pointer border-2 border-blue-700 ${selectedDate === date
+                    ? "bg-blue-700 text-white"
+                    : "hover:bg-blue-700 hover:text-white"
+                    } text-gray-900 shadow-md`}
                   onClick={() => handleVirtualDateClick(date)}
                 >
                   {date}
@@ -345,29 +350,30 @@ const ClinicProfileView = () => {
               ))}
             </div>
             {/* Timings  1:1 */}
-            <div className=" items-center place-content-center gap-y-2 gap-4 my-5 px-5 grid grid-cols-2">
-            <div className="flex items-center gap-4 my-5 px-5">
-              {virtualTimeSlots.map((slot, index) => (
-                <div
-                  key={index}
-                  className="rounded-2xl mb-2 font-bold bg-green-50 px-2 py-1 text-sm cursor-pointer border-2 border-green-700 hover:bg-green-700 hover:text-white text-gray-900 shadow-md"
-                  
-                >
-                    <div onClick={() => {
-                    handleVirtualSlotSelection(slot)}
-                  }>
+            <div className=" items-center place-content-center gap-y-2 gap-4 my-2 px-5 grid grid-cols-2">
+              <div className="flex items-center gap-4 ">
+                {virtualTimeSlots.map((slot, index) => (
+                  <div
+                    key={index}
+                    className="rounded-2xl min-w-fit mb-2 font-bold bg-green-50 px-2 py-1 text-sm cursor-pointer border-2 border-green-700 hover:bg-green-700 hover:text-white text-gray-900 shadow-md"
 
-                        {slot}
+                  >
+                    <div onClick={() => {
+                      handleVirtualSlotSelection(slot)
+                    }
+                    }>
+
+                      {slot}
                     </div>
-                </div>
-              ))}
-            </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Booking Button */}
             <div className="">
-              <button onClick={()=>{
-                if(!(selectedVirtualSlot && selectedVirtualDate)){
+              <button onClick={() => {
+                if (!(selectedVirtualSlot && selectedVirtualDate)) {
                   toast.info("Please select slot and date");
                   return;
                 }
