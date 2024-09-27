@@ -128,7 +128,7 @@ function ReportSum() {
   
   useEffect(()=>{
   
-  document.title="Clinic New Report Summarizer";
+  document.title="Clinic Net Report Summarizer";
 
   },[]);
 

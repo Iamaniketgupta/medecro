@@ -80,6 +80,31 @@ const ClinicProfileView = () => {
     setSelectedVirtualSlot(slot);
   };
 
+  const originalTitle = "Clinic Net";
+
+  // Fetch clinic details and update the title
+  useEffect(() => {
+    fetchClinicDetails();
+    fetchSlots();
+
+    return () => {
+      // Reset the title when component unmounts
+      document.title = originalTitle;
+    };
+  }, []);
+
+  // Set document title based on clinic name
+  useEffect(() => {
+    if (clinic) {
+      document.title = `${clinic.clinicName} - Clinic Profile`;
+    }
+
+    return () => {
+      // Reset the title when clinic changes
+      document.title = originalTitle;
+    };
+  }, [clinic]);
+
   // Fetch clinic details
   const fetchClinicDetails = async () => {
     try {
