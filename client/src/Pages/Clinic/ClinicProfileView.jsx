@@ -61,7 +61,7 @@ const ClinicProfileView = () => {
   
   // Handle in-person slot selection
   const handleSlotSelection = (time) => {
-    const slot = slots.find(slot => slot.date === selectedDate && slot.timeSlot === time);
+    const slot = slots?.find(slot => slot.date === selectedDate && slot.timeSlot === time);
     setSelectedSlot(slot);
   };
   
@@ -69,14 +69,14 @@ const ClinicProfileView = () => {
   const handleVirtualDateClick = (date) => {
     setSelectedVirtualDate(date);
     const availableVirtualSlots = virtualSlots
-      .filter((app) => app.date === date)
-      .map((app) => app.timeSlot);
+      ?.filter((app) => app?.date === date)
+      ?.map((app) => app.timeSlot);
     setVirtualTimeSlots(availableVirtualSlots);
   };
   
   // Handle virtual slot selection
   const handleVirtualSlotSelection = (time) => {
-    const slot = virtualSlots.find(slot => slot.date === selectedVirtualDate && slot.timeSlot === time);
+    const slot = virtualSlots?.find(slot => slot.date === selectedVirtualDate && slot.timeSlot === time);
     setSelectedVirtualSlot(slot);
   };
   
@@ -84,24 +84,26 @@ const ClinicProfileView = () => {
   const fetchClinicDetails = async () => {
     try {
       const res = await axiosInstance(`/clinic/getClinicById/${clinicId}`);
-      if (res.data) {
-        setClinic(res.data.data);
-      }
+      console.log("Clinics:",res)
+      setClinic(res.data.data);
+   
     } catch (error) {
       console.error(error);
     }
   };
-  
+ 
   // Fetch available in-person slots
   const fetchSlots = async () => {
     try {
       const res = await axiosInstance(`/slot/clinic/${clinicId}`);
+      console.log("Slots:",res)
       if (res.data) {
         const formattedSlots = res.data.map(slot => ({
           ...slot,
-          date: getFormattedDate(slot.date),
+          date: getFormattedDate(slot?.date),
         }));
         setSlots(formattedSlots);
+        
         setSelectedDate(formattedSlots[0]?.date);
         setTimeSlots(formattedSlots
           .filter(app => app.date === formattedSlots[0]?.date)
@@ -149,10 +151,10 @@ const ClinicProfileView = () => {
     }
   }, [clinic]);
   
+  
   if (!clinic || !slots ) {
     return <>Loading...</>;
   }
-  
   // Get unique dates for both in-person and virtual slots
   const uniqueDates = [...new Set(slots.map(app => app.date))];
   const uniqueVirtualDates = [...new Set(virtualSlots.map(app => app.date))];
