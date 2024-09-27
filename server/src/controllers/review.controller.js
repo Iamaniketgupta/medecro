@@ -1,11 +1,11 @@
-// controllers/doctorReviewController.js
-import DoctorReview from '../models/review.model.js';
+// controllers/clinicReviewController.js
+import ClinicReview from '../models/review.model.js';  // Correct import to match your model name
 
 // Add a new review
 export const addReview = async (req, res) => {
     try {
-        const { doctorId, userId, rating, comment } = req.body;
-        const newReview = new DoctorReview({ doctorId, userId, rating, comment });
+        const { clinicId, userId, rating, comment } = req.body;
+        const newReview = new ClinicReview({ clinicId, userId, rating, comment });
         await newReview.save();
         res.status(201).json({ message: 'Review added successfully!', review: newReview });
     } catch (error) {
@@ -13,11 +13,11 @@ export const addReview = async (req, res) => {
     }
 };
 
-// Get reviews for a doctor
-export const getReviewsByDoctorId = async (req, res) => {
+// Get reviews for a clinic
+export const getReviewsByClinicId = async (req, res) => {
     try {
-        const { doctorId } = req.params;
-        const reviews = await DoctorReview.find({ doctorId }).populate('userId', 'name email');
+        const { clinicId } = req.params;
+        const reviews = await ClinicReview.find({ clinicId }).populate('userId');
         res.status(200).json(reviews);
     } catch (error) {
         res.status(500).json({ message: 'Failed to fetch reviews', error: error.message });
@@ -28,7 +28,7 @@ export const getReviewsByDoctorId = async (req, res) => {
 export const updateReview = async (req, res) => {
     try {
         const { reviewId } = req.params;
-        const updatedReview = await DoctorReview.findByIdAndUpdate(reviewId, req.body, { new: true });
+        const updatedReview = await ClinicReview.findByIdAndUpdate(reviewId, req.body, { new: true });
         if (!updatedReview) {
             return res.status(404).json({ message: 'Review not found' });
         }
@@ -42,7 +42,7 @@ export const updateReview = async (req, res) => {
 export const deleteReview = async (req, res) => {
     try {
         const { reviewId } = req.params;
-        const deletedReview = await DoctorReview.findByIdAndDelete(reviewId);
+        const deletedReview = await ClinicReview.findByIdAndDelete(reviewId);
         if (!deletedReview) {
             return res.status(404).json({ message: 'Review not found' });
         }

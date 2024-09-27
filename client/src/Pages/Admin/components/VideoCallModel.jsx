@@ -3,15 +3,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import PeerService from '../../../peer';
 
 import { useSocket } from "../../../SockerWrapper";
-import { useSelector } from 'react-redux';
 
 const VideoCallModal = ({ onClose }) => {
   const localVideoRef = useRef(null);
   const [remoteVideoRefs, setRemoteVideoRefs] = useState({});
-//   const [socket, setSocket] = useState(null);
   const [peers, setPeers] = useState({});
   const socket = useSocket();
-  const type = useSelector(state=>state.auth.type);
+  
 
   useEffect(() => {
 
