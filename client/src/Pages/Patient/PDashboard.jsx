@@ -234,8 +234,7 @@ const PDashboard = () => {
                   } ${isTimeOver && "bg-indigo-700 cursor-pointer"} `}
                   disabled={!isTimeOver(appointment.slotId?.date , appointment?.slotId.timeSlot)} // Disable button based on timer
                   onClick={()=>{
-                    window.location.href = `http://localhost:5173/vc/${appointment?.roomId}`;
-
+                    navigate(`../vc/${appointment?.roomId}`);
                   }}
                 >
                   Meet <FaPhone />

@@ -18,6 +18,10 @@ const Dashboard = () => {
     const [reviews, setreviews] = useState([]);
     const [open,setopen]= useState(false);
     const [appointments, setappointments] = useState([]);
+    const [virtualAppointments, setvirtualAppointments] = useState([])
+    const [liveAppointments, setliveAppointments] = useState([]);
+    const [liveVirtualAppointments, setliveVirtualAppointments] = useState([])
+    
     
     const user = useSelector(state=>state.auth.user);
     
@@ -63,8 +67,9 @@ const Dashboard = () => {
 
     const fetchAppointments=async()=>{
         try {
-            const res = await axiosInstance.get(`/appointment/getUpcomingAppointments/${user?._id}`);
+            const res = await axiosInstance.get(`/appointment/getUpcomingAppointments/doc/${user?._id}`);
             if(res.data){
+                console.log("app : " , res.data)
                 setappointments(res.data);
             }
             
@@ -84,8 +89,45 @@ const Dashboard = () => {
         return average;
     }
 
+    
 
+    const fetchVirtualAppointments = async()=>{
+        try {
+            const res = await axiosInstance.get(`/virtualAppointment/getUpcomingAppointments/doc/${user?._id}`);
+            console.log(" res : "  ,res)
+            if(res.data){
+                console.log(" : " , res.data)
+                setvirtualAppointments(res.data);
+            }
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
 
+    const fetchLiveAppointments = async()=>{
+        try {
+            const res = await axiosInstance(`/appointment/getRecentlyPassedAppointmentsByDoctorId/${user._id}`);
+            if(res.data){
+                console.log("live appointmnts : " , res.data);
+                setliveAppointments(res.data)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const fetchLiveVirtualAppointments = async()=>{
+        try {
+            const res= await axiosInstance(`/virtualAppointment/getRecentlyPassedAppointments/${user._id}`);
+            if(res.data){
+                console.log("virtual live appintments : " , res.data)
+                setliveVirtualAppointments(res.data);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const statsTabs = [
         {
@@ -118,10 +160,14 @@ const Dashboard = () => {
     ]
     
     useEffect(() => {
+        
         fetchClinics()
         fetchPatients()
         fetchReviews()
         fetchAppointments()
+        fetchVirtualAppointments();
+        fetchLiveAppointments();
+        fetchLiveVirtualAppointments();
         
     }, [user])
     
@@ -169,8 +215,8 @@ const Dashboard = () => {
 
             <div className='grid md:grid-cols-2 gap-10 my-4 px-3'>
                 {/* Live Appointments */}
-                <LiveAppointments />
-                <OneonOne />
+                <LiveAppointments upcomingAppointments={appointments} liveAppointments={liveAppointments}  />
+                <OneonOne upcomingAppointments={virtualAppointments} liveAppointments={liveVirtualAppointments} />
             </div>
 
             <AddClinic open={open} onClose={() => setopen(false)} />

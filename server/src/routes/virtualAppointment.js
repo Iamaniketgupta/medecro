@@ -6,7 +6,9 @@ import {
   getVirtualAppointmentById,
   updateVirtualAppointmentStatus,
   deleteVirtualAppointment,
-  getUpcomingAppointments
+  getUpcomingAppointments,
+  getUpcomingAppointmentsByDoctorId,
+  getRecentlyPassedAppointments
 } from "../controllers/virtualAppointment.controller.js";
 
 const router = express.Router();
@@ -32,4 +34,6 @@ router.delete("/:appointmentId", deleteVirtualAppointment);
 
 router.get('/getUpcomingAppointments/:userId' , getUpcomingAppointments)
 
+router.get('/getUpcomingAppointments/doc/:userId' , getUpcomingAppointmentsByDoctorId)
+router.get('/getRecentlyPassedAppointments/:userId' , getRecentlyPassedAppointments);
 export default router;

@@ -7,7 +7,9 @@ import {
     getAppointmentById,
     updateAppointmentStatus,
     deleteAppointment,
-    getUpcomingAppointments
+    getUpcomingAppointments,
+    getUpcomingAppointmentsByDoctorId,
+    getRecentlyPassedAppointmentsByDoctorId
 } from '../controllers/appointment.controller.js';
 
 const router = express.Router();
@@ -32,6 +34,8 @@ router.put('/:appointmentId', updateAppointmentStatus);
 
 // Route to delete an appointment
 router.delete('/:appointmentId', deleteAppointment);
-router.get('/getUpcomingAppointments/:userId' , getUpcomingAppointments)
+router.get('/getUpcomingAppointments/v/:userId' , getUpcomingAppointments)
 
+router.get('/getUpcomingAppointments/doc/:userId' , getUpcomingAppointmentsByDoctorId)
+router.get('/getRecentlyPassedAppointmentsByDoctorId/:userId'  , getRecentlyPassedAppointmentsByDoctorId)
 export default router;

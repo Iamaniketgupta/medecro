@@ -37,4 +37,5 @@ app.use("/virtualSlot" , virtualSlot);
 app.use('/virtualAppointment' , virtualAppointmentRouter)
 app.use('/prescription' , prescriptionRouter)
 
+
 export {app} 
