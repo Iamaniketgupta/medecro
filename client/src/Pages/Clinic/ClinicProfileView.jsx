@@ -102,9 +102,9 @@ const ClinicProfileView = () => {
           date: getFormattedDate(slot.date),
         }));
         setSlots(formattedSlots);
-        setSelectedDate(formattedSlots[0].date);
+        setSelectedDate(formattedSlots[0]?.date);
         setTimeSlots(formattedSlots
-          .filter(app => app.date === formattedSlots[0].date)
+          .filter(app => app.date === formattedSlots[0]?.date)
           .map(app => app.timeSlot)
         );
       }
@@ -149,7 +149,7 @@ const ClinicProfileView = () => {
     }
   }, [clinic]);
   
-  if (!clinic || !slots.length ) {
+  if (!clinic || !slots ) {
     return <>Loading...</>;
   }
   
@@ -266,11 +266,10 @@ const ClinicProfileView = () => {
             <div className="flex items-center gap-4 my-5 px-5">
               {timeSlots.map((slot, index) => (
                 <div
-                  key={index}
-                  className="rounded-2xl font-bold bg-green-50 px-2 py-1 text-sm cursor-pointer border-2 border-green-700 hover:bg-green-700 hover:text-white text-gray-900 shadow-md"
-                  
+                  key={slot}
+                  className={`rounded-2xl font-bold bg-green-50 px-2 py-1 text-sm cursor-pointer border-2 border-green-700 hover:bg-green-700 ${selectedSlot?.timeSlot == slot && "bg-green-700 text-white"}  hover:text-white text-gray-900 shadow-md`} 
                 >
-                    <div onClick={() => {
+                    <div  onClick={() => {
                     handleSlotSelection(slot)}
                   }>
 
@@ -316,12 +315,13 @@ const ClinicProfileView = () => {
                 <LucideStethoscope className="  text-gray-700" /> {clinic?.doctor.speciality}
               </p>
               <p className="flex my-1 items-center justify-center  gap-2 font-bold text-md">
-                {" "}
-                <FaUserDoctor className=" text-gray-700" /> MBBS, M.D
+                
+              {clinic.doctor.degree.map((d) => d).join(" , ")}
+                <FaUserDoctor className=" text-gray-700" />
               </p>
               <p className="flex my-1 items-center justify-center  gap-2 font-bold text-md">
                 {" "}
-                <FaClock className=" text-gray-700" /> 7+ Years Experience
+                <FaClock className=" text-gray-700" /> {clinic?.doctor?.experience}+ Years Experience
               </p>
             </div>
             <hr />
@@ -334,7 +334,7 @@ const ClinicProfileView = () => {
                 <div
                   key={date}
                   className={`rounded-2xl font-bold bg-blue-50 p-3 cursor-pointer border-2 border-blue-700 ${
-                    selectedDate === date
+                    selectedVirtualDate === date
                       ? "bg-blue-700 text-white"
                       : "hover:bg-blue-700 hover:text-white"
                   } text-gray-900 shadow-md`}
@@ -350,7 +350,7 @@ const ClinicProfileView = () => {
               {virtualTimeSlots.map((slot, index) => (
                 <div
                   key={index}
-                  className="rounded-2xl mb-2 font-bold bg-green-50 px-2 py-1 text-sm cursor-pointer border-2 border-green-700 hover:bg-green-700 hover:text-white text-gray-900 shadow-md"
+                  className={`rounded-2xl mb-2 font-bold bg-green-50 px-2 py-1 text-sm cursor-pointer border-2 border-green-700 hover:bg-green-700 ${selectedVirtualSlot?.timeSlot == slot && "bg-green-700 text-white"}  hover:text-white text-gray-900 shadow-md`}
                   
                 >
                     <div onClick={() => {

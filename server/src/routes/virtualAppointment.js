@@ -6,6 +6,7 @@ import {
   getVirtualAppointmentById,
   updateVirtualAppointmentStatus,
   deleteVirtualAppointment,
+  getUpcomingAppointments
 } from "../controllers/virtualAppointment.controller.js";
 
 const router = express.Router();
@@ -27,5 +28,8 @@ router.put("/:appointmentId", updateVirtualAppointmentStatus);
 
 // Delete a virtual appointment
 router.delete("/:appointmentId", deleteVirtualAppointment);
+
+
+router.get('/getUpcomingAppointments/:userId' , getUpcomingAppointments)
 
 export default router;

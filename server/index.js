@@ -8,8 +8,6 @@ dotenv.config({
   path: "./env",
 });
 
-
-
 // Connect to MongoDB
 connectDB()
   .then(() => {
@@ -24,37 +22,40 @@ connectDB()
       },
     });
 
+    const userSocketMap = new Map();
+
     // Set up Socket.IO connection
     io.on("connection", (socket) => {
       console.log("New client connected:", socket.id);
-
-      // Handle events and communication with the client
-      socket.on("message", (data) => {
-        console.log("Message received:", data);
-        // Broadcast the message to all clients
-        socket.broadcast.emit("message", data);
+      socket.on("register", ({ userId, role }) => {
+        userSocketMap.set(userId, socket.id);
+        console.log(
+          `User registered: ${role} - ${userId}, Socket ID: ${socket.id}`
+        );
       });
 
+      // Handle message from doctor to patient
+      socket.on("message", ({ senderId, receiverId, message }) => {
+        console.log(
+          "Message received from",
+          senderId,
+          "to",
+          receiverId,
+          ":",
+          message
+        );
 
-      // Broadcast when a user joins
-      socket.broadcast.emit('user-joined', socket.id);
-
-      // Handle incoming offer from a client
-      socket.on('offer', ({ offer, targetId }) => {
-        io.to(targetId).emit('offer', { offer, from: socket.id });
+        const receiverSocketId = userSocketMap.get(receiverId);
+        if (receiverSocketId) {
+          // Send message to the specific receiver
+          io.to(receiverSocketId).emit("message", {
+            senderId,
+            message,
+          });
+        } else {
+          console.log("Receiver not connected:", receiverId);
+        }
       });
-
-      // Handle incoming answer from a client
-      socket.on('answer', ({ answer, targetId }) => {
-        io.to(targetId).emit('answer', { answer, from: socket.id });
-      });
-
-      // Handle ICE candidates
-      socket.on('ice-candidate', ({ candidate, targetId }) => {
-        io.to(targetId).emit('ice-candidate', { candidate, from: socket.id });
-      });
-
-      
 
       // Handle client disconnect
       socket.on("disconnect", () => {

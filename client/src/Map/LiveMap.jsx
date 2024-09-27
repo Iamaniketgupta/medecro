@@ -13,12 +13,12 @@ L.Icon.Default.mergeOptions({
 });
 
 const LiveMap = ({markerPositio1}) => {
-  const markerPosition = [20.5937, 78.9629]; // Center of India
+  const markerPosition =markerPositio1 ||  [20.5937, 78.9629]; // Center of India
 
   return (
     <div className="w-full h-full rounded-xl">
       <MapContainer
-        center={markerPosition} // Center the map at the marker's position
+        center={ markerPosition} // Center the map at the marker's position
         zoom={5} // Zoom level
         className="w-full h-full rounded-xl"
         zoomControl={false} // Disable zoom controls (plus/minus buttons)
@@ -29,7 +29,7 @@ const LiveMap = ({markerPositio1}) => {
         />
 
         {/* Add Marker */}
-        <Marker position={markerPosition}></Marker>
+        <Marker position={ markerPosition}></Marker>
       </MapContainer>
     </div>
   );

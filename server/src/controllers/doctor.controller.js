@@ -239,6 +239,16 @@ const getDoctorById = asyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponse(200, doctor, 'Doctor retrieved successfully'));
 });
 
+
+const getdoctor = asyncHandler(async(req,res)=>{
+    const user  = req.user;
+    if(!user){  
+        throw new ApiError(404, "User not found");
+    }
+
+    res.status(200).json(new ApiResponse(200 , user , "doctor dounf successfullty"))
+})
+
 export {
     initiateRegister,
     verifyOtp,
@@ -246,5 +256,6 @@ export {
     getRefreshToken,
     updateAvatar,
     getPatients,
-    getDoctorById
+    getDoctorById,
+    getdoctor
 };

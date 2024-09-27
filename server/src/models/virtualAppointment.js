@@ -1,36 +1,45 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const virtualAppointmentSchema = new mongoose.Schema({
+const virtualAppointmentSchema = new mongoose.Schema(
+  {
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     doctorId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Doctor',
-        required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Doctor",
+      required: true,
     },
     slotId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'VirtualSlot',
-        required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "VirtualSlot",
+      required: true,
+    },
+    roomId: {
+      type: String,
     },
     isAttended: {
-        type: Boolean,
-        default: false,
+      type: Boolean,
+      default: false,
     },
     payment: {
-        type: Number,
-        required: true,
+      type: Number,
+      required: true,
     },
     paymentStatus: {
-        type: String,
-        enum: ['Pending', 'Completed', 'Failed'],
-        default: 'Pending',
+      type: String,
+      enum: ["Pending", "Completed", "Failed"],
+      default: "Pending",
     },
-}, { timestamps: true });
+  },
+  { timestamps: true }
+);
 
-const VirtualAppointment = mongoose.model('VirtualAppointment', virtualAppointmentSchema);
+const VirtualAppointment = mongoose.model(
+  "VirtualAppointment",
+  virtualAppointmentSchema
+);
 
 export default VirtualAppointment;

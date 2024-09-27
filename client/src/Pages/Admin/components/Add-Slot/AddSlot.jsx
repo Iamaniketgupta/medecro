@@ -81,70 +81,77 @@ const AddSlot = () => {
 
     return (
         <div className="p-4">
-            <h2 className="text-2xl font-bold mb-4">Add Available Slots</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Select Clinic</label>
-                    <select
-                        value={selectedClinic}
-                        onChange={(e) => setSelectedClinic(e.target.value)}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                        required
-                    >
-                        <option value="">Select a clinic</option>
-                        {clinics.map((clinic) => (
-                            <option key={clinic._id} value={clinic._id}>
-                                <div className="flex items-center">
-                                    <img src={clinic.clinicImages[0]} alt={clinic.clinicName} className="h-8 w-8 rounded-full mr-2" />
-                                    {clinic.clinicName}
-                                </div>
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Date</label>
-                    <input
-                        type="date"
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Time Slots (HH:MM)</label>
-                    {timeSlots.map((slot, index) => (
-                        <div key={index} className="flex items-center gap-2">
-                            <input
-                                type="time"
-                                value={slot}
-                                onChange={(e) => handleTimeSlotChange(index, e.target.value)}
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                                required
-                            />
-                            <button
-                                type="button"
-                                onClick={() => removeTimeSlot(index)}
-                                className="bg-red-500 text-white px-2 py-1 rounded"
-                            >
-                                Remove
-                            </button>
-                        </div>
-                    ))}
-                    <button
-                        type="button"
-                        onClick={addTimeSlot}
-                        className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
-                    >
-                        Add Another Slot
-                    </button>
-                </div>
-                <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
-                    Submit Slots
-                </button>
-            </form>
+    <h2 className="text-2xl font-bold mb-4">Add Available Slots</h2>
+    <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Clinic Selection */}
+        <div>
+            <label className="block text-sm font-medium text-gray-700">Select Clinic</label>
+            <select
+                value={selectedClinic}
+                onChange={(e) => setSelectedClinic(e.target.value)}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                required
+            >
+                <option value="">Select a clinic</option>
+                {clinics.map((clinic) => (
+                    <option key={clinic._id} value={clinic._id}>
+                        {clinic.clinicName}
+                    </option>
+                ))}
+            </select>
         </div>
+
+        {/* Date Selection */}
+        <div>
+            <label className="block text-sm font-medium text-gray-700">Date</label>
+            <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                required
+            />
+        </div>
+
+        {/* Time Slots */}
+        <div>
+            <label className="block text-sm font-medium text-gray-700">Time Slots (HH:MM)</label>
+            <div className="flex flex-wrap gap-2">
+                {timeSlots.map((slot, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                        <input
+                            type="time"
+                            value={slot}
+                            onChange={(e) => handleTimeSlotChange(index, e.target.value)}
+                            className="mt-1 block w-28 border border-gray-300 rounded-md shadow-sm p-2"
+                            required
+                        />
+                        <button
+                            type="button"
+                            onClick={() => removeTimeSlot(index)}
+                            className="bg-red-500 text-white px-2 py-1 rounded"
+                        >
+                            Remove
+                        </button>
+                    </div>
+                ))}
+            </div>
+            <button
+                type="button"
+                onClick={addTimeSlot}
+                className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
+            >
+                Add Another Slot
+            </button>
+        </div>
+
+        {/* Submit Button */}
+        <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded">
+            Submit Slots
+        </button>
+    </form>
+</div>
+
     );
 };
 

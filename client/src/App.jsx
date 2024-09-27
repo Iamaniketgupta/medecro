@@ -30,13 +30,67 @@ import ViewReport from "./Pages/Patient/ViewReport";
 import PChat from "./Pages/Patient/Chat";
 import AllClinics from "./Pages/Home/components/AllClinics";
 import ReportSum from "./Pages/Home/components/ReportSum";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import BookAppointment from "./Pages/Patient/AppointmentBooking";
 import BookVirtualAppointment from "./Pages/Patient/VirtualAppointmentBooking"
 import AddSlot from "./Pages/Admin/components/Add-Slot/AddSlot";
 import AddVirtualSlot from "./Pages/Admin/components/Add-Slot/AddVirtualSlot";
+import VideoCallComponent from "./Pages/VideoCall/VideoCallComponent";
+import SlotAdd from "./Pages/Admin/components/Add-Slot/SlotAdd";
+import { useEffect } from "react";
+import axiosInstance from "./axiosConfig/axiosConfig";
+import { login } from "./store/authSlice";
+
 function App() {
   const user = useSelector(state=>state.auth.user);
+  const dispatch = useDispatch()
+  console.log("user : " , user);
+
+  const fetchUser = async()=>{
+    try {
+      const res = await axiosInstance(`/users/getuser`);
+      if(res.data){
+        
+        return {user : res.data.data , type:"user"}
+      }
+    } catch (error) {
+      console.log(error)
+      return null;
+    }
+  }
+
+  const fetchDoctor = async()=>{
+    try {
+      const res = await axiosInstance(`/doctor/getdoctor`);
+      if(res.data){
+        
+        return {user : res.data.data , type:"doctor"}
+      }
+    } catch (error) {
+      console.log(error)
+      return null;
+    }
+  }
+
+
+  const fetchUserForRedux = async(req,res)=>{
+    const accessToken = localStorage.getItem("accessToken");
+    console.log({accessToken})
+    if (accessToken) {
+      const {user , type} = await fetchUser() || await fetchDoctor();
+      if(user){
+        dispatch(login({user , type}))
+      }
+    }
+  }
+
+  useEffect(() => {
+    if(!user){
+      fetchUserForRedux()
+    }
+    
+  }, [user])
+  
   
   return (
     <div>
@@ -67,7 +121,7 @@ function App() {
         <Route path="/clinic/profile" element={<AdminPanel>< Profile /></AdminPanel>} />
         <Route path="/clinic/chat" element={<AdminPanel>< Chat/></AdminPanel>} />
         <Route path="/clinic/chat/:id" element={<AdminPanel>< ChatPage/></AdminPanel>} />
-        <Route path="/clinic/add-slot" element={<AdminPanel>< AddSlot /></AdminPanel>} />
+        <Route path="/clinic/add-slot" element={<AdminPanel>< SlotAdd /></AdminPanel>} />
         
         <Route path="/clinic/add-virtual-slot" element={<AdminPanel>< AddVirtualSlot /></AdminPanel>} />
         {/* Patient Routes */}
@@ -77,6 +131,10 @@ function App() {
         <Route path="/patient/chat" element={<PAdminPanel>< PChat /></PAdminPanel>} />
         <Route path="/patient/report/:reportId" element={<PAdminPanel><ViewReport /></PAdminPanel>} />
         <Route path="/patient/summarise" element={<ReportSum/>}/>
+
+
+        {/* Video call Routes */}
+        <Route path="/vc/:roomID" element={<VideoCallComponent />} />
 
                                                  
       </Routes>
