@@ -5,7 +5,7 @@ const FeatureSection = () => {
     <div className="relative mt-20 border-b border-gray-800 min-h-[800px]">
       <div className="text-center">
         <h2 className="text-3xl sm:text-5xl lg:text-6xl mt-10 lg:mt-20 tracking-wide">
-          Say goodbye to the hassle of clinic appointments and outdated offline ads!
+          Say goodbye to the hassle of clinic appointments!<br/>
           <span className="bg-gradient-to-r from-blue-500 to-blue-800 text-transparent bg-clip-text">
             Elevate your clinic with our digital platform
           </span>
