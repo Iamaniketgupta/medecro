@@ -18,6 +18,10 @@ const VideoCallComponent = () => {
     updatedAt: "2024-09-24T07:26:06.011Z",
     __v: 0
 };
+
+const type = useSelector((state) => state.auth?.type);
+console.log({type})
+
   const videoCallContainer = useRef(null); // Create a ref for the video call container
   const navigate = useNavigate()
 
@@ -31,7 +35,9 @@ const VideoCallComponent = () => {
 
       const appID = 1455837037;
       const serverSecret = "d0c816a85a98b775f53cd72a5ba0accb";
-      const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID, user?._id, user?.fullName + user._id.slice(-5));
+      const username = (user?.fullName || user?.name) + user._id.toString().slice(-5);
+
+      const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID, user?._id, username);
 
       const zp = ZegoUIKitPrebuilt.create(kitToken);
 
@@ -52,7 +58,12 @@ const VideoCallComponent = () => {
         turnOnCameraWhenJoining: true,     // Automatically turn on camera
         showPreJoinView: false,    
         onLeaveRoom: () => {
-          navigate("/patient/dashboard")
+          if(type == 'doctor'){
+            navigate("/clinic/dashboard")
+
+          }else{
+            navigate("/patient/dashboard")
+          }
 
         }        // Skip the pre-join view
       });

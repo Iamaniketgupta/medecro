@@ -1,5 +1,5 @@
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Home from "./Pages/Home/Home";
 
@@ -43,8 +43,10 @@ import { login } from "./store/authSlice";
 
 function App() {
   const user = useSelector(state=>state.auth.user);
+  const type = useSelector(state=>state.auth.type);
+  console.log({user , type});
   const dispatch = useDispatch()
-  console.log("user : " , user);
+  const navigate = useNavigate();
 
   const fetchUser = async()=>{
     try {
@@ -63,7 +65,6 @@ function App() {
     try {
       const res = await axiosInstance(`/doctor/getdoctor`);
       if(res.data){
-        
         return {user : res.data.data , type:"doctor"}
       }
     } catch (error) {
@@ -81,6 +82,9 @@ function App() {
       if(user){
         dispatch(login({user , type}))
       }
+    }else{
+      navigate('/login')
+
     }
   }
 
