@@ -31,10 +31,10 @@ const transporter = nodemailer.createTransport({
 // Add a new virtual appointment
 export const addVirtualAppointment = async (req, res) => {
   try {
-    const { userId, doctorId, slotId, payment } = req.body;
+    const { userId, doctorId, slotId, payment  , roomId} = req.body;
 
     // Validate request body
-    if (!userId || !doctorId || !slotId || !payment) {
+    if (!userId || !doctorId || !slotId || !payment || !roomId) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
@@ -60,6 +60,7 @@ export const addVirtualAppointment = async (req, res) => {
       slotId,
       payment,
       paymentStatus: "Completed",
+      roomId
     });
 
     // Save the appointment
@@ -248,3 +249,23 @@ export const deleteVirtualAppointment = async (req, res) => {
     res.status(500).json({ message: "Failed to delete virtual appointment", error: error.message });
   }
 };
+
+export const getUpcomingAppointments = async(req,res)=>{
+
+  try{
+    const {userId} = req.params;
+    
+    const user = await User.findById(userId);
+    if(!user){
+      return res.status(404).json({message: "User not found"});
+    }
+    
+    const appointments = await VirtualAppointment.find({userId, isAttended: false})
+    .populate("doctorId")
+    .populate("slotId")
+
+    res.status(200).json(appointments);
+  }catch(error){
+    res.status(500).json({message: "Failed to fetch upcoming appointments", error: error.message});
+  }
+}

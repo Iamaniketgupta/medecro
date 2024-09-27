@@ -13,12 +13,13 @@ import { useSelector } from 'react-redux';
 
 const Dashboard = () => {
     // const [currentUser, setCurrentUser] = useRecoilState(userData);
-    const [clinics, setclinics] = useState([])
-    const user = useSelector(state=>state.auth.user);
-    const [patients, setpatients] = useState([])
-    const [reviews, setreviews] = useState([])
-    
+    const [clinics, setclinics] = useState([]);
+    const [patients, setpatients] = useState([]);
+    const [reviews, setreviews] = useState([]);
     const [open,setopen]= useState(false);
+    const [appointments, setappointments] = useState([]);
+    
+    const user = useSelector(state=>state.auth.user);
     
 
     const fetchClinics =async()=>{
@@ -50,10 +51,21 @@ const Dashboard = () => {
 
     const fetchReviews =async()=>{
         try {
-            const res = await axiosInstance.get(`/reviews/${user?._id}`);
+            const res = await axiosInstance.get(`/review/${user?._id}`);
             if(res.data){
-                
-                setreviews(res.data.data);
+                setreviews(res.data);
+            }
+            
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
+    const fetchAppointments=async()=>{
+        try {
+            const res = await axiosInstance.get(`/appointment/getUpcomingAppointments/${user?._id}`);
+            if(res.data){
+                setappointments(res.data);
             }
             
         } catch (error) {
@@ -62,13 +74,13 @@ const Dashboard = () => {
     }
 
     function calculateAverage(reviews) {
-        if (reviews.length === 0) {
+        if (reviews === null || reviews?.length === 0) {
             return 0; // Avoid division by zero
         }
     
         // Sum the ratings of all reviews
         const sum = reviews.reduce((accumulator, current) => accumulator + current.rating, 0);
-        const average = sum / reviews.length; // Calculate the average
+        const average = sum / reviews?.length; // Calculate the average
         return average;
     }
 
@@ -79,14 +91,14 @@ const Dashboard = () => {
         {
             id: 1,
             title: "Total patients",
-            value: patients.length,
+            value: patients?.length,
             icon: <FaUserDoctor className='' />
 
         },
         {
             id: 2,
             title: "Active Appointments",
-            value: "10",
+            value: appointments?.length,
             icon: <FaChartSimple />
         },
         {
@@ -99,35 +111,19 @@ const Dashboard = () => {
         {
             id: 4,
             title: "Total Reviews",
-            value: reviews.length,
+            value: reviews?.length,
             icon: <FaPenSquare />
 
         },
     ]
-    // const clinics = [
-    //     {
-    //         id: 1,
-    //         img: 'https://plus.unsplash.com/premium_photo-1682145291930-43b73e27446e?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2xpbmljfGVufDB8fDB8fHww',
-    //         Name: "SabarMati Clinic",
-    //         location: "102 Sector near jain villa",
-    //         phone: `+91 1234567890`,
-    //     },
-    //     {
-    //         id: 1,
-    //         img: 'https://plus.unsplash.com/premium_photo-1673547484865-199b16c93a5e?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    //         Name: "Asha Clinic & Care",
-    //         location: "102 Sector near jain villa",
-    //         phone: `+91 1234567890`,
-    //     },
-
-    // ]
-
+    
     useEffect(() => {
         fetchClinics()
         fetchPatients()
         fetchReviews()
+        fetchAppointments()
         
-    }, [])
+    }, [user])
     
 
 

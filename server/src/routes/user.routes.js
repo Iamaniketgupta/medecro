@@ -8,7 +8,8 @@ import {
     updateAvatar, 
     addDoctorToUser, 
     removeDoctorFromUser ,
-    getuserbyid
+    getuserbyid,
+    getuser
 } from '../controllers/user.controller.js';
 import { upload } from "../middlewares/multer.middleware.js";
 
@@ -29,5 +30,5 @@ router.post('/avatar', verifyJwt, upload.single('avatar'), updateAvatar);
 // Routes to manage doctor associations
 router.post('/add-doctor', verifyJwt, addDoctorToUser);
 router.post('/remove-doctor', verifyJwt, removeDoctorFromUser);
-
+router.get('/getuser' ,verifyJwt, getuser);
 export default router;

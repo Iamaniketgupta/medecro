@@ -268,6 +268,14 @@ const getuserbyid = asyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponse(200, user, "User found successfully"));
 });
 
+const getuser = asyncHandler(async(req,res)=>{
+    const user = req.user;
+    if(!user){
+        throw new ApiError(404, "User not found");
+    }
+    res.status(200).json(new ApiResponse(200, user, "User found successfully"));
+})
+
 export {
     initiateRegister,
     verifyOtp,
@@ -276,5 +284,6 @@ export {
     updateAvatar,
     addDoctorToUser,
     removeDoctorFromUser,
-    getuserbyid
+    getuserbyid,
+    getuser
 };
