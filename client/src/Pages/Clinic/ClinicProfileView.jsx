@@ -104,10 +104,10 @@ const ClinicProfileView = () => {
           date: getFormattedDate(slot?.date),
         }));
         setSlots(formattedSlots);
-        console.log(formattedSlots)
+        
         setSelectedDate(formattedSlots[0]?.date);
         setTimeSlots(formattedSlots
-          .filter(app => app.date === formattedSlots[0].date)
+          .filter(app => app.date === formattedSlots[0]?.date)
           .map(app => app.timeSlot)
         );
       }
@@ -248,7 +248,7 @@ const ClinicProfileView = () => {
             <h2 className="text-gray-800 mt-3">Available Slots</h2>
 
             {/* Dates */}
-            <div
+           { uniqueDates.length>0 ? <div
               className="flex items-center gap-4 mb-4 mt-2 px-5 "
               style={{ overflowX: "scroll" , scrollbarWidth:'none' }}
             >
@@ -264,19 +264,17 @@ const ClinicProfileView = () => {
                   {date}
                 </div>
               ))}
-            </div>
+            </div> : <div className="text-center">No Slots Available</div>}
 
             {/* Timings */}
             <div className="flex items-center gap-4 my-5 px-5">
               {timeSlots.map((slot, index) => (
                 <div
-                  key={index}
-                  className="rounded-2xl font-bold bg-green-50 px-2 py-1 text-sm cursor-pointer border-2 border-green-700 hover:bg-green-700 hover:text-white text-gray-900 shadow-md"
-
+                  key={slot}
+                  className={`rounded-2xl font-bold bg-green-50 px-2 py-1 text-sm cursor-pointer border-2 border-green-700 hover:bg-green-700 ${selectedSlot?.timeSlot == slot && "bg-green-700 text-white"}  hover:text-white text-gray-900 shadow-md`} 
                 >
-                  <div onClick={() => {
-                    handleSlotSelection(slot)
-                  }
+                    <div  onClick={() => {
+                    handleSlotSelection(slot)}
                   }>
 
                     {slot}
@@ -320,14 +318,15 @@ const ClinicProfileView = () => {
                 {" "}
                 <LucideStethoscope className="  text-gray-700" /> {clinic?.doctor.speciality}
               </p>
-              <p className="flex my-1 items-center justify-center gap-2 font-bold text-md">
-                <FaUserDoctor className="text-gray-700" />
-                {clinic?.doctor.degrees.join(", ")}
+              <p className="flex my-1 items-center justify-center  gap-2 font-bold text-md">
+                
+                <FaUserDoctor className=" text-gray-700" />
+              {clinic?.doctor?.degrees?.map((d) => d).join(" , ")}
               </p>
 
               <p className="flex my-1 items-center justify-center  gap-2 font-bold text-md">
                 {" "}
-                <FaClock className=" text-gray-700" /> 7+ Years Experience
+                <FaClock className=" text-gray-700" /> {clinic?.doctor?.experience}+ Years Experience
               </p>
             </div>
             <hr />
@@ -339,10 +338,11 @@ const ClinicProfileView = () => {
               {uniqueVirtualDates.map((date) => (
                 <div
                   key={date}
-                  className={`rounded-2xl text-xs font-bold bg-blue-50 p-3 cursor-pointer border-2 border-blue-700 ${selectedDate === date
-                    ? "bg-blue-700 text-white"
-                    : "hover:bg-blue-700 hover:text-white"
-                    } text-gray-900 shadow-md`}
+                  className={`rounded-2xl text-xs min-w-fit font-bold bg-blue-50 py-2 px-3 cursor-pointer border-2 border-blue-700 ${
+                    selectedVirtualDate === date
+                      ? "bg-blue-700 text-white"
+                      : "hover:bg-blue-700 hover:text-white"
+                  } text-gray-900 shadow-md`}
                   onClick={() => handleVirtualDateClick(date)}
                 >
                   {date}
@@ -350,18 +350,19 @@ const ClinicProfileView = () => {
               ))}
             </div>
             {/* Timings  1:1 */}
-            <div className=" items-center place-content-center gap-y-2 gap-4 my-2 px-5 grid grid-cols-2">
-              <div className="flex items-center gap-4 ">
-                {virtualTimeSlots.map((slot, index) => (
-                  <div
-                    key={index}
-                    className="rounded-2xl min-w-fit mb-2 font-bold bg-green-50 px-2 py-1 text-sm cursor-pointer border-2 border-green-700 hover:bg-green-700 hover:text-white text-gray-900 shadow-md"
-
-                  >
+            <div className=" items-center place-content-center gap-y-2 gap-4  grid grid-cols-2">
+            <div className="flex items-center gap-4 my-2 px-5">
+              {virtualTimeSlots.map((slot, index) => (
+                <div
+                  key={index}
+                  className={`rounded-2xl mb-2 font-bold text-xs min-w-fit bg-green-50 px-2 py-1  cursor-pointer border-2 border-green-700 hover:bg-green-700 ${selectedVirtualSlot?.timeSlot == slot && "bg-green-700 text-white"}  hover:text-white text-gray-900 shadow-md`}
+                  
+                >
                     <div onClick={() => {
-                      handleVirtualSlotSelection(slot)
-                    }
-                    }>
+                    handleVirtualSlotSelection(slot)}
+                  }>
+
+                  
 
                       {slot}
                     </div>

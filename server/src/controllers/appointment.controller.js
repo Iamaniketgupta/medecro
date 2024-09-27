@@ -336,7 +336,8 @@ export const getUpcomingAppointments = async(req,res)=>{
     
     const appointments = await Appointment.find({userId, isAttended: false})
     .populate("doctorId")
-    .populate("slotId");
+    .populate("slotId")
+    .populate("clinicId");
 
     res.status(200).json(appointments);
   }catch(error){

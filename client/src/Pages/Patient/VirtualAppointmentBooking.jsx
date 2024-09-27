@@ -5,6 +5,7 @@ import axiosInstance from '../../axiosConfig/axiosConfig';
 import { useSelector } from 'react-redux';
 import { FaSpinner } from 'react-icons/fa'; // Import the spinner icon
 import { toast } from 'react-toastify';
+import { v4 as uuidv4 } from 'uuid'; // Correct import for uuid
 
 const AppointmentDetails = () => {
     const [clinic, setclinic] = useState(null);
@@ -14,6 +15,7 @@ const AppointmentDetails = () => {
     const { clinicId, SlotId } = useParams();
     const user = useSelector(state => state.auth.user);
     const navigate = useNavigate();
+
 
     const fetchClinicDetails = async () => {
         try {
@@ -48,7 +50,10 @@ const AppointmentDetails = () => {
         try {
             setLoading(true)
             const userId = user._id;
-            const res = await axiosInstance.post(`/virtualAppointment`, {  slotId: SlotId, userId, doctorId: clinic.doctor._id, payment: clinic.doctor.onsiteFee });
+            
+            const roomId = uuidv4(); 
+            console.log(roomId);
+            const res = await axiosInstance.post(`/virtualAppointment`, {  slotId: SlotId, userId, doctorId: clinic.doctor._id, payment: clinic.doctor.onsiteFee , roomId });
 
             if (res.data) {
                 console.log(res.data);
