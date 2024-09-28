@@ -4,6 +4,7 @@ import { MdFilterList } from 'react-icons/md';
 import axiosInstance from '../../../axiosConfig/axiosConfig';
 import {useSelector} from "react-redux"
 import { toast } from 'react-toastify';
+
 const ReviewSection = ({clinicId}) => {
   const [filter, setFilter] = useState('most-helpful');
   const [userRating, setUserRating] = useState(0);  // State for star rating (1-5)
@@ -146,7 +147,7 @@ const ReviewSection = ({clinicId}) => {
                   ></div>
                 </div>
               </div>
-              <div className="w-12 text-sm font-medium text-right">{item.percentage}%</div>
+              <div className="w-12 text-sm font-medium text-right">{item.percentage.toFixed(1)}%</div>
             </div>
           ))}
         </div>

@@ -11,11 +11,45 @@ const AppointmentDetails = () => {
     const [clinic, setclinic] = useState(null);
     const [slot, setslot] = useState(null);
     const [loading, setLoading] = useState(true); // Loading state
-
+    const RAZORPAY_KEY='rzp_test_mrBW5J4OwVHwDY';
     const { clinicId, SlotId } = useParams();
     const user = useSelector(state => state.auth.user);
     const navigate = useNavigate();
 
+    const checkoutHandler = async () => {
+        try {
+        const instance = async () => {
+            try {
+                const response = await axiosInstance.post(`/create_order`,{amt:clinic?.doctor?.onsiteFee});
+                return response.data.message;
+            } catch (error) {
+                console.log("error : ", error);
+            }
+        };
+
+        const order = await instance();
+        const key = RAZORPAY_KEY;
+        const options = {
+            key,
+            amount: Math.ceil(order.amount / 100),
+            currency: "INR",
+            name: clinic?.doctor?.name,
+            description: "RazorPay",
+            order_id: order.id,
+            notes: {
+                "address": "Razorpay Corporate Office"
+            },
+            theme: {
+                "color": "#121212"
+            }
+        };
+        const razor = new window.Razorpay(options);
+        razor.open();
+        return true;
+    } catch (error) {
+            return false;
+    }
+    };
 
     const fetchClinicDetails = async () => {
         try {
@@ -42,8 +76,9 @@ const AppointmentDetails = () => {
     };
 
     const handlePayment = () => {
-        // Implement payment logic here
+        if(checkoutHandler()){
         BookAppointment();
+        }
     };
 
     const BookAppointment = async () => {
