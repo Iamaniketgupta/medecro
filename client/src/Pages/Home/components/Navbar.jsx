@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 const Navbar = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const status = useSelector(state=>state.auth.status);
+  const type = useSelector(state=>state.auth.type)
 
   const toggleNavbar = () => {
     setMobileDrawerOpen(!mobileDrawerOpen);
@@ -51,7 +52,12 @@ const Navbar = () => {
 
               <button
                 onClick={()=>{
-                  navigate("/clinic/dashboard")
+                  if(type==='user'){
+                    navigate('/patient/dashboard')
+                  }else{
+                    navigate('/clinic/dashboard')
+                  }
+                  
                 }}
                 className="py-2 px-3 border rounded-md bg-blue-700 text-white font-semibold"
               >

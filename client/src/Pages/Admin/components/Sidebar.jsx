@@ -6,6 +6,7 @@ import { FaChartLine, FaMessage, FaPersonCirclePlus } from "react-icons/fa6";
 import { TbDrone } from "react-icons/tb";
 import { FaClock, FaFile, FaFolder, FaFolderOpen, FaRegFolder, FaSignOutAlt } from "react-icons/fa";
 
+
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 
 
@@ -39,11 +40,6 @@ const SideBar = () => {
             title: 'Patient Records',
             link: `/clinic/records`,
             icon: <FaFolderOpen className='text-xl max-sm:text-sm' />
-        },
-        {
-            title: 'Chat and Calls',
-            link: `/clinic/chat`,
-            icon: <IoChatboxEllipses className='text-xl max-sm:text-sm' />
         },
         {
             title: 'Prescriptions',
