@@ -1,11 +1,13 @@
 
 import React, { useState } from 'react';
 import { MdOutlineSettings } from "react-icons/md";
+import { CgLock, CgProfile } from "react-icons/cg";
 import { MdDashboard } from "react-icons/md";
 import { FaChartLine, FaMessage, FaPersonCirclePlus } from "react-icons/fa6";
 import { TbDrone } from "react-icons/tb";
-import { FaFile, FaFolder, FaFolderOpen, FaRegFolder, FaSignOutAlt } from "react-icons/fa";
-import { CgProfile } from "react-icons/cg";
+import { FaClock, FaFile, FaFolder, FaFolderOpen, FaRegFolder, FaSignOutAlt } from "react-icons/fa";
+
+
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 
 
@@ -17,12 +19,14 @@ import { useRecoilState } from 'recoil';
 import { SidebarState, userData } from '../../../atom/states';
 import { IoChatboxEllipses } from 'react-icons/io5';
 import { icon } from 'leaflet';
+import { useSelector } from 'react-redux';
+import { Clock } from 'lucide-react';
 const cookies = new Cookies(null, { path: '/' });
 
 const SideBar = () => {
-    
+    const currentUser = useSelector(state=>state.auth.user);
+
     const {pathname}= useLocation();
-    const [currentUser,setCurrentUser] =useRecoilState(userData)
 
     const [open,setOpen] =useRecoilState(SidebarState);
     const navigate = useNavigate()
@@ -51,7 +55,7 @@ const SideBar = () => {
         {
             title:'Add Slot',
             link: `/clinic/add-slot`,
-            icon: <TbDrone className='text-xl max-sm:text-sm' />
+            icon: <FaClock className='text-xl max-sm:text-sm' />
         },
       
         // {

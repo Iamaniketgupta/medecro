@@ -89,11 +89,11 @@ const DoctorProfile = () => {
                 <h3 className="text-lg font-semibold text-gray-700 mb-5"> Statistics</h3>
                 <div className="grid md:grid-cols-4 gap-6">
                     <div className="flex flex-col items-center bg-blue-100 rounded-lg py-5">
-                        <h4 className="text-2xl font-bold text-blue-700">{patients.length}+</h4>
+                        <h4 className="text-2xl font-bold text-blue-700">{patients?.length}+</h4>
                         <p className="text-gray-500">Total Patients</p>
                     </div>
                     <div className="flex flex-col items-center bg-green-100 rounded-lg py-5">
-                        <h4 className="text-2xl font-bold text-green-700">{onlinrConsultations.length}+</h4>
+                        <h4 className="text-2xl font-bold text-green-700">{onlinrConsultations?.length}+</h4>
                         <p className="text-gray-500">Online Consultations</p>
                     </div>
                     <div className="flex flex-col items-center bg-yellow-100 rounded-lg py-5">
@@ -101,7 +101,7 @@ const DoctorProfile = () => {
                         <p className="text-gray-500">Average Rating</p>
                     </div>
                     <div className="flex flex-col items-center bg-red-100 rounded-lg py-5">
-                        <h4 className="text-2xl font-bold text-red-700">{user.experience} Years</h4>
+                        <h4 className="text-2xl font-bold text-red-700">{user?.experience} Years</h4>
                         <p className="text-gray-500">Experience</p>
                     </div>
                 </div>
@@ -113,7 +113,7 @@ const DoctorProfile = () => {
                     <div className="flex flex-col items-center">
                         <div className='relative'>
                             <img
-                                src={user.avatar || 'https://www.pngkey.com/png/detail/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png'}
+                                src={user?.avatar || 'https://www.pngkey.com/png/detail/114-1149878_setting-user-avatar-in-specific-size-without-breaking.png'}
                                 alt="Doctor Profile"
                                 className="rounded-full w-32 h-32 object-cover shadow-md"
                             />
@@ -124,15 +124,15 @@ const DoctorProfile = () => {
                             </div>
                             <input onChange={handleProfilePic} ref={ref} type="file" name="avatar" hidden id="" />
                         </div>
-                        <h2 className="text-xl font-bold text-gray-700 mt-4">Dr. {user.name}</h2>
-                        <p className="text-sm text-gray-500">{user.speciality}</p>
+                        <h2 className="text-xl font-bold text-gray-700 mt-4">Dr. {user?.name}</h2>
+                        <p className="text-sm text-gray-500">{user?.speciality}</p>
                         <p className="text-sm text-gray-500">
-                            {user.degrees?.join(', ')}
+                            {user?.degrees?.join(', ')}
                         </p>
                     {/* <p className="text-sm text-gray-500 mt-4">Phone</p> */}
-                    <p className="text-sm text-gray-700"> {user.phoneNumber}</p>
+                    <p className="text-sm text-gray-700"> {user?.phoneNumber}</p>
                     <p className="text-sm text-gray-500 mt-4">Email</p>
-                    <p className="text-sm text-gray-700">{user.email}</p>
+                    <p className="text-sm text-gray-700">{user?.email}</p>
                     </div>
 
                 </div>
@@ -144,7 +144,7 @@ const DoctorProfile = () => {
                         <div className="grid md:grid-cols-2 gap-6 mt-4">
                             <div>
                                 <p className="text-sm text-gray-500">Email</p>
-                                <p className="text-lg text-gray-700">{user.email}</p>
+                                <p className="text-lg text-gray-700">{user?.email}</p>
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Contact</p>
@@ -152,7 +152,7 @@ const DoctorProfile = () => {
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Age</p>
-                                <p className="text-lg text-gray-700">{user.age || 31}</p>
+                                <p className="text-lg text-gray-700">{user?.age || 31}</p>
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Gender</p>
@@ -166,19 +166,19 @@ const DoctorProfile = () => {
                         <div className="grid md:grid-cols-2 gap-6 mt-4">
                             <div>
                                 <p className="text-sm text-gray-500">Years of Experience</p>
-                                <p className="text-lg text-gray-700">{user.experience} years</p>
+                                <p className="text-lg text-gray-700">{user?.experience} years</p>
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Specialization</p>
-                                <p className="text-lg text-gray-700">{user.speciality}</p>
+                                <p className="text-lg text-gray-700">{user?.speciality}</p>
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Total Patients</p>
-                                <p className="text-lg text-gray-700">{patients.length}+</p>
+                                <p className="text-lg text-gray-700">{patients?.length}+</p>
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500">Online Consultations</p>
-                                <p className="text-lg text-gray-700">{onlinrConsultations.length}+</p>
+                                <p className="text-lg text-gray-700">{onlinrConsultations?.length}+</p>
                             </div>
                         </div>
                     </div>
@@ -186,10 +186,10 @@ const DoctorProfile = () => {
                     <div>
                         <h3 className="text-lg font-semibold text-gray-700">Qualifications</h3>
                         <ul className="list-disc ml-5 mt-4 text-gray-700">
-                            {user.degrees?.map((degree, index) => (
+                            {user?.degrees?.map((degree, index) => (
                                 <li key={index}>{degree}</li>
                             ))}
-                            {user.degrees && user.degrees.length === 0 && <p>No degrees added</p>}
+                            {user?.degrees && user?.degrees.length === 0 && <p>No degrees added</p>}
                         </ul>
                     </div>
                     

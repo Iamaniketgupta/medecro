@@ -3,13 +3,15 @@ import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { userData } from '../../../atom/states';
 import { IoNotifications } from 'react-icons/io5';
+import {  useSelector } from 'react-redux';
 // import { useRecoilState } from 'recoil';
 
 const Header = () => {
-    const [currentUser,setCurrentUser] =useRecoilState(userData);
-    useEffect(()=>{
-      console.log(currentUser?.user);
-    },[]);
+  const currentUser = useSelector(state=>state.auth.user);
+
+    // useEffect(()=>{
+    //   // console.log(currentUser?.user);
+    // },[]);
     // const pathname  = usePathname()
 
     return (

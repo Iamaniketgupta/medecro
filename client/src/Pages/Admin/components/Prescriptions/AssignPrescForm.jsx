@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import axiosInstance from '../../../../axiosConfig/axiosConfig';
 import { toast } from 'react-toastify';
-import { Loader2 } from 'lucide-react';
+import { Loader, Loader2 } from 'lucide-react';
 
 const AssignPrescriptionForm = ({ selectedPatient }) => {
+    console.log(selectedPatient)
     const [formData, setFormData] = useState({
-        clinicId: selectedPatient?.clinicId || null,
-        patientId: selectedPatient?._id || null,
         medicationName: '',
         dosage: '',
         frequency: '',
@@ -30,13 +29,12 @@ const AssignPrescriptionForm = ({ selectedPatient }) => {
 
     // Handle file upload and preview
     const handleFileUpload = (e) => {
-        const files = Array.from(e.target.files);
-        const updatedFiles = [...formData.reports, ...files];
-        const previews = files.map((file) => URL.createObjectURL(file));
-        setFormData({ ...formData, reports: updatedFiles });
-        setPreviewFiles([...previewFiles, ...previews]);
+        const file = e.target.files[0];  // Get only the first file
+        setFormData({ ...formData, reports: [file] });  // Store single file in an array
+        const preview = URL.createObjectURL(file);
+        setPreviewFiles([preview]);  // Only one preview
     };
-
+    
     // Remove uploaded file
     const handleRemoveFile = (index) => {
         const updatedFiles = formData.reports.filter((_, i) => i !== index);
@@ -46,32 +44,62 @@ const AssignPrescriptionForm = ({ selectedPatient }) => {
     };
 
     //  form submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log('Form Data Submitted:', formData);
-
+    
         try {
             setLoading(true);
-            const response = axiosInstance.post('/prescription/assign', formData);
+    
+            const data = new FormData();
+            data.append('clinicId', selectedPatient.clinicId);
+            data.append('patientId', selectedPatient.userId._id);
+            data.append('medicationName', formData.medicationName);
+            data.append('dosage', formData.dosage);
+            data.append('frequency', formData.frequency);
+            data.append('duration', formData.duration);
+            data.append('instructions', formData.instructions);
+    
+            if (formData.reports[0]) {
+                data.append('report', formData.reports[0]);
+            }
+    
+            const response = await axiosInstance.post('/prescription/assign', data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+    
             if (response.status === 201) {
                 toast.success('Prescription assigned successfully');
+                setFormData({
+                    medicationName: '',
+                    dosage: '',
+                    frequency: '',
+                    duration: '',
+                    instructions: '',
+                    reports: [],        
+                })
+                setPreviewFiles([]);
             } else {
                 throw new Error('Failed to assign prescription');
             }
         } catch (error) {
-            console.log(error)
-            toast.error('Failed to Assign prescription');
-        }
-        finally {
+            console.log(error);
+            toast.error('Failed to assign prescription');
+        } finally {
             setLoading(false);
-
         }
     };
+    
+    
     return (
         <form onSubmit={handleSubmit} className="p-8 bg-white rounded-lg">
 
             {/* Patient Info */}
             <div className="mb-8">
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
+
                 <div>
                     <label className="block text-sm font-medium text-gray-600">
                         Patient Name <span className='text-red-700'>*</span>
@@ -79,34 +107,35 @@ const AssignPrescriptionForm = ({ selectedPatient }) => {
                     <input
                         type="text"
                         name="patientName"
-                        value={selectedPatient?.name}
+                        value={selectedPatient?.userId.fullName}
                         disabled
                         className="mt-1 block w-full border-gray-400 p-1 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     />
                 </div>
-            </div>
+                
+            
 
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
                 <div>
                     <label className="block text-sm font-medium text-gray-600">Age</label>
                     <input
                         type="number"
                         name="age"
-                        value={selectedPatient?.age}
+                        value={selectedPatient?.userId.age}
                         disabled
                         className="mt-1 block w-full border-gray-400 p-1 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     />
                 </div>
-                <div>
+                </div>
+                {/* <div>
                     <label className="block text-sm font-medium text-gray-600">Gender</label>
                     <input
                         type="text"
                         name="gender"
-                        value={selectedPatient?.gender}
+                        value={selectedPatient?.userId.gender || 'Male'}
                         disabled
                         className="mt-1 block w-full border-gray-400 p-1 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     />
-                </div>
+                </div> */}
             </div>
 
             {/* Prescription Details */}
@@ -249,9 +278,9 @@ const AssignPrescriptionForm = ({ selectedPatient }) => {
             </div>
 
             {/* Submit Button */}
-            <div className="text-right">
-                {loading ? <div className="bg-blue-600 text-white font-semibold py-2 px-6 rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                    <Loader2 />
+            <div className="text-right flex items-center justify-end">
+                {loading ? <div className="bg-blue-600 w-fit  text-white font-semibold py-2 px-6 rounded-md shadow-md  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <Loader />
                 </div>
                     :
                     <button
