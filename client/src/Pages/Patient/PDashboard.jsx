@@ -288,7 +288,7 @@ const fetchReports = async()=>{
                 </p>
               </div>
 
-              <div className="w-52 h-full ">
+              <div className="w-52 h-full overflow-hidden">
                 <LiveMap markerPositio1={appointment?.clinicId?.locationCoordinates} />
               </div>
             </div>
