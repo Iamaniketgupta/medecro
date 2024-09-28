@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import Modal from 'react-modal'; // You can use any modal library or a custom one
 
 const UpdateDoctorModal = ({ isOpen, onRequestClose, doctorInfo, onUpdate }) => {
-    const [name, setName] = useState(doctorInfo.name || '');
-    const [email, setEmail] = useState(doctorInfo.email || '');
-    const [speciality, setSpeciality] = useState(doctorInfo.speciality || '');
-    const [phoneNumber, setPhoneNumber] = useState(doctorInfo.phoneNumber || '');
-    const [experience, setExperience] = useState(doctorInfo.experience || '');
-    const [age, setAge] = useState(doctorInfo.age || '');
+    console.log(doctorInfo)
+    const [name, setName] = useState(doctorInfo?.name );
+    const [email, setEmail] = useState(doctorInfo?.email );
+    const [speciality, setSpeciality] = useState(doctorInfo?.speciality );
+    const [phoneNumber, setPhoneNumber] = useState(doctorInfo?.phoneNumber );
+    const [experience, setExperience] = useState(doctorInfo?.experience);
+    const [age, setAge] = useState(doctorInfo?.age );
 
     const handleSubmit = async (e) => {
         e.preventDefault();
