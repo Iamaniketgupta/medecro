@@ -100,7 +100,7 @@ const AppointmentDetails = () => {
                     <p className="text-lg font-medium text-gray-800"><strong>Doctor:</strong> {clinic?.doctor?.name}</p>
                 </div>
 
-                <p className="text-lg text-gray-700 mb-4"><strong>Amount to Pay:</strong> <span className="text-xl font-bold text-green-600">${clinic?.doctor?.onsiteFee}</span></p>
+                <p className="text-lg text-gray-700 mb-4"><strong>Amount to Pay:</strong> <span className="text-xl font-bold text-green-600">₹{clinic?.doctor?.onsiteFee}</span></p>
 
                 <button 
                     onClick={handlePayment} 

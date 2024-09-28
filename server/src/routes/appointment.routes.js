@@ -34,7 +34,7 @@ router.put('/:appointmentId', updateAppointmentStatus);
 
 // Route to delete an appointment
 router.delete('/:appointmentId', deleteAppointment);
-router.get('/getUpcomingAppointments/v/:userId' , getUpcomingAppointments)
+router.get('/getUpcomingAppointment/user/:userId' , getUpcomingAppointments)
 
 router.get('/getUpcomingAppointments/doc/:userId' , getUpcomingAppointmentsByDoctorId)
 router.get('/getRecentlyPassedAppointmentsByDoctorId/:userId'  , getRecentlyPassedAppointmentsByDoctorId)

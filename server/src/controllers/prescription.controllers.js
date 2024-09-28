@@ -107,7 +107,13 @@ export const getPrescriptionById  = asyncHandler(async(req, res) => {
     const { id } = req.params;
 
     const prescription = await Prescription.findById(id)
-        .populate("clinicId")
+    .populate({
+        path: 'clinicId',
+        populate: {
+            path: 'doctor', 
+            model: 'Doctor', 
+        }
+    })
         .populate("patientId");
 
     if (!prescription) {
@@ -147,3 +153,28 @@ export const getAllPatientsAppointmentsByDoctorId = asyncHandler(async (req, res
         appointments
     });
 });
+
+
+export const getPrescriptionByPatientId = asyncHandler(async (req, res) => {
+    const { patientId } = req.params;
+    if(!patientId){
+        return res.status(404).json({ message: "Patient ID not found" });
+    }
+    const prescription = await Prescription.find({ patientId })
+    .populate({
+        path: 'clinicId',
+        populate: {
+            path: 'doctor', 
+            model: 'Doctor', 
+        }
+    })
+    .populate('patientId');
+
+    if (!prescription) {
+        return res.status(404).json({ message: "Prescription not found" });
+    }    
+
+    res.status(200).json({
+        message: "Prescription retrieved successfully",
+        prescription})
+}) 
