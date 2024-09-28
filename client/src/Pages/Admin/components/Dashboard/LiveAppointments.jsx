@@ -5,6 +5,10 @@ const LiveAppointments = ({
   upcomingAppointments = [],
   liveAppointments = [],
 }) => {
+
+  const handleCancel =async()=>{
+    
+  }
   return (
     <div className="shadow-lg bg-white py-5 rounded-xl">
       <h2 className="px-5 my-4 text-xl rounded-lg font-semibold text-gray-600">

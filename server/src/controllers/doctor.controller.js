@@ -251,6 +251,31 @@ const getdoctor = asyncHandler(async(req,res)=>{
     res.status(200).json(new ApiResponse(200 , user , "doctor dounf successfullty"))
 })
 
+// Controller to update doctor details
+const updateDoctor = asyncHandler(async (req, res) => {
+    const doctorId = req.user._id; 
+    const { name,email ,  speciality,  experience , age } = req.body;
+
+    
+    const doctor = await Doctor.findById(doctorId);
+    if (!doctor) {
+        throw new ApiError(404, 'Doctor not found');
+    }
+
+    // Update doctor details
+    if (name) doctor.name = name;
+    if (speciality) doctor.speciality = speciality;
+    if(email) doctor.email = email;
+    if(age) doctor.age = age;
+    
+    
+    if (experience !== undefined) doctor.experience = experience;
+    await doctor.save();
+
+    res.status(200).json(new ApiResponse(200, doctor, 'Doctor updated successfully'));
+});
+
+
 export {
     initiateRegister,
     verifyOtp,
@@ -259,5 +284,6 @@ export {
     updateAvatar,
     getPatients,
     getDoctorById,
-    getdoctor
+    getdoctor,
+    updateDoctor
 };

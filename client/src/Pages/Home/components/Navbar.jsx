@@ -1,18 +1,22 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { navItems } from "../../../constants";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const status = useSelector(state=>state.auth.status);
 
   const toggleNavbar = () => {
     setMobileDrawerOpen(!mobileDrawerOpen);
   };
+  const navigate  = useNavigate()
 
   const handleLogout = () => {
-    window.location.href = "/login";
+    localStorage.removeItem("accessToken");
+    navigate('/login')  
     
   };
 
@@ -35,24 +39,41 @@ const Navbar = () => {
             ))}
           </ul>
           <div className="hidden lg:flex justify-center space-x-4 items-center">
-            {1 ? (
+            {status ? (
+              <>
+              
               <button
                 onClick={handleLogout}
                 className="py-2 px-3 border rounded-md"
               >
-                Log in
+                Log out
               </button>
+
+              <button
+                onClick={()=>{
+                  navigate("/clinic/dashboard")
+                }}
+                className="py-2 px-3 border rounded-md bg-blue-700 text-white font-semibold"
+              >
+                Dashboard
+              </button>
+
+
+              
+              </>
             ) : (
+              <>
               <Link to={'/login'} className="py-2 px-3 border rounded-md">
                 Log In
               </Link>
-            )}
+              
             <Link
-              to="/signup"
-              className="bg-gradient-to-r text-white from-blue-500 to-blue-800 py-2 px-3 rounded-md"
-            >
-              Create an account
-            </Link>
+            to="/signup"
+            className="bg-gradient-to-r text-white from-blue-500 to-blue-800 py-2 px-3 rounded-md"
+          >
+            Create an account
+          </Link></>
+            )}
           </div>
           <div className="lg:hidden md:flex flex-col justify-end">
             <button onClick={toggleNavbar}>

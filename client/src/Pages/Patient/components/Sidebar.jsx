@@ -1,12 +1,11 @@
 
 import React, { useState } from 'react';
 import { MdOutlineSettings } from "react-icons/md";
-import { CgProfile } from "react-icons/cg";
 import { MdDashboard } from "react-icons/md";
 import { FaChartLine, FaMessage, FaPersonCirclePlus } from "react-icons/fa6";
 import { TbDrone } from "react-icons/tb";
 import { FaFile, FaFolder, FaFolderOpen, FaRegFolder, FaSignOutAlt } from "react-icons/fa";
-
+import { CgProfile } from "react-icons/cg";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 
 
@@ -40,9 +39,9 @@ const SideBar = () => {
             icon: <FaFolderOpen className='text-xl max-sm:text-sm' />
         },
         {
-            title: 'Chat and Calls',
-            link: `/patient/chat`,
-            icon: <IoChatboxEllipses className='text-xl max-sm:text-sm' />
+            title: 'Profile',
+            link: `/patient/profile`,
+            icon: <CgProfile className='text-xl max-sm:text-sm' />
         },
         // {
         //     title: 'Prescriptions',
@@ -88,6 +87,8 @@ const SideBar = () => {
             <div onClick={()=>{
             cookies.remove('auth')
             // router.push('/pilot/login')
+            localStorage.removeItem('accessToken')
+            navigate('/login')
         }
 
             } title='Sign out' className=' flex my-1 hover:bg-blue-500 hover:text-white inset-x-0 w-[80%] mx-auto rounded-md p-2 cursor-pointer  text-gray-800 items-center gap-x-4 
