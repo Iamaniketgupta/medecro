@@ -28,7 +28,10 @@ export const addVirtualSlot = async (req, res) => {
 export const getVirtualSlotsByDoctorId = async (req, res) => {
     try {
         const { doctorId } = req.params;
+        console.log("dada")
         const slots = await VirtualSlot.find({ doctor:doctorId }).populate('doctor'); // Populate doctor details if needed
+        console.log(slots)
+       
         res.status(200).json(slots);
     } catch (error) {
         res.status(500).json({ message: 'Failed to fetch virtual slots', error: error.message });

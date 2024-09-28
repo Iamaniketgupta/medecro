@@ -39,7 +39,7 @@ const storage = multer.diskStorage({
   
 export const upload = multer({
   storage: storage,
-  fileFilter: imageFileFilter // Apply the image file filter
+  fileFilter: imageFileFilter 
 });
 
 

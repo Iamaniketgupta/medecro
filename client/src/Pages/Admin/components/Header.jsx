@@ -3,10 +3,11 @@ import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { userData } from '../../../atom/states';
 import { IoNotifications } from 'react-icons/io5';
+import { useSelector } from 'react-redux';
 // import { useRecoilState } from 'recoil';
 
 const Header = () => {
-    const [currentUser,setCurrentUser] =useRecoilState(userData)
+    const currentUser = useSelector(state=>state.auth.user);
     // const pathname  = usePathname()
 
     return (
@@ -14,10 +15,10 @@ const Header = () => {
         // style={{zIndex:pathname===`/pilot/dashboard/${currentUser?.fullName?.toLowerCase()?.replace(" ", "-")}`?1500:40}}
         >
             <div className=' p-5 flex gap-2 items-center  justify-end shadow-md h-14 '>
-            <IoNotifications className='text-2xl text-yellow-500'/>
+            {/* <IoNotifications className='text-2xl text-yellow-500'/> */}
             <div className='text-xs items-end flex flex-col'>
                
-               <p className='font-semibold'>{currentUser?.fullName || 'name'}</p> 
+               <p className='font-semibold'>{currentUser?.name || 'name'}</p> 
                <p>{currentUser?.email || ' Email'}</p> 
                </div>
                <div className='relative w-fit h-fit'>
