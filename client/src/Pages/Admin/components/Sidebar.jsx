@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import { CgLock, CgProfile } from "react-icons/cg";
-import { MdOutlineSettings } from "react-icons/md";
 import { MdDashboard } from "react-icons/md";
 import { FaChartLine, FaMessage, FaPersonCirclePlus } from "react-icons/fa6";
 import { TbDrone } from "react-icons/tb";
