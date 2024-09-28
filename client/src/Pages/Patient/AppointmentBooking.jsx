@@ -10,7 +10,7 @@ const AppointmentDetails = () => {
     const [clinic, setclinic] = useState(null);
     const [slot, setslot] = useState(null);
     const [loading, setLoading] = useState(true); // Loading state
-
+    const RAZORPAY_KEY='rzp_test_mrBW5J4OwVHwDY';
     const { clinicId, SlotId } = useParams();
     const user = useSelector(state => state.auth.user);
     const navigate = useNavigate();
@@ -39,9 +39,45 @@ const AppointmentDetails = () => {
         }
     };
 
+    const checkoutHandler = async () => {
+        try {
+        const instance = async () => {
+            try {
+                const response = await axiosInstance.post(`/create_order`,{amt:clinic?.doctor?.onsiteFee});
+                return response.data.message;
+            } catch (error) {
+                console.log("error : ", error);
+            }
+        };
+
+        const order = await instance();
+        const key = RAZORPAY_KEY;
+        const options = {
+            key,
+            amount: Math.ceil(order.amount / 100),
+            currency: "INR",
+            name: clinic?.doctor?.name,
+            description: "RazorPay",
+            order_id: order.id,
+            notes: {
+                "address": "Razorpay Corporate Office"
+            },
+            theme: {
+                "color": "#121212"
+            }
+        };
+        const razor = new window.Razorpay(options);
+        razor.open();
+        return true;
+    } catch (error) {
+            return false;
+    }
+    };
+
     const handlePayment = () => {
-        // Implement payment logic here
+        if(checkoutHandler()){
         BookAppointment();
+        }
     };
 
     const BookAppointment = async () => {
@@ -95,10 +131,10 @@ const AppointmentDetails = () => {
                     <p className="text-lg font-medium text-gray-800"><strong>Doctor:</strong> {clinic?.doctor?.name}</p>
                 </div>
 
-                <p className="text-lg text-gray-700 mb-4"><strong>Amount to Pay:</strong> <span className="text-xl font-bold text-green-600">${clinic?.doctor?.onsiteFee}</span></p>
+                <p className="text-lg text-gray-700 mb-4"><strong>Amount to Pay:</strong> <span className="text-xl font-bold text-green-600">₹{clinic?.doctor?.onsiteFee}</span></p>
 
                 <button 
-                    onClick={handlePayment} 
+                    onClick={handlePayment}
                     className="w-full py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-200 transform hover:scale-105"
                 >
                     Pay Now

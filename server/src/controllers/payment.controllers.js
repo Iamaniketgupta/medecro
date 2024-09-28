@@ -9,8 +9,7 @@ import { validatePaymentVerification } from "razorpay/dist/utils/razorpay-utils.
 
 // import { Booking } from "../models/booking.model.js";
 const createOrder = asyncHandler(async (req, res) => {
-    const { username, amt } = req.body;
-   
+    const { amt } = req.body;
     const key_secret = process.env.RAZORPAY_API_SECRET;
     const key_id = process.env.RAZORPAY_API_KEY;
     const instance = new Razorpay({
@@ -19,7 +18,6 @@ const createOrder = asyncHandler(async (req, res) => {
     }
     )
 
-
     const amount=amt||'9500';
     const options={
         amount:Number.parseInt(amount)*100,
@@ -27,12 +25,6 @@ const createOrder = asyncHandler(async (req, res) => {
     }
 
     const paymentInit = await instance.orders.create(options);
-    // const payment = await Payment.create({
-    //     order_id: paymentInit.id,
-    //     amount,
-    //     user_id,
-    //     ragpicker_id:'2139p12i49114901u4'
-    // });
 
     res.status(201).json(new ApiResponse(201, "Order created successfully", paymentInit));
 })
@@ -54,7 +46,6 @@ const verifyOrder = asyncHandler(async (req, res) => {
         secret
     );
     
- 
         
         res.redirect(`${process.env.CLIENT_URL}/payment/?paymentdone=true`);
 }   );
