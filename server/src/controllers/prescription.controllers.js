@@ -76,7 +76,7 @@ export const getAllPrescribedPatients = asyncHandler(async (req, res) => {
     
     // Find prescriptions for the given clinic
     const prescriptions = await Prescription.find({ clinicId })
-        .populate('patientId', 'name email'); // Populate patient details if necessary
+        .populate('patientId', 'name email').populate('clinicId'); // Populate patient details if necessary
 
     // Filter patients whose prescription exists
     const patientsWithPrescriptions = allPatients.filter(patient => 
