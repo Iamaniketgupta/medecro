@@ -68,22 +68,38 @@ export const getAllPrescriptions  = asyncHandler(async(req, res) => {
 });
 
 
-export const getAllPrescribedPatients  = asyncHandler(async(req, res) => {
-   
-    const allpatients = await User.find({})
-    const patients = await Prescription.find({clinicId: req.params.clinicId})
-        .populate("clinicId")
-        .populate("patientId");
+export const getAllPrescribedPatients = asyncHandler(async (req, res) => {
+    const { clinicId } = req.params;
 
-    if (!patients) {
-        return res.status(404).json({ message: "Something went wrong" });
+    // Find all patients
+    const allPatients = await User.find({});
+    
+    // Find prescriptions for the given clinic
+    const prescriptions = await Prescription.find({ clinicId })
+        .populate('patientId', 'name email'); // Populate patient details if necessary
+
+    // Filter patients whose prescription exists
+    const patientsWithPrescriptions = allPatients.filter(patient => 
+        prescriptions.some(prescription => String(prescription.patientId._id) === String(patient._id))
+    );
+
+    // Merge prescription data under each patient
+    const data = patientsWithPrescriptions.map(patient => ({
+        patient,
+        prescriptions: prescriptions.filter(prescription => String(prescription.patientId._id) === String(patient._id))
+    }));
+
+    if (!data || data.length === 0) {
+        return res.status(404).json({ message: "No patients with prescriptions found for this clinic." });
     }
 
     res.status(200).json({
-        message: "patients retrieved successfully",
-        patients,
+        message: "Patients retrieved successfully",
+        data,
     });
 });
+
+
 
 
 // Get a single prescription by ID
