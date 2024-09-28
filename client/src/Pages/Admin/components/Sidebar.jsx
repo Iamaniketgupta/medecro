@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
-import { MdOutlineSettings } from "react-icons/md";
-import { CgProfile } from "react-icons/cg";
+import { MdOutlineSettings } from "react-icons/md";a
 import { MdDashboard } from "react-icons/md";
 import { FaChartLine, FaMessage, FaPersonCirclePlus } from "react-icons/fa6";
 import { TbDrone } from "react-icons/tb";
@@ -59,11 +58,6 @@ const SideBar = () => {
             link: `/clinic/add-slot`,
             icon: <TbDrone className='text-xl max-sm:text-sm' />
         },
-        {
-            title:"Add Virtual Slot",
-            link:`/clinic/add-virtual-slot`,
-            icon:<TbDrone className='text-xl max-sm:text-sm' />
-        }
       
         // {
         //     title: 'Settings',
@@ -106,7 +100,8 @@ const SideBar = () => {
 
             <div onClick={()=>{
             cookies.remove('auth')
-            // router.push('/pilot/login')
+            localStorage.removeItem("accessToken")
+            navigate("/login")
         }
 
             } title='Sign out' className=' flex my-1 hover:bg-blue-500 hover:text-white inset-x-0 w-[80%] mx-auto rounded-md p-2 cursor-pointer  text-gray-800 items-center gap-x-4 
