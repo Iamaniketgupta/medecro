@@ -40,6 +40,7 @@ import SlotAdd from "./Pages/Admin/components/Add-Slot/SlotAdd";
 import { useEffect } from "react";
 import axiosInstance from "./axiosConfig/axiosConfig";
 import { login } from "./store/authSlice";
+import UserProfile from "./Pages/Patient/components/Userprofile";
 
 function App() {
   const user = useSelector(state=>state.auth.user);
@@ -82,9 +83,6 @@ function App() {
       if(user){
         dispatch(login({user , type}))
       }
-    }else{
-      navigate('/login')
-
     }
   }
 
@@ -135,6 +133,7 @@ function App() {
         <Route path="/patient/chat" element={<PAdminPanel>< PChat /></PAdminPanel>} />
         <Route path="/patient/report/:reportId" element={<PAdminPanel><ViewReport /></PAdminPanel>} />
         <Route path="/patient/summarise" element={<ReportSum/>}/>
+        <Route path="/patient/profile" element={<PAdminPanel>< UserProfile /></PAdminPanel>} />
 
 
         {/* Video call Routes */}

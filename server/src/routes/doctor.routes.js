@@ -8,7 +8,8 @@ import {
     updateAvatar ,
     getPatients,
     getDoctorById,
-    getdoctor
+    getdoctor,
+    updateDoctor
 } from '../controllers/doctor.controller.js';
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJwtForDoctor } from '../middlewares/doctor.auth.middleware.js';
@@ -28,5 +29,6 @@ router.get("/getDoctorById/:id" , getDoctorById);
 router.post('/avatar', verifyJwtForDoctor, upload.single('avatar'), updateAvatar);
 router.get('/patients',verifyJwtForDoctor, getPatients);
 router.get("/getdoctor" , verifyJwtForDoctor , getdoctor)
+router.post('/updateDoctor',verifyJwtForDoctor , updateDoctor)
 
 export default router;

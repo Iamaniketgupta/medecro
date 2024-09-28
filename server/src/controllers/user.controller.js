@@ -7,6 +7,8 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadToCloudinary, deleteFromCloudinary, publicId } from '../utils/cloudinary.js';
+import Appointment from "../models/appointment.model.js";
+import VirtualAppointment from "../models/virtualAppointment.js";
 
 const tempUserStore = {};
 
@@ -20,17 +22,15 @@ function generateOTP(length) {
     return otp;
 }
 
-// Nodemailer setup
-console.log(process.env.EMAIL);
-console.log(process.env.PASSWORD)
+
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.EMAIL, // Replace with your email
-        pass: process.env.PASSWORD, // Replace with your email password
+        user: process.env.EMAIL, 
+        pass: process.env.PASSWORD,
     },
     tls: {
-        rejectUnauthorized: false // Disable strict SSL verification
+        rejectUnauthorized: false 
     }
 });
 
@@ -108,7 +108,7 @@ const verifyOtp = asyncHandler(async (req, res) => {
 
 // User login endpoint
 const login = asyncHandler(async (req, res) => {
-    console.log("reacged")
+    
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -276,6 +276,53 @@ const getuser = asyncHandler(async(req,res)=>{
     res.status(200).json(new ApiResponse(200, user, "User found successfully"));
 })
 
+
+const getPatientsByDoctorId = asyncHandler(async (req, res) => {
+    const{doctorId} = req.params;
+    const appointments = await Appointment.find({doctorId});
+    const virtualAppointments = await VirtualAppointment.find({doctorId});
+    
+    const patients = new Set();
+    appointments.map((a)=>{
+        patients.add(a.userId);
+    })
+    virtualAppointments.map((a)=>{
+        patients.add(a.userId);
+    })
+
+    const patientsArray = Array.from(patients);
+    const users = await User.find({_id: {$in: patientsArray}});
+    res.status(200).json(new ApiResponse(200, users, "Patients found successfully"));
+});
+
+
+
+const updateUserDetails = asyncHandler(async (req, res) => {
+    const userId = req.user._id; 
+    const {  age, emergencyno, address } = req.body;
+    
+    if ( !age && !emergencyno  && !address) {
+        throw new ApiError(400, 'No fields to update');
+    }
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError(404, 'User not found');
+    }
+
+    // Update only provided fields
+    if (age) user.age = age;
+    if (emergencyno) user.emergencyno = emergencyno;
+    if (address) user.address = address; 
+
+    // Save the updated user details
+    await user.save();
+
+    res.status(200).json(new ApiResponse(200, user, 'User details updated successfully'));
+});
+
+
 export {
     initiateRegister,
     verifyOtp,
@@ -285,5 +332,7 @@ export {
     addDoctorToUser,
     removeDoctorFromUser,
     getuserbyid,
-    getuser
+    getuser,
+    getPatientsByDoctorId,
+    updateUserDetails
 };
