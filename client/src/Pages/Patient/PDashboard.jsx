@@ -8,17 +8,19 @@ import LiveMap from "../../Map/LiveMap";
 import { useSelector } from "react-redux";
 import axiosInstance from "../../axiosConfig/axiosConfig";
 import { toast } from "react-toastify";
+import { useStateManager } from "react-select";
 
 const PDashboard = () => {
   const user = useSelector((state) => state.auth.user);
   const [pendingAppointments, setPendingAppointments] = useState([]);
   const [consultancies, setconsultancies] = useState([])
   const navigate  = useNavigate();
+  const [reports, setreports] = useState(null)
 
   const fetchPendingAppointments = async () => {
     try {
       const res = await axiosInstance.get(
-        `/appointment/getUpcomingAppointments/${user._id}`
+        `/appointment/getUpcomingAppointment/user/${user._id}`
       );
       if (res.data) {
         console.log("Res.data : ", res.data);
@@ -63,12 +65,6 @@ const PDashboard = () => {
       value: "5",
       icon: <FaUserDoctor />,
     },
-    {
-      id: 4,
-      title: "Pending Payments",
-      value: "₹9,500",
-      icon: <MdPayment />,
-    },
   ];
 
   // Appointments data
@@ -95,23 +91,7 @@ const PDashboard = () => {
     },
   ];
 
-  // Reports data
-  const reports = [
-    {
-      id: 1,
-      title: "Blood Test Report",
-      date: "10th Sept 2024",
-      doctor: "Dr. Suresh Patel",
-      link: "#",
-    },
-    {
-      id: 2,
-      title: "X-Ray Report",
-      date: "12th Sept 2024",
-      doctor: "Dr. Anita Sharma",
-      link: "#",
-    },
-  ];
+  
   const [timers, setTimers] = useState({});
 
   function isTimeOver(dateString, timeSlot) {
@@ -139,6 +119,20 @@ const PDashboard = () => {
     // Compare the dates
     return date < now;
 }
+
+
+const fetchReports = async()=>{
+  try {
+      const res = await axiosInstance.get(`/prescription/getPrescriptionByPatientId/${user._id}`);
+      if(res.data){
+          console.log("res.data.pre :  " , res.data.prescription.slice(0,2))
+          setreports(res?.data?.prescription?.slice(0,2));
+      } 
+  } catch (error) {
+      console.log(error)
+  }
+}
+
 
   // Initialize countdown timers for each appointment
   useEffect(() => {
@@ -169,6 +163,7 @@ const PDashboard = () => {
   useEffect(() => {
     fetchPendingAppointments();
     fetchOnlineConsultations();
+    fetchReports()
   }, []);
 
   return (
@@ -179,7 +174,7 @@ const PDashboard = () => {
 
       {/* Stats Section */}
       <div className="flex justify-around flex-wrap gap-4 p-3">
-        {statsTabs.map((i) => (
+        {statsTabs &&  statsTabs?.map((i) => (
           <div
             key={i.id}
             className="bg-white flex-1 rounded-lg shadow-lg flex min-w-46 p-4 md:w-[260px] w-[180px] py-5 justify-between gap-5 items-center"
@@ -206,7 +201,7 @@ const PDashboard = () => {
           <div className="bg-red-500 animate-ping w-2 h-2 rounded-full"></div>
         </h2>
         <div className="flex-wrap gap-4 p-3 grid grid-cols-3">
-          {consultancies.map((appointment) => (
+          {consultancies?.map((appointment) => (
             <div
               key={appointment._id}
               className="bg-white flex-1 rounded-lg shadow-lg p-4"
@@ -263,7 +258,7 @@ const PDashboard = () => {
           <div className="bg-red-500 animate-ping w-2 h-2 rounded-full"></div>
         </h2>
         <div className=" flex-wrap gap-4 p-3 grid grid-cols-2">
-          {pendingAppointments.map((appointment) => (
+          {pendingAppointments?.map((appointment) => (
             <div
               key={appointment._id}
               className="bg-white flex-1 rounded-lg shadow-lg p-4 flex gap-3 justify-between"
@@ -293,7 +288,7 @@ const PDashboard = () => {
                 </p>
               </div>
 
-              <div className="w-52 h-full ">
+              <div className="w-52 h-full overflow-hidden">
                 <LiveMap markerPositio1={appointment?.clinicId?.locationCoordinates} />
               </div>
             </div>
@@ -308,19 +303,18 @@ const PDashboard = () => {
           My Reports <FaFileCirclePlus className="text-red-500" />
         </h2>
         <div className="flex flex-wrap gap-4 p-3">
-          {reports.map((report) => (
+          {reports?.map((report) => (
             <div
-              key={report.id}
+              key={report._id}
               className="bg-white flex-1 rounded-lg shadow-lg p-4"
             >
-              <h3 className="text-gray-800 font-semibold">{report.title}</h3>
-              <p className="text-gray-600">Appointment : 9th Aug 2024</p>
+              <h3 className="text-gray-800 font-semibold">{report.medication.name}</h3>
               <p className="text-gray-600">Type : Physical ( on Clinic )</p>
               <p className="text-gray-600">
-                Issued by {report.doctor} on {report.date}
+                Issued by {report.clinicId?.doctor?.name} 
               </p>
               <br />
-              <a href={report.link} className="text-blue-500 hover:underline">
+              <a href={report.report[0]} className="text-blue-500 hover:underline">
                 Download Report
               </a>
               <Link
@@ -341,21 +335,6 @@ const PDashboard = () => {
       </div>
 
       <hr />
-      {/* Pending Payments Section */}
-      <div className="my-6">
-        <h2 className="px-5 text-2xl font-semibold text-gray-600">
-          Pending Payments
-        </h2>
-        <div className="bg-white rounded-lg shadow-lg p-4">
-          <p className="text-gray-600">
-            You have pending payments totaling{" "}
-            <span className="font-bold text-gray-900">₹9,500</span>.
-          </p>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md mt-3">
-            Pay Now
-          </button>
-        </div>
-      </div>
     </div>
   );
 };
