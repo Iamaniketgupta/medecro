@@ -1,88 +1,118 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchInput from './components/Dashboard/SearchInput';
 import FilterChecklist from './components/PatientRecords/filter';
 import { Link } from 'react-router-dom';
+import axiosInstance from '../../axiosConfig/axiosConfig';
+import { useSelector } from 'react-redux';
+import { useRecoilState } from 'recoil';
+import { allClinics } from '../../atom/states';
 
 const PatientsRecords = () => {
-    const demoRecords = [
-        { id: 1, name: 'Vivek Sharma', age: 23, gender: 'Male', image: 'https://preview.redd.it/created-random-people-using-chatgpt-midjourney-do-you-know-v0-q1aa450i5dqb1.png?width=1024&format=png&auto=webp&s=c4e9abc47d193474a2fa1a7e337d9d9340dce947' },
-        { id: 2, name: 'Priya Gupta', age: 29, gender: 'Female', image: 'https://randomuser.me/api/portraits/women/2.jpg' },
-        { id: 3, name: 'Ravi Verma', age: 34, gender: 'Male', image: 'https://randomuser.me/api/portraits/men/3.jpg' },
+    const user = useSelector(state => state.auth.user);
+    const [clinicsData, setAllClinics] = useRecoilState(allClinics);
+    const [allrecords, setAllRecords] = useState([]);
+    const [tab, setTab] = useState(clinicsData[0]?._id); // Default to the first clinic's _id
+    const [loading, setLoading] = useState(false);
+    const [filteredData, setFilteredData] = useState([]);
 
-    ];
-    const demoData2 = [
-        { id: 4, name: 'Shalini Mehta', age: 41, gender: 'Female', image: 'https://randomuser.me/api/portraits/women/4.jpg' },
-        { id: 5, name: 'Kiran Desai', age: 25, gender: 'Female', image: 'https://randomuser.me/api/portraits/women/5.jpg' },
-        { id: 6, name: 'Rajesh Kumar', age: 50, gender: 'Male', image: 'https://randomuser.me/api/portraits/men/6.jpg' },
-        { id: 7, name: 'Anita Singh', age: 33, gender: 'Female', image: 'https://randomuser.me/api/portraits/women/6.jpg' },
-        { id: 8, name: 'Ajay Nair', age: 27, gender: 'Male', image: 'https://randomuser.me/api/portraits/men/7.jpg' },
-        { id: 9, name: 'Meena Joshi', age: 42, gender: 'Female', image: 'https://randomuser.me/api/portraits/women/7.jpg' },
-        { id: 10, name: 'Suresh Patel', age: 39, gender: 'Male', image: 'https://randomuser.me/api/portraits/men/8.jpg' },
-    ];
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const response = await axiosInstance.get(`/prescription/patients/records/all/${tab}`);
+            setAllRecords(response.data.data); // Assuming `patients` is the key in the response
+            setFilteredData(response.data.data); // Set filtered data as well if you want to handle search/filter later
+            console.log(response.data);
+        } catch (error) {
+            console.error("Error fetching patient records:", error);
+        } finally {
+            setLoading(false); // Set loading to false after fetching data
+        }
+    }
 
-const _id = 313;
+    useEffect(() => {
+        if (tab) {
+            fetchData();
+        }
+    }, [tab]);
+console.log(allrecords)
+    if (!tab) {
+        return (
+            <p>Kindly Add Clinic to Get Records</p>
+        );
+    }
+
     return (
         <div className='relative pb-10'>
-            <h1 className="md:text-2xl text-lg max-sm:px-3 font-semibold mb-5  opacity-70">Patient Records</h1>
+            <h1 className="md:text-2xl text-lg max-sm:px-3 font-semibold mb-5 opacity-70">Patient Records</h1>
 
-            <SearchInput placeholder={'Search Patient'} />
-
-            <div>
-                <h2 className=" px-4 text-lg max-sm:px-3 font-semibold mb-5  opacity-70">Recently Added Records</h2>
-                <div className=' items-center gap-5 grid md:grid-cols-2 lg:grid-cols-4'>
-                    {
-                        demoRecords?.map((i) => {
-                            return <Link to={`/clinic/records/patient/${_id }`} key={i.id} className='flex-grow cursor-pointer hover:bg-gray-50 max-w-[350px] border border-blue-700 p-3 flex gap-4 shadow-lg rounded-xl'>
-                                <img src={i.image} alt="" className='w-16  h-16 rounded-full  object-cover ' />
-                                <div className=' text-sm font-semibold text-gray-800'>
-                                    <p className='text-lg'>  {i.name}</p>
-                                    <p>Age : {i.age}</p>
-                                    <p>Gender : {i.gender}</p>
-
-                                </div>
-                            </Link>
-                        })
-                    }
-                </div>
+            {/* Clinic Selection */}
+            <div className='my-4 flex items-center mb-5 gap-4'>
+                {
+                    clinicsData?.map((clinic) => (
+                        <button
+                            key={clinic._id}
+                            onClick={() => setTab(clinic._id)}
+                            className={`font-bold py-2 px-4 rounded-full 
+                                ${tab === clinic._id ? 'bg-blue-500 text-sm text-white' : 'bg-white text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white'}`}
+                        >
+                            {clinic?.clinicName}
+                        </button>
+                    ))
+                }
             </div>
 
-            <br />
+            {/* Search and Filter */}
+            <SearchInput placeholder={'Search Patient'} />
 
             <hr />
             <br />
 
+            {/* Patients List */}
             <div>
-                <h2 className=" px-4 text-lg max-sm:px-3 font-semibold mb-5  opacity-70">All Patients Records</h2>
+                <h2 className="px-4 text-lg max-sm:px-3 font-semibold mb-5 opacity-70">All Patients Records</h2>
 
-                <div className='my-3 p-1  items-center flex flex-wrap gap-6 px-4'>
+                {/* Sorting and Filters */}
+                <div className='my-3 p-1 items-center flex flex-wrap gap-6 px-4'>
                     <select name="" id="" className='text-gray-800 w-52 font-semibold rounded bg-gray-100 p-2'>
                         <option value="">Sort By</option>
                         <option value="date">Date</option>
                         <option value="name">Name</option>
                     </select>
 
-                    <FilterChecklist/>
+                    {/* <FilterChecklist /> */}
                 </div>
-                <div className=' items-center gap-5 grid md:grid-cols-2 lg:grid-cols-4'>
-                    {
-                        demoData2?.map((i) => {
-                            return <Link to={`/clinic/records/patient/${_id }`}key={i.id} className='flex-grow  cursor-pointer hover:bg-gray-50 max-w-[350px] border border-blue-700 p-3 flex gap-4 shadow-lg rounded-xl'>
-                                <img src={i.image} alt="" className='w-16  h-16 rounded-full  object-cover ' />
-                                <div className=' text-sm font-semibold text-gray-800'>
-                                    <p className='text-lg'>  {i.name}</p>
-                                    <p>Age : {i.age}</p>
-                                    <p>Gender : {i.gender}</p>
 
-                                </div>
-                            </Link>
-                        })
+                {/* Patient Records */}
+                <div className='items-center gap-5 grid md:grid-cols-2 lg:grid-cols-4'>
+                    {
+                        loading ? (
+                            <p>Loading...</p>
+                        ) : (
+                            allrecords?.map((i,idx) => (
+                                <Link
+                                    to={`/clinic/records/i.patient/${i.patient._id}`}
+                                    key={idx}
+                                    className='flex-grow cursor-pointer hover:bg-gray-50 max-w-[350px] border border-blue-700 p-3 flex gap-4 shadow-lg rounded-xl'
+                                >
+                                    <img src={i.patient.avatar || 'https://img.freepik.com/premium-vector/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-vector-illustration_561158-3408.jpg'} alt="i.patient Avatar" className='w-16 h-16 rounded-full object-cover' />
+                                    <div className='text-sm font-semibold text-gray-800'>
+                                        <p className='text-lg'>{i.patient.fullName}</p>
+                                        <p>Age: {i.patient.age}</p>
+                                        {/* <p>Gender: {patient.gender}</p> */}
+                                    </div>
+                                </Link>
+                            ))
+                        )
                     }
                 </div>
             </div>
 
-<button className='bg-blue-700 hover:bg-blue-500 text-bold block mx-auto my-10 px-4 py-2 w-[150px] rounded-md shadow-sm text-white'>More</button>
+            {/* Load More Button */}
+            {/* <button className='bg-blue-700 hover:bg-blue-500 text-bold block mx-auto my-10 px-4 py-2 w-[150px] rounded-md shadow-sm text-white'>
+                More
+            </button> */}
 
-        </div >
+        </div>
     );
 }
 

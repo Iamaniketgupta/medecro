@@ -8,6 +8,8 @@ import OneonOne from './components/Dashboard/OneonOne';
 import AddClinic from './components/Dashboard/AddClinic';
 import axiosInstance from '../../axiosConfig/axiosConfig';
 import { useSelector } from 'react-redux';
+import { useRecoilState } from 'recoil';
+import { allClinics } from '../../atom/states';
 // import { useRecoilState } from 'recoil';
 // import { userData } from '../atom/states';
 
@@ -24,6 +26,7 @@ const Dashboard = () => {
     
     
     const user = useSelector(state=>state.auth.user);
+    const [Theclinics,setAllClincs] = useRecoilState(allClinics);
     
 
     const fetchClinics =async()=>{
@@ -32,6 +35,8 @@ const Dashboard = () => {
             if(res.data){
                 
                 setclinics(res.data.data);
+                setAllClincs(res.data.data);
+                // console.log("dadadad",Theclinics)
             }
             
         } catch (error) {

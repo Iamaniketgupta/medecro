@@ -8,8 +8,8 @@ export const userData = atom({
 
 
 
-export const allStoriesState = atom({
-    key: 'allStories', 
+export const allClinics = atom({
+    key: 'allClinics', 
     default: [],
   });
 
