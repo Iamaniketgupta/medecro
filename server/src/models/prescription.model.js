@@ -41,6 +41,6 @@ const prescriptionSchema = new Schema({
         required: false
     },
    
-});
+},{timestamps: true});
 
 export const Prescription = mongoose.model("Prescription", prescriptionSchema);
